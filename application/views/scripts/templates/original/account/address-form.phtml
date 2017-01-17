@@ -1,0 +1,150 @@
+
+<div class="main-column"><!--main-max-banner start-->
+<div id="container"><!--container start-->
+
+<? if(count($this->pos[left])>0){?>
+<div id="column-left"><!--column-left start-->
+<?php echo $this->action('left','modules',null,array('mod' =>$this->pos[left]));?>
+<!--column-left End--></div>
+<?}?>
+
+<?if(count($this->pos[right])>0){?>
+<div id="column-right"><!--column-right start-->
+<?php echo $this->action('right','modules',null,array('mod' =>$this->pos[right]));?>
+<!--column-right End-->
+<?}?>
+		
+            <div id="content"><!--content start-->
+<?if(count($this->pos[top])>0){?>
+<div id="main-max-banner"><!--start main-max-banner-->
+<?php echo $this->action('top','modules',null,array('mod' =>$this->pos[top]));?>
+<!--End main-max-banner--></div>
+<?}?>
+
+          <div class="breadcrumb"><!--readcrumb start-->
+	<p>
+	<?php foreach ($this->data[breadcrumbs] as $breadcrumb) { ?>
+    <?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
+    <?php } ?></P>
+                   <!--readcrumb End --></div>
+				   
+				   
+                  <!-- <div class="page-title"><h1><?php echo $this->trans->_('heading_title_account_address'); ?></h1></div>-->
+						 
+                    
+					 <div class="box">
+				    <div class="box-heading"><p><span><?php echo $this->data['text_address'];?></span></p></div>
+				  <div class="box-content">
+					
+    <form action="<?php echo $this->data[action]; ?>" method="post" enctype="multipart/form-data" id="address">
+    <div class="content">
+	
+      <table class="form">
+        <tr>
+          <td><span class="required">*</span> <?php echo $this->trans->_('entry_firstname_account_address'); ?></td>
+          <td><input type="text" name="firstname" value="<?php echo $this->data[firstname]; ?>" />
+            <?php if ($this->data[error_firstname]) { ?>
+            <span class="error"><?php echo $this->data[error_firstname]; ?></span>
+            <?php } ?></td>
+        </tr>
+        <tr>
+          <td><span class="required">*</span> <?php echo $this->trans->_('entry_lastname_account_address'); ?></td>
+          <td><input type="text" name="lastname" value="<?php echo $this->data[lastname]; ?>" />
+            <?php if ($this->data[error_lastname]) { ?>
+            <span class="error"><?php echo $this->data[error_lastname]; ?></span>
+            <?php } ?></td>
+        </tr>
+        <tr>
+          <td><?php echo $this->trans->_('entry_company_account_address'); ?></td>
+          <td><input type="text" name="company" value="<?php echo $this->data[company]; ?>" /></td>
+        </tr>
+        <tr>
+          <td><span class="required">*</span> <?php echo $this->trans->_('entry_address_1_account_address'); ?></td>
+          <td><input type="text" name="address_1" value="<?php echo $this->data[address_1]; ?>" />
+            <?php if ($this->data[error_address_1]) { ?>
+            <span class="error"><?php echo $this->data[error_address_1]; ?></span>
+            <?php } ?></td>
+        </tr>
+        <tr>
+          <td><?php echo $this->trans->_('entry_address_2_account_address'); ?></td>
+          <td><input type="text" name="address_2" value="<?php echo $this->data[address_2]; ?>" /></td>
+        </tr>
+        <tr>
+          <td><span class="required">*</span> <?php echo $this->trans->_('entry_city_account_address'); ?></td>
+          <td><input type="text" name="city" value="<?php echo $this->data[city]; ?>" />
+            <?php if ($this->data[error_city]) { ?>
+            <span class="error"><?php echo $this->data[error_city]; ?></span>
+            <?php } ?></td>
+        </tr>
+        <tr>
+          <td><span class="required">*</span> <?php echo $this->trans->_('entry_postcode_account_address'); ?></td>
+          <td><input type="text" name="postcode" value="<?php echo $this->data[postcode]; ?>" />
+            <?php if ($this->data[error_postcode]) { ?>
+            <span class="error"><?php echo $this->data[error_postcode]; ?></span>
+            <?php } ?></td>
+        </tr>
+        <tr>
+          <td><span class="required">*</span> <?php echo $this->trans->_('entry_country_account_address'); ?></td>
+          <td>
+
+		  <select name="country_id" onchange="$('select[name=\'zone_id\']').load('<?echo $this->url_to_site;?>ajax/zone/country_id/' + this.value + '/zone_id/<?php echo $this->data[zone_id]; ?>');">
+              <option value=""><?php echo $this->data[text_select]; ?></option>
+              <?php foreach ($this->data[countries] as $country) { ?>
+              <?php if ($country['countries_id'] == $this->data[country_id]) { ?>
+              <option value="<?php echo $country['countries_id']; ?>" selected="selected"><?php echo $country['countries_name']; ?></option>
+              <?php } else { ?>
+              <option value="<?php echo $country['countries_id']; ?>"><?php echo $country['countries_name']; ?></option>
+              <?php } ?>
+              <?php } ?>
+            </select>
+            <?php if ($this->data[error_country]) { ?>
+            <span class="error"><?php echo $this->data[error_country]; ?></span>
+            <?php } ?></td>
+        </tr>
+        <tr>
+          <td><span class="required">*</span> <?php echo $this->trans->_('entry_zone_account_address'); ?></td>
+          <td><select name="zone_id">
+            </select>
+            <?php if ($this->data[error_zone]) { ?>
+            <span class="error"><?php echo $this->data[error_zone]; ?></span>
+            <?php } ?></td>
+        </tr>
+        <tr>
+          <td><?php echo $this->trans->_('entry_default_account_address'); ?></td>
+          <td><?php if ($this->data['default']) { ?>
+            <input type="radio"  class="radio" name="default" value="1" checked="checked" />
+            <?php echo $this->data[text_yes]; ?>
+            <input type="radio" class="radio" name="default" value="0" />
+            <?php echo $this->data[text_no]; ?>
+            <?php } else { ?>
+            <input type="radio"  class="radio" name="default" value="1" />
+            <?php echo $this->data[text_yes]; ?>
+            <input type="radio"  class="radio" name="default" value="0" checked="checked" />
+            <?php echo $this->data[text_no]; ?>
+            <?php } ?></td>
+        </tr>
+      </table>
+    </div>
+   
+
+						</div>
+					
+                  <!--box end --></div>
+		  	 <div class="buttons">
+      <div class="left"><a href="<?php echo $this->data[back]; ?>" class="button_btn"><span><?php echo $this->trans->_('button_back'); ?></span></a></div>
+      <div class="right"><a onclick="$('#address').submit();" class="button_btn"><span><?php echo $this->trans->_('button_submit_account_address'); ?></span></a></div>
+    </div>
+  </form>
+				<?if(count($this->pos[bottom])>0){?>
+<div class="content-bottom"><!--content-bottom srtart-->
+<?php echo $this->action('bottom','modules',null,array('mod' =>$this->pos[bottom]));?>
+</div>
+<?}?>
+              
+<!--container End--></div>
+           <!--main-max-banner End--></div>
+
+	   <script type="text/javascript"><!--
+		$('select[name=\'zone_id\']').load('<?=$this->url_to_site;?>ajax/zone/country_id/<?php echo $this->data[country_id]; ?>/zone_id/<?php echo $this->data[zone_id]; ?>');
+		//--></script>
+		

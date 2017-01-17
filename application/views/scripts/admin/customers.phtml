@@ -1,0 +1,482 @@
+<?php
+$act=new Model_Adminaction();
+$act_ext=new Model_Adminextaction();
+$currency=new Model_currencies();
+if($_REQUEST['type']==''){?>
+
+<div class="container_12">
+           <div style="clear:both;"></div>
+            <div class="grid_12">
+  				<?
+					if($_REQUEST['msg']!=""){?>
+				<span class='<?php echo $_REQUEST['m']==""?"notification n-success":"notification n-error"?>'><?=base64_decode($_REQUEST['msg']);?></span>
+				
+				<?}?>
+                <div class="bottom-spacing">
+                    <!-- Button -->
+                    <div class="float-right">
+		    <?=$this->view_pagination;?>
+					
+                    </div>
+                    <!-- Table records filtering -->
+					<form  name="frmfilter" id="frmfilter" method="post" action="" autocomplete="off">
+                   <!-- Customer Name :<input type="text" name="name" id="name" value="<?=$_REQUEST['name']?>"> | Email :<input type="text" name="emailid" id="emailid" value="<?=$_REQUEST['emailid']?>">  <input type="submit" name="filter" id="filter" value="filter">-->
+				   
+				   <span> <input type="text" name="name" id="name" onfocus="if(this.value=='Customer Name') this.value=''"  value="<?php echo $_REQUEST['name']!=""?$_REQUEST['name']:'Customer Name';?>"></span> <span><input type="text" name="emailid" id="emailid" onfocus="if(this.value=='Email') this.value=''"  value="<?php echo $_REQUEST['emailid']!=""?$_REQUEST['emailid']:'Email';?>"></span> <span> <input type="submit" name="filter" id="filter" value="filter"></span>
+				   
+					</form>
+                </div>
+
+
+                <!-- Example table -->
+                <div class="module">
+                	<h2><span><?=$this->actionTitle." [".$this->total_count."]"?></span> <div class="add-btn-div"><?php $act->viewAddB(ADMIN_URL_CONTROLLER.$this->actionTitle);?></div> </h2>
+
+                    <div class="module-table-body">
+                    	<form name="frmMain" id="frmMain" method="post" action="<?php echo ADMIN_URL_CONTROLLER.$this->actionTitle?>">
+                        <table id="myTable" class="tablesorter">
+                   	  <thead>
+                                <tr>
+					<th align="center" style="width:5%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#</th>
+					<th style="width:20%">
+					<?echo $act_ext->getSortLable(array("disType"=>$this->disType, "sortby"=>"customers_firstname", "page"=>$_REQUEST['page'] ,"file"=>"customers" ,"label"=>"First Name"));?>
+					</th>
+					<th style="width:21%"><?echo $act_ext->getSortLable(array("disType"=>$this->disType, "sortby"=>"customers_lastname", "page"=>$_REQUEST['page'] ,"file"=>"customers" ,"label"=>"Last Name"));?></th>
+					<th style="width:13%"><?echo $act_ext->getSortLable(array("disType"=>$this->disType, "sortby"=>"customers_email_address", "page"=>$_REQUEST['page'] ,"file"=>"customers" ,"label"=>"Email"));?></th>
+					<th style="width:5%"><?echo $act_ext->getSortLable(array("disType"=>$this->disType, "sortby"=>"customers_approved", "page"=>$_REQUEST['page'] ,"file"=>"customers" ,"label"=>"Approved"));?></th>
+					<th style="width:13%">Customer Group</th>
+					<th style="width:13%">Telephone</th>
+					<th style="width:15%"><input type="checkbox" name="checkall" id="checkall" onClick="Checkall()"/> <a href="#">Action</a></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+							<?
+					$i=1;
+					if($this->page!=1)
+					{
+						$i+=($this->page-1)*$this->per_page;
+					}
+
+
+							foreach ($this->results as $result)
+							{
+
+							$class=fmod($i,2)==0?'':'addcolorne';
+							?>
+                              <tr>
+                                <td  class="<?=$class?>"><?=$i?></td>
+                                <td class="<?=$class?>"><?php echo $result['customers_firstname'];?></td>
+                                <td class="<?=$class?>"><?php echo $result['customers_lastname'];?></td>
+                                <td class="<?=$class?>"><?php echo $result['customers_email_address'];?></td>
+				<td class="<?=$class?>"><?php echo $result['customers_approved']=='1'?'Yes':'No';?></td>
+				<td class="<?=$class?>"><?php echo $result['name'];?></td>
+                                <td class="<?=$class?>"><?php echo $result['customers_telephone'];?></td>
+                                <td class="<?=$class?>">
+                                <input type="checkbox" name="rid[]" id="rid" value="<?php echo $result['customers_id'];?>"  />
+								<?php if($result['customers_status']=='0'){?>
+								<a href="javascript:fnSingleAction('Pub','customers','<?php echo $result['customers_id'];?>','r_customers','customers_status','customers_id','<?=$this->page?>');">
+								<img src="<?echo PATH_TO_ADMIN_IMAGES;?>minus-circle.gif"   width="16" height="16" title="unpublish" />
+								</a>
+								<?php }else{?>
+								<a href="javascript:fnSingleAction('UnPub','customers','<?php echo $result['customers_id'];?>','r_customers','customers_status','customers_id','<?=$this->page?>');">
+								<img src="<?echo PATH_TO_ADMIN_IMAGES;?>tick-circle.gif"   width="16" height="16" title="publish" />
+								</a>
+								<?php }?>
+								<?php
+									$act->viewEditB(ADMIN_URL_CONTROLLER.$this->actionTitle,$result['customers_id'],$_REQUEST['page']);
+									$act->viewDelB($this->actionTitle,$result['customers_id'],'r_customers','customers_id',$_REQUEST['page']);
+								?>
+                                <!-- <a href="<?php echo ADMIN_URL_CONTROLLER.$this->actionTitle.'?type=Edit&rid='.$result['customers_id']?>"><img src="<?echo PATH_TO_ADMIN_IMAGES;?>pencil.gif"  width="16" height="16" title="edit" /></a>
+                                <a href="javascript:fnSingleAction('Del','customers','<?php echo $result['customers_id'];?>','r_customers','','customers_id','<?=$this->page?>');"><img src="<?echo PATH_TO_ADMIN_IMAGES;?>bin.gif"   width="16" height="16" title="delete" /></a> -->
+                                </td>
+                              </tr>
+                              <?$i=$i+1;}?>
+
+                            </tbody>
+                        </table>
+
+						<input type="hidden" name="page" id="page" value="<?php echo $this->page;?>">
+                        <div class="table-apply">
+                            <!--<select name="action" id="action" class="input-medium" onchange="fnaction(this.value);" >
+                                <option value="">Select action</option>
+				<option value="Approve" <?php echo $_REQUEST['action']=='Approve'?'selected':'';?>>Approve</option>
+                                <option value="Pub" <?php echo $_REQUEST['action']=='Pub'?'selected':'';?>>Publish</option>
+                                <option value="UnPub" <?php echo $_REQUEST['action']=='UnPub'?'selected':'';?>>Unpublish</option>
+                                <option value="Del" <?php echo $_REQUEST['action']=='Del'?'selected':'';?>>Delete</option>
+                            </select>-->
+			    <?$act->fnmultipleactdropdown(array('Approve'=>'Approve','Pub'=>'Publish','UnPub'=>'UnPublish','Del'=>'Delete',));?>
+                            </form>
+                        </div>
+                        <div style="clear: both"></div>
+                     </div>
+                </div>
+                <?=$this->view_pagination;?>
+			</div>
+             <div class="grid_6">
+		  </div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+        </div>
+		<?php }elseif($_REQUEST['type']=='Add' || 'Edit'){
+ 	/*foreach ($this->data as $result)
+	{} print_r($result);*/?>
+		<div class="container_12">
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+            <div class="grid_12">
+                <div class="module">
+                     <h2><span><?php echo $_REQUEST['type']." ".$this->actionTitle;?></span></h2>
+                     <div id="TabbedPanels1" class="TabbedPanels">
+                       <ul class="TabbedPanelsTabGroup">
+                         <li class="TabbedPanelsTab" tabindex="0">personal</li>
+					
+                          <li class="TabbedPanelsTab" tabindex="0">Address</li>
+					
+
+						 <?if($_REQUEST[type]=='Edit'){?><li class="TabbedPanelsTab" tabindex="0">Transactions</li>
+						 <li class="TabbedPanelsTab" tabindex="0">Reward Points</li><?}?>
+                         <li class="iconsec"><?php echo $act->editCancelB($this->actionTitle,$_REQUEST['page']);?></li>
+                    
+			 <?php echo $act->editApplyB(ADMIN_URL_CONTROLLER.$this->actionTitle,(int)$_REQUEST['rid'],$_REQUEST['type']);?>
+			 
+                         <li class="iconsec">
+			 <?php echo $act->editSaveB(ADMIN_URL_CONTROLLER.$this->actionTitle,(int)$_REQUEST['rid'],$_REQUEST['type'],$_REQUEST['page']);?>
+			 </li>
+                       </ul>
+                       <div class="TabbedPanelsContentGroup">
+                         <div class="TabbedPanelsContent"> <form name="frmEdit" id="frmEdit" method="post" enctype="multipart/form-data">
+                             <?if($this->msg!=""){ echo '<div><span class="notification n-success">'.base64_decode($this->msg).'</span></div> ';}?>
+							 <p><b>All fields indicated with * are mandatory</b></p>
+                            <!-- <p>
+                                <label>Gender</label>
+				<input name="customers_gender" value="m" type="radio" tooltipText="Select Gender" <?echo $this->data[0]['customers_gender']=='m'?'checked':'';?> >&nbsp;&nbsp;Male&nbsp;&nbsp;
+				<input name="customers_gender" value="f" type="radio" tooltipText="Select Gender" <?echo $this->data[0]['customers_gender']=='f'?'checked':'';?> >&nbsp;&nbsp;Female
+                              </p> -->
+			      <div class="mode-box">
+<h3><span>Personal Details</span></h3>
+
+                            <p>
+                                <label>*First Name</label>
+                                <input name="customers_firstname" id="customers_firstname" type="text" title="first name" class="input-medium" value="<?=$this->data[0]['customers_firstname'];?>" tooltipText="enter customers first name"/>
+                           </p>
+						   <p>
+                                <label>*Last Name</label>
+                                <input name="customers_lastname" id="customers_lastname" type="text" class="input-medium" value="<?=$this->data[0]['customers_lastname'];?>" tooltipText="enter customers last name"/>
+                           </p>
+			   			<p>
+							<label>Telephone Number</label>
+                            <input name="tele" id="tele" type="text" class="input-medium" value="<?=$this->data[0]['customers_telephone'];?>" tooltipText="enter Telephone Number"/>
+                            </p>
+
+							<p>
+							<label>Fax Number</label>
+                            <input name="fax" id="fax" type="text" class="input-medium" value="<?=$this->data[0]['customers_fax'];?>" tooltipText="enter Fax"/>
+                            </p>
+						   <!-- <p>
+                                <label>*Date of Birth</label>
+                                <input name="dob" id="dob" type="text" class="input-medium" value="<?=$this->data[0]['customers_dob'];?>" tooltipText="enter customers dob"/>
+                           </p> -->
+			   </div>
+			   <div class="mode-box">
+<h3><span>Login Details</span></h3>
+
+			   <p>
+                                <label>*Email Address</label>
+                               <input name="customers_email" id="customers_email" type="text" class="input-medium" value="<?=$this->data[0]['customers_email_address'];?>" tooltipText="enter customers email address"/>
+                           </p>
+			   <p>
+                                <label>Password</label>
+                               <input name="password" id="password" type="password" class="input-medium" value="<?=$act_ext->getDecryptPassword($this->data[0]['customers_password']);?>" tooltipText="enter password"/>
+                           </p>
+			   </div>
+			   <div class="mode-box">
+<h3><span>Settings</span></h3>
+				<?
+				echo $act->field(array('lable'=>'Customer Group Name','input_title'=>'customer_group_id','desc'=>'select customer group','input_type'=>'select','val'=>$act->getcustomergroupdropdown($this->data[0]['customer_group_id']),"req"=>'1'));
+				?>
+						   	<p>
+                            <label>NewsLetter</label>
+                                <select name="newsletter" id="newsletter" tooltipText="select option for newsletter" >
+                                    <option value="1" <?echo $this->data[0]['customers_newsletter']=='1'?'selected':'';?>>Subscribe</option>
+                                    <option value="0" <?echo $this->data[0]['customers_newsletter']=='0'?'selected':'';?>>Un Subscribe</option>
+                                </select>
+                            </p>
+
+						<p>
+                            <label>Status</label>
+                                <select name="customers_status" id="customers_status" tooltipText="select customers_status" >
+                                    <option value="1" <?echo $this->data[0]['customers_status']=='1'?'selected':'';?>>Active</option>
+                                    <option value="0" <?echo $this->data[0]['customers_status']=='0'?'selected':'';?>>Deactive</option>
+                                </select>
+                            </p>                         </div></div>
+
+                     <div class="TabbedPanelsContent">
+ <div id="form">
+ 			     <?php $address_row = 1; ?>
+          <?php 
+	  if($_REQUEST['type']=='Add')
+	  {
+	  $this->addresses=array("");
+	  }
+	  foreach ($this->addresses as $address) { ?>
+	  <div class="mode-box">
+<h3><span>Address <?echo $address_row;?></span></h3>
+
+          <div id="tab-address-<?php echo $address_row; ?>" class="vtabs-content">
+            <input type="hidden" name="address[<?php echo $address_row; ?>][address_id]" value="<?php echo $address['address_id']; ?>" />
+            <table class="form">
+			  <tr>
+                <td colpspan="2">Address <?echo $address_row;?></td>
+              </tr>
+              <tr>
+                <td><span class="required">*</span> First Name</td>
+                <td><input type="text" name="address[<?php echo $address_row; ?>][firstname]" value="<?php echo $address['firstname']; ?>" />
+                  <?php if (isset($error_address_firstname[$address_row])) { ?>
+                  <span class="error"><?php echo $error_address_firstname[$address_row]; ?></span>
+                  <?php } ?></td>
+              </tr>
+              <tr>
+                <td><span class="required">*</span> Last Name</td>
+                <td><input type="text" name="address[<?php echo $address_row; ?>][lastname]" value="<?php echo $address['lastname']; ?>" />
+                  <?php if (isset($error_address_lastname[$address_row])) { ?>
+                  <span class="error"><?php echo $error_address_lastname[$address_row]; ?></span>
+                  <?php } ?></td>
+              </tr>
+              <tr>
+                <td>Company</td>
+                <td><input type="text" name="address[<?php echo $address_row; ?>][company]" value="<?php echo $address['company']; ?>" /></td>
+              </tr>
+              <tr>
+                <td><span class="required">*</span> Address 1</td>
+                <td><input type="text" name="address[<?php echo $address_row; ?>][address_1]" value="<?php echo $address['address_1']; ?>" />
+                  <?php if (isset($error_address_address_1[$address_row])) { ?>
+                  <span class="error"><?php echo $error_address_address_1[$address_row]; ?></span>
+                  <?php } ?></td>
+              </tr>
+              <tr>
+                <td>Address 2</td>
+                <td><input type="text" name="address[<?php echo $address_row; ?>][address_2]" value="<?php echo $address['address_2']; ?>" /></td>
+              </tr>
+              <tr>
+                <td><span class="required">*</span> City</td>
+                <td><input type="text" name="address[<?php echo $address_row; ?>][city]" value="<?php echo $address['city']; ?>" />
+                  <?php if (isset($error_address_city[$address_row])) { ?>
+                  <span class="error"><?php echo $error_address_city[$address_row]; ?></span>
+                  <?php } ?></td>
+              </tr>
+              <tr>
+                <td><span class="required">*</span> Post Code</td>
+                <td><input type="text" name="address[<?php echo $address_row; ?>][postcode]" value="<?php echo $address['postcode']; ?>" /></td>
+              </tr>
+              <tr>
+                <td><span class="required">*</span> Country</td>
+                <td><select name="address[<?php echo $address_row; ?>][country_id]" id="address[<?php echo $address_row; ?>][country_id]" onchange="$('select[name=\'address[<?php echo $address_row; ?>][zone_id]\']').load('<?php echo HTTP_SERVER;?>ajax/zone/country_id/' + this.value + '/zone_id/<?php echo $address['zone_id']; ?>');">
+                    <option value=""><?php echo $text_select; ?></option>
+                    <?php foreach ($this->countries as $country) { ?>
+                    <?php if ($country['countries_id'] == $address['country_id']) { ?>
+                    <option value="<?php echo $country['countries_id']; ?>" selected="selected"><?php echo $country['countries_name']; ?></option>
+                    <?php } else { ?>
+                    <option value="<?php echo $country['countries_id']; ?>"><?php echo $country['countries_name']; ?></option>
+                    <?php } ?>
+                    <?php } ?>
+                  </select>
+                  <?php if (isset($error_address_country[$address_row])) { ?>
+                  <span class="error"><?php echo $error_address_country[$address_row]; ?></span>
+                  <?php } ?></td>
+              </tr>
+              <tr>
+                <td><span class="required">*</span> Region/State</td>
+                <td><select name="address[<?php echo $address_row; ?>][zone_id]">
+                  </select>
+                  <?php if (isset($error_address_zone[$address_row])) { ?>
+                  <span class="error"><?php echo $error_address_zone[$address_row]; ?></span>
+                  <?php } ?></td>
+              </tr>
+			  <tr>
+                <td>Default</td>
+                <td>
+                <?php if ((isset($address['default']) && $address['default']) || count($addresses) == 1) { ?>
+                <input type="radio" name="address[<?php echo $address_row; ?>][default]" onclick="fnchecked(this.name);" value="<?php echo $address_row; ?>" checked="checked" class="checked" /></td>
+                <?php } else { ?>
+                <input type="radio" class="checked" name="address[<?php echo $address_row; ?>][default]" onclick="fnchecked(this.name);" value="<?php echo $address_row; ?>" />
+				</td>
+                <?php } ?>
+              </tr>
+            </table>
+            <script type="text/javascript"><!--
+		    $('select[name=\'address[<?php echo $address_row; ?>][zone_id]\']').load('<?php echo HTTP_SERVER;?>ajax/zone/country_id/<?php echo $address['country_id']; ?>/zone_id/<?php echo $address['zone_id']; ?>');
+		    //--></script>
+          </div>
+          <?php $address_row++; ?></div>
+          <?php } ?>
+        </div></div>
+
+ <?php 
+	  if($_REQUEST['type']!='Add')
+	  {?>
+					   <div class="TabbedPanelsContent">
+					   <div class="mode-box">
+<h3><span>Add Transactions</span></h3>
+
+			   		   <form name="frmTransaction" id="frmTransaction" action="customers">
+					   <?echo $act->field(array('lable'=>'Description','input_title'=>'r_customer_transaction[description]','desc'=>'enter description','input_type'=>'input_text','val'=>$this->data[0]['description'],"req"=>'0'));
+
+						echo $act->field(array('lable'=>'Amount','input_title'=>'r_customer_transaction[amount]','desc'=>'enter  amount','input_type'=>'input_text','val'=>$this->data[0]['amount'],"req"=>'0'));
+						?>
+
+						<input type="submit" name="add_transaction" id="add_transaction" value="Add Transaction" class="button">
+						</form>
+<?$fch=$act->db->fetchAssoc('select * from r_customer_transaction where customer_id="'.(int)$_REQUEST['rid'].'" order by date_added desc');
+$total=$act->db->fetchRow('select sum(amount) as amt from r_customer_transaction where customer_id="'.(int)$_REQUEST['rid'].'"');
+if(count($fch)>0)
+{
+	echo '<table class="list"><thead><tr><td class="left">Date Added</td><td class="left">Description</td><td class="right">Amount</td></tr></thead><tbody>';
+	foreach($fch as $v)
+	{
+		echo '<tr><td class="left">'.$v[date_added].'</td><td class="left">'.$v[description].'</td><td class="right">'.$currency->format($v[amount]).'</td></tr>';
+	}
+	echo '<tr><td>&nbsp;</td><td class="right"><b>Balance:</b></td><td class="right">'.$currency->format($total[amt]).'</td></tr></tbody></table>';
+}?></form></div>
+					   </div>
+	<div class="TabbedPanelsContent">
+	<div class="mode-box">
+<h3><span>Add Reward Points</span></h3>
+
+	<form name="frmRewards" id="frmRewards" action="customers?rid=<?=(int)$_REQUEST['rid']?>" method="post">
+	<?echo $act->field(array('lable'=>'Description','input_title'=>'r_customer_reward[description]','desc'=>'enter description','input_type'=>'input_text','val'=>$this->data[0]['description'],"req"=>'0'));
+
+	echo $act->field(array('lable'=>'Amount','input_title'=>'r_customer_reward[amount]','desc'=>'enter  amount','input_type'=>'input_text','val'=>$this->data[0]['amount'],"req"=>'0'));
+	?>
+	<input type="submit" name="add_rewards" id="add_rewards" value="Add Reward Points" class="button">
+	</form>
+	<?$fch=$act->db->fetchAssoc('select * from r_customer_reward where customer_id="'.(int)$_REQUEST['rid'].'" order by date_added desc');
+	$total=$act->db->fetchRow('select sum(points) as amt from r_customer_reward where customer_id="'.(int)$_REQUEST['rid'].'"');
+	if(count($fch)>0)
+	{
+	echo '<table class="list"><thead><tr><td class="left">Date Added</td><td class="left">Description</td><td class="right">Amount</td></tr></thead><tbody>';
+	foreach($fch as $v)
+	{
+	echo '<tr><td class="left">'.$v[date_added].'</td><td class="left">'.$v[description].'</td><td class="right">'.$v[points].'</td></tr>';
+	}
+	echo '<tr><td>&nbsp;</td><td class="right"><b>Balance:</b></td><td class="right">'.$total[amt].'</td></tr></tbody></table>';
+	}?></form>
+</div>
+	</div><?}?>
+                       </div>
+                  </div>
+                     <div class="module-body">
+                  </div>
+
+                </div>
+        		<div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+           <div style="clear:both;"></div>
+
+</div>
+<script type="text/javascript"><!--
+		$('select[name=\'zone\']').load('<? echo HTTP_SERVER;?>ajax/zone/country_id/<?php echo $this->data[0][entry_country_id]; ?>/zone/<?php echo $this->data[0][entry_zone_id]; ?>');
+		//--></script>
+
+		<script type="text/javascript"><!--
+var address_row = <?php echo $address_row; ?>;
+
+function addAddress() {
+	html  = '<div id="tab-address-' + address_row + '" class="vtabs-content" style="display: none;">';
+	html += '  <input type="hidden" name="address[' + address_row + '][address_id]" value="" />';
+	html += '  <table class="form">';
+	html += '    <tr>';
+    html += '	   <td><?php echo $entry_firstname; ?></td>';
+    html += '	   <td><input type="text" name="address[' + address_row + '][firstname]" value="" /></td>';
+    html += '    </tr>';
+    html += '    <tr>';
+    html += '      <td><?php echo $entry_lastname; ?></td>';
+    html += '      <td><input type="text" name="address[' + address_row + '][lastname]" value="" /></td>';
+    html += '    </tr>';
+    html += '    <tr>';
+    html += '      <td><?php echo $entry_company; ?></td>';
+    html += '      <td><input type="text" name="address[' + address_row + '][company]" value="" /></td>';
+    html += '    </tr>';
+    html += '    <tr>';
+    html += '      <td><?php echo $entry_address_1; ?></td>';
+    html += '      <td><input type="text" name="address[' + address_row + '][address_1]" value="" /></td>';
+    html += '    </tr>';
+    html += '    <tr>';
+    html += '      <td><?php echo $entry_address_2; ?></td>';
+    html += '      <td><input type="text" name="address[' + address_row + '][address_2]" value="" /></td>';
+    html += '    </tr>';
+    html += '    <tr>';
+    html += '      <td><?php echo $entry_city; ?></td>';
+    html += '      <td><input type="text" name="address[' + address_row + '][city]" value="" /></td>';
+    html += '    </tr>';
+    html += '    <tr>';
+    html += '      <td><?php echo $entry_postcode; ?></td>';
+    html += '      <td><input type="text" name="address[' + address_row + '][postcode]" value="" /></td>';
+    html += '    </tr>';
+    html += '      <td><?php echo $entry_country; ?></td>';
+	
+    html += '      <td><select name="address[' + address_row + '][country_id]" onchange="$(\'select[name=\\\'address[' + address_row + '][zone_id]\\\']\').load(\'<?php echo HTTP_SERVER;?>ajax/zone/country_id/\' + this.value + \'/zone_id/0\');">';
+    html += '         <option value=""><?php echo $text_select; ?></option>';
+    <?php foreach ($this->countries as $country) { ?>
+    html += '         <option value="<?php echo $country['countries_id']; ?>"><?php echo addslashes($country['countries_name']); ?></option>';
+    <?php } ?>
+    html += '      </select></td>';
+    html += '    </tr>';
+    html += '    <tr>';
+    html += '      <td><?php echo $entry_zone; ?></td>';
+    html += '      <td><select name="address[' + address_row + '][zone_id]"><option value="false">None</option></select></td>';
+    html += '    </tr>';
+	html += '    <tr>';
+    html += '      <td><?php echo $entry_default; ?></td>';
+    html += '      <td><input type="radio" name="address[' + address_row + '][default]" value="1" /></td>';
+    html += '    </tr>';
+    html += '  </table>';
+    html += '</div>';
+
+	$('#tab-general').append(html);
+
+	$('#address-add').before('<a href="#tab-address-' + address_row + '" id="address-' + address_row + '"><?php echo $tab_address; ?> ' + address_row + '&nbsp;<img src="view/image/delete.png" alt="" onclick="$(\'#vtabs a:first\').trigger(\'click\'); $(\'#address-' + address_row + '\').remove(); $(\'#tab-address-' + address_row + '\').remove(); return false;" /></a>');
+
+	$('.vtabs a').tabs();
+
+	$('#address-' + address_row).trigger('click');
+
+	address_row++;
+}
+ 
+
+//-->
+
+
+</script>
+		<?php }?>
+<script type="text/javascript">
+function fnchecked(name){
+ 	$('input[type=radio]').attr('checked', false);
+	$('input[name="'+name+'"]').attr('checked', true);
+	}
+</script> 
+<!-- <script type='text/javascript' src='<?=PATH_TO_ADMIN_JS?>jquery.autocomplete.js'></script>
+<link rel="stylesheet" type="text/css" href="<?=PATH_TO_ADMIN_JS?>jquery.autocomplete.css" /> -->
+<script type="text/javascript">
+
+$().ready(function() {
+	$("#name").autocomplete("<?php echo @constant('ADMIN_URL_CONTROLLER');?>ajaxcnameauto?format=json", {
+		width: 260,
+		matchContains: true,
+		selectFirst: false
+	});
+});
+
+$().ready(function() {
+	$("#emailid").autocomplete("<?php echo @constant('ADMIN_URL_CONTROLLER');?>ajaxcemailauto?format=json", {
+		width: 260,
+		matchContains: true,
+		selectFirst: false
+	});
+});
+
+</script>
+

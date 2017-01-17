@@ -1,0 +1,248 @@
+<?php
+	$act=new Model_Adminaction();
+	$act_ext=new Model_Adminextaction();
+ 	if($_REQUEST['type']==''){?>
+<div class="container_12">
+           <div style="clear:both;"></div>
+            <div class="grid_12">
+  				<?
+					if($_REQUEST['msg']!=""){?>
+				<span class="notification n-success"><?=base64_decode($_REQUEST[msg]);?></span>
+				<?}?>
+
+                <div class="bottom-spacing">
+                    <!-- Button -->
+                    <div class="float-right">
+						<?php //$act->viewAddB(ADMIN_URL_CONTROLLER.$this->actionTitle);?>
+                    </div>
+                    <!-- Table records filtering -->
+
+
+                </div>
+
+
+                <!-- Example table -->
+                <div class="module">
+                	<h2><span><?=$this->actionTitle." [".$this->total_count."]"?> <p style="float:right;padding-right:10px;">Clear Complete [ <a href="javascript:clearSession();">Sessions</a> | <a href="javascript:clearCache();">Cache</a> ]</p> </span></h2>
+
+                    <div class="module-table-body">
+                    	<form name="frmMain" id="frmMain" method="post" action="<?php echo ADMIN_URL_CONTROLLER.$this->actionTitle?>">
+                       <?if($this->total_count>0){?>
+						<table id="myTable" class="tablesorter">
+                   	  <thead>
+                                <tr>
+								  <th align="center" style="width:5%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#</th>
+                                  <th style="width:10%">Store Name</th>
+								  <th style="width:15%">Owner</th>
+								  <th style="width:15%">Email address</th>
+								  <th style="width:15%"><!-- <input type="checkbox" name="checkall" id="checkall" onClick="Checkall()"/> <a href="#">Check All </a>-->Edit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+							<?
+
+
+					$i=1;
+					if($this->page!=1)
+					{
+						$i+=($this->page-1)*$this->per_page;
+					}
+
+							for($j=0;$j<1;$j++)
+							{
+							$class=fmod($i,2)==0?'':'addcolorne';
+ 							?>
+                              <tr>
+                                <td align="center" class="<?=$class?>"><?=$i?></td>
+                                 <td class="<?=$class?>"><?php echo STORE_NAME;?></td>
+								 <td class="<?=$class?>"><?php echo STORE_OWNER;?></td>
+								 <td class="<?=$class?>"><?php echo STORE_OWNER_EMAIL_ADDRESS;?></td>
+
+                                <td class="<?=$class?>">
+
+								<!-- <input type="checkbox" name="rid[]" id="rid" value="<?php echo $result[$this->r_id];?>"  /> -->
+								<?php
+									$act->viewEditB(ADMIN_URL_CONTROLLER.$this->actionTitle,'1',$_REQUEST['page']);
+									//$act->viewDelB($this->actionTitle,$result[$this->r_id],$this->r_table,$this->r_id,$_REQUEST['page']);
+								?>
+
+                                </td>
+                              </tr>
+                              <?$i=$i+1;}?>
+
+                            </tbody>
+                        </table>
+<?}else{
+							echo "<table id='myTable' class='tablesorter' border='2'><tr><td align='center'>No records to display</td></tr></table>";
+							}?>
+						<input type="hidden" name="page" id="page" value="<?php echo $this->page;?>">
+                        <div class="table-apply">
+                             <!-- <div>
+                            <span>Apply action to selected:</span>
+							<?$arrmact=array('Del'=>'Delete');
+							  $act->viewMultipleAction($arrmact);?>
+
+                            </div> -->
+                            </form>
+                        </div>
+                        <div style="clear: both"></div>
+                     </div>
+                </div>
+
+                <?=$this->view_pagination;?>
+			</div>
+             <div class="grid_6">
+		  </div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+        </div>
+		<?php }elseif($_REQUEST['type']=='Add' || 'Edit'){
+ 	/*foreach ($this->data as $result)
+	{} print_r($result);*/?>
+		<div class="container_12">
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+            <div class="grid_12">
+                <div class="module">
+                     <h2><span><?php echo $_REQUEST['type']." ".$this->actionTitle;?></span></h2>
+                     <div id="TabbedPanels1" class="TabbedPanels">
+                       <ul class="TabbedPanelsTabGroup">
+                         <li class="TabbedPanelsTab" tabindex="0">Details</li>
+						  <li class="TabbedPanelsTab" tabindex="0">Stock</li>
+						  <li class="TabbedPanelsTab" tabindex="0">Options</li>
+						  <li class="TabbedPanelsTab" tabindex="0">Mail</li>
+						  <!-- <li class="TabbedPanelsTab" tabindex="0">Status</li> -->
+						  <li class="TabbedPanelsTab" tabindex="0">Image</li>
+						  <li class="TabbedPanelsTab" tabindex="0">Server</li>
+						  <!-- <li class="TabbedPanelsTab" tabindex="0">Product Listing</li> -->
+						  <li class="TabbedPanelsTab" tabindex="0">Settings</li>
+						   <!-- <li class="TabbedPanelsTab" tabindex="0">Misceleaneous</li> -->
+                         <li class="iconsec">
+						 <?php echo $act->editCancelB($this->actionTitle,$_REQUEST['page']);?></li>
+
+                         <li class="iconsec">
+						 <?php echo $act->editSaveB(ADMIN_URL_CONTROLLER.$this->actionTitle,(int)$_REQUEST['rid'],$_REQUEST['type'],$_REQUEST['page']);?></li>
+                       </ul>
+                       <div class="TabbedPanelsContentGroup">
+                         <div class="TabbedPanelsContent"> <form name="frmEdit" class="categortee" method="post" enctype="multipart/form-data">
+                             <?
+			     $this->msg=$_REQUEST['msg']!=""?$_REQUEST['msg']:$this->msg;
+			     if($this->msg!=""){ echo '<div><span class="notification n-success">'.base64_decode($this->msg).'</span></div> ';}?>
+							 <p><b>All fields indicated with * are mandatory</b></p>
+							 						 <div class="mode-box">
+						<h3><span>Store Details</span></h3>
+							<?
+							$act_ext->mystock_fields('\'1\' and status =\'1\' order by sort_order asc'); //details
+							?>
+							</div>
+						 </div>
+						 <div class="TabbedPanelsContent categortee">
+
+						   <?if($this->msg!=""){ echo '<div><span class="notification n-success">'.base64_decode($this->msg).'</span></div> ';}?>
+						 <div class="mode-box">
+						<h3><span>Stock Details</span></h3>
+						 <?$act_ext->mystock_fields('9'); //stock?>
+						 </div>
+						 </div>
+						 <div class="TabbedPanelsContent categortee">
+						   <?if($this->msg!=""){ echo '<div><span class="notification n-success">'.base64_decode($this->msg).'</span></div> ';}?>
+						   						 <div class="mode-box">
+						<h3><span>Option Settings</span></h3>
+						   <?$act_ext->mystock_fields('18'); //options?></div></div>
+									
+						 <div class="TabbedPanelsContent  categortee">  <?if($this->msg!=""){ echo '<div><span class="notification n-success">'.base64_decode($this->msg).'</span></div> ';}?>
+						 			 <div class="mode-box">
+						<h3><span>Mail Settings</span></h3>
+						 <?$act_ext->mystock_fields('\'12\' order by sort_order asc'); //mail?>
+						 </div></div>
+						 <!-- <div class="TabbedPanelsContent">status
+						 <?$act_ext->mystock_fields('\'4\' order by sort_order asc'); //status?>
+						 </div> -->
+						 <div class="TabbedPanelsContent  categortee">  <?if($this->msg!=""){ echo '<div><span class="notification n-success">'.base64_decode($this->msg).'</span></div> ';}?>
+						 						 <div class="mode-box">
+						<h3><span>Image Details</span></h3>
+						 <?$act_ext->mystock_fields('\'4\' order by sort_order asc'); //image?>
+						 </div>
+						 </div>
+						 <div class="TabbedPanelsContent  categortee">  <?if($this->msg!=""){ echo '<div><span class="notification n-success">'.base64_decode($this->msg).'</span></div> ';}?>
+						 						 <div class="mode-box">
+						<h3><span>Server Details</span></h3>
+						 <?$act_ext->mystock_fields('\'16\' and status =\'1\' order by sort_order asc'); //server?></div></div>
+						 <!-- <div class="TabbedPanelsContent">  <?if($this->msg!=""){ echo '<div><span class="notification n-success">'.$this->msg.'</span></div> ';}?>
+						  <?$act_ext->mystock_fields('\'8\' order by sort_order asc'); //product list?>
+						 </div> commented for time being on apr 19 2012-->
+						 <div class="TabbedPanelsContent categortee">  <?if($this->msg!=""){ echo '<div><span class="notification n-success">'.base64_decode($this->msg).'</span></div> ';}?>
+						 						 <div class="mode-box">
+						<h3><span>Settings</span></h3>
+						  <?$act_ext->mystock_fields('\'17\' order by sort_order asc'); //settings?>
+						 </div></div>
+
+						 <!-- <div class="TabbedPanelsContent">settings
+
+						 </div> -->
+ 						 </form>
+                       </div>
+                  </div>
+                     <div class="module-body">
+                  </div>
+
+                </div>
+        		<div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+           <div style="clear:both;"></div>
+</div>
+		<?php }?>
+
+<script type="text/javascript">
+//var baseUrl="<?php echo $this->baseUrl(); ?>";
+//alert($('#r_affiliate["country_id"]').val());
+function ajax_call(val){
+$.ajax({
+url: '<?php echo @constant("ADMIN_URL_CONTROLLER");?>ajaxzone?format=json&q='+val,
+dataType:'json',
+success: function(data){
+//alert(data.test)
+$('#zone_id').html(data.test);
+}
+});
+}
+
+function clearSession()
+{
+		$.ajax({
+		url: 'clear-session',
+		dataType: 'json',
+		complete: function() {
+			$('.bottom-spacing').before().remove();
+		},
+		success: function(json) {
+ 			if (json['success']) {
+				$('.bottom-spacing').before('<span class="notification n-success">' + json['success'] + '</span>');
+			}
+		}
+		});
+
+}
+
+function clearCache()
+{
+		$.ajax({
+		url: 'clear-cache',
+		dataType: 'json',
+		complete: function() {
+			$('.bottom-spacing').before().remove();
+		},
+		success: function(json) {
+
+			if (json['success']) {
+
+				$('.bottom-spacing').before('<span class="notification n-success">' + json['success'] + '</span>');
+			}
+		}
+		});
+
+}
+</script>

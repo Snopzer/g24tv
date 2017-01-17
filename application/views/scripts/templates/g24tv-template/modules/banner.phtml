@@ -1,0 +1,45 @@
+<div class="col-lg-6 col-md-6 col-sm6">
+	<div class="content_top_right">
+		<ul class="featured_nav wow fadeInDown">
+			<?foreach($this->info[data][side_banners] as $k1){
+				/*echo '<pre>';
+					print_r($k1);
+				echo '</pre>';*/
+				/*if($k1['link']){ ?>
+				<li>
+					<img src="<?php echo $this->url_to_site."timthumb.php?src=".$k1['image']; ?>" alt="<?echo $k1['title'];?>" style="width:<?php echo $k1['width']."px"?>;height:<?php echo $k1['height']."px"?>">
+					<div class="title_caption">
+						<a href="<?php echo  $k1['link'];?>">
+							<?echo $k1['title'];?>
+						</a>
+					</div>
+				</li>
+				<? }else{	?>
+				<li>
+					<img src="<?php echo $this->url_to_site."timthumb.php?src=".$k1['image']; ?>" alt="<?echo $k1['title'];?>" style="width:<?php echo $k1['width']."px"?>;height:<?php echo $k1['height']."px"?>">
+					<div class="title_caption">
+						<?echo $k1['title'];?>
+					</div>
+				</li>
+				<?}*/
+				
+				// removed the Content div above the banner
+				if($k1['link']){ ?>
+				<li>
+					<a href="<?php echo  $k1['link'];?>"><img src="<?php echo $this->url_to_site."timthumb.php?src=".$k1['image']; ?>" alt="<?echo $k1['title'];?>" style="width:<?php echo $k1['width']."px"?>;height:<?php echo $k1['height']."px"?>">
+						<div class="title_caption">
+						<?echo $k1['title'];?>
+					</div>
+						</a>
+				</li>
+				<? }else{	?>
+				<li>
+					<img src="<?php echo $this->url_to_site."timthumb.php?src=".$k1['image']; ?>" alt="<?echo $k1['title'];?>" style="width:<?php echo $k1['width']."px"?>;height:<?php echo $k1['height']."px"?>">
+				</li>
+				<?}
+				
+			}?>
+			
+		</ul>
+	</div>
+</div>	

@@ -1,0 +1,219 @@
+
+<div class="main-column"><!--main-max-banner start-->
+<div id="container"><!--container start-->
+
+<div id="notification"><!-- <a href=" " id="compare_total"> </a> --></div>
+
+<? if(count($this->pos[left])>0){?>
+<div id="column-left"><!--column-left start-->
+<?php echo $this->action('left','modules',null,array('mod' =>$this->pos[left]));?>
+<!--column-left End--></div>
+<?}?>
+
+<?if(count($this->pos[right])>0){?>
+<div id="column-right"><!--column-right start-->
+<?php echo $this->action('right','modules',null,array('mod' =>$this->pos[right]));?>
+<!--column-right End-->
+<?}?>
+
+                	<div id="content"><!--content start-->
+					
+					<?if(count($this->pos[top])>0){?>
+<div id="main-max-banner"><!--start main-max-banner-->
+<?php echo $this->action('top','modules',null,array('mod' =>$this->pos[top]));?>
+<!--End main-max-banner--></div>
+<?}?>
+					
+<div class="breadcrumb"><!--readcrumb start-->
+                    	<p><?php    foreach ($this->breadcrumbs as $breadcrumb) { ?>
+<?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a> <?php } ?>                  </p> <!--readcrumb End --></div>
+
+
+            
+<?if($this->products){?>
+                                    <div class="products"> <!--products Start -->
+<div class="product-filter">
+<div class="display">
+                            		<b><span><span>View  : </span></b>
+                                    <span class="list"><a href="<?php echo $_SERVER['REQUEST_URI'][strlen($_SERVER['REQUEST_URI'])-1]=="/"?$_SERVER['REQUEST_URI']."view_prod/list/":$_SERVER['REQUEST_URI']."/view_prod/list";?>" class="<?php echo $_SESSION['PRODUCT_LIST_VIEW']=="grid"?"gridActive":"list";?>">List</a></span>
+                                    
+                                   <span class="grid"><a href="<?php echo $_SERVER['REQUEST_URI'][strlen($_SERVER['REQUEST_URI'])-1]=="/"?$_SERVER['REQUEST_URI']."view_prod/grid/":$_SERVER['REQUEST_URI']."/view_prod/grid";?>" class="<?php echo $_SESSION['PRODUCT_LIST_VIEW']=="list"?"gridActive":"list";?>">Grid</a></span>
+                                <div id="clear"></div>
+								
+                          <!--view --></div>
+                             
+							 <div class="results">
+							 <?php echo $this->pagination; ?>
+                    </div>
+							 
+							    <div class="limit">   <!--limit start-->
+    <span><?php echo $this->trans->_('text_limit_product_special');?></span>
+      <select class="show" onchange="location = this.value;">
+        <?php foreach ($this->limits as $limits) { ?>
+        <?php if ($limits['value'] == $this->limit) { ?>
+        <option value="<?php echo $limits['href']; ?>" selected="selected"><?php echo $limits['text']; ?></option>
+        <?php } else { ?>
+        <option value="<?php echo $limits['href']; ?>"><?php echo $limits['text']; ?></option>
+        <?php } ?>
+        <?php } ?>
+      </select></div>
+	  
+	  <div class="sort">
+                       
+				  <?
+				  //echo "limit".Zend_Controller_Front::getInstance()->getRequest()->getParam('limit');
+				 /* echo "<pre>";
+    print_r($this->limits);
+    echo "</pre>";*/?>
+ <span><?php echo $this->trans->_('text_sort_product_special');?></span>
+
+      <select class="show replaced" onchange="location = this.value;">
+        <?php
+
+	foreach ($this->sorts as $sorts) { ?>
+        <?php if ($sorts['value'] == $this->sort . '-' . $this->order) { ?>
+        <option value="<?php echo $sorts['href']; ?>" selected="selected"><?php echo $sorts['text']; ?></option>
+        <?php } else { ?>
+        <option value="<?php echo $sorts['href']; ?>"><?php echo $sorts['text']; ?></option>
+        <?php } ?>
+        <?php } ?>
+      </select>
+</div>
+							 
+						
+
+                        <!--paginationBar --></div>
+						
+						
+						<div class="special-product-div">
+
+                           <div class="product-<?echo $_SESSION['PRODUCT_LIST_VIEW'];?>">
+                          	<?php
+				$i=0;
+				foreach ($this->products as $product) {
+				$div=fmod($i,2)=='1'?'1':'';
+				$i++;
+				?>
+			<div>
+				<?php if ($product['thumb']) { ?>
+                                	<div class="image"><!--image Start -->
+          	                     	    <a href="<?php echo $product['href']; ?>"><img src="<?php echo HTTP_SERVER."timthumb.php?src=".$product['thumb']; ?>" alt="<?php echo $product['name']; ?>" title="<?php echo $product['name']; ?>" /></a>
+                                    <!--img --></div>
+				    <?}?>
+                                 <div class="left"><!--left start -->
+                                    	<div class="name"><a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a></div>
+                                        <div class="description"> <p><?php echo $product['description']; ?></p></div>
+										
+                                  <!--left End --></div>
+								  
+				          <?php if ($product['price']) { ?>
+	<div class="right">
+						  
+      <div class="price">
+        <?php if (!$product['special']) { ?>
+       <p class="price"> <?php echo "<strong>".$product['price']."</strong>"; ?></p>
+        <?php } else { ?>
+        <p class="price-old"><?php echo $product['price']; ?></p>
+		<p class="price-new"><?php echo "<strong>".$product['special']."</strong>" ; ?></p>
+        <?php } ?>
+        <?php if ($product['tax']) { ?>
+        <p class="price-tax"><?php echo $this->trans->_(text_tax_product_special); ?> <?php echo $product['tax']; ?></p>
+        <?php } ?>
+      </div>
+      <?php } ?>
+
+           <?php if ($product['rating']) { ?>
+      <div class="rating"><img src="<?php echo URL_TO_TEMPLATES.SITE_DEFAULT_TEMPLATE?>/includes/images/rating-<?php echo $product['rating']; ?>.jpg" alt="<?php echo $product['reviews']; ?>" /></div>
+      <?php } ?>
+      <div id="cart"> <!--cart start -->
+                                        	<a href="javascript:addToCart('<?php echo $product['product_id'];?>');" class="button"><span>Add to cart </span></a></div>
+                                            
+											 <div class="compare"> <!--compare srart --> 
+											<a href="javascript:addToWishList('<?php echo $product['product_id'];?>');" >Add to Wish List</a>
+                                           <a href="javascript:addToCompare('<?php echo $product['product_id'];?>');">Add to Compare</a> <!--compare End --></div>
+                            	  <!--dive--></div>
+                    	
+						</div>    
+			<?}?>
+                           <!--productContainer --></div>
+</div>  
+                     
+					 <div class="product-filter">
+<div class="display">
+                            		<b><span><span>View  : </span></b>
+                                    <span class="list"><a href="<?php echo $_SERVER['REQUEST_URI'][strlen($_SERVER['REQUEST_URI'])-1]=="/"?$_SERVER['REQUEST_URI']."view_prod/list/":$_SERVER['REQUEST_URI']."/view_prod/list";?>" class="<?php echo $_SESSION['PRODUCT_LIST_VIEW']=="grid"?"gridActive":"list";?>">List</a></span>
+                                    
+                                   <span class="grid"><a href="<?php echo $_SERVER['REQUEST_URI'][strlen($_SERVER['REQUEST_URI'])-1]=="/"?$_SERVER['REQUEST_URI']."view_prod/grid/":$_SERVER['REQUEST_URI']."/view_prod/grid";?>" class="<?php echo $_SESSION['PRODUCT_LIST_VIEW']=="list"?"gridActive":"list";?>">Grid</a></span>
+                                <div id="clear"></div>
+								
+                          <!--view --></div>
+                             
+							 	<div class="results">
+							 <?php echo $this->pagination; ?>
+                    </div>
+							 
+							    <div class="limit">   <!--limit start-->
+    <span><?php echo $this->trans->_('text_limit_product_special');?></span>
+      <select class="show" onchange="location = this.value;">
+        <?php foreach ($this->limits as $limits) { ?>
+        <?php if ($limits['value'] == $this->limit) { ?>
+        <option value="<?php echo $limits['href']; ?>" selected="selected"><?php echo $limits['text']; ?></option>
+        <?php } else { ?>
+        <option value="<?php echo $limits['href']; ?>"><?php echo $limits['text']; ?></option>
+        <?php } ?>
+        <?php } ?>
+      </select></div>
+	  
+	  <div class="sort">
+                       
+				  <?
+				  //echo "limit".Zend_Controller_Front::getInstance()->getRequest()->getParam('limit');
+				 /* echo "<pre>";
+    print_r($this->limits);
+    echo "</pre>";*/?>
+ <span><?php echo $this->trans->_('text_sort_product_special');?></span>
+
+      <select class="show replaced" onchange="location = this.value;">
+        <?php
+
+	foreach ($this->sorts as $sorts) { ?>
+        <?php if ($sorts['value'] == $this->sort . '-' . $this->order) { ?>
+        <option value="<?php echo $sorts['href']; ?>" selected="selected"><?php echo $sorts['text']; ?></option>
+        <?php } else { ?>
+        <option value="<?php echo $sorts['href']; ?>"><?php echo $sorts['text']; ?></option>
+        <?php } ?>
+        <?php } ?>
+      </select>
+</div>
+							 
+					
+
+                        <!--paginationBar --></div>
+					 
+					 
+					 
+					 
+	<?}?>
+	 <?php if (!$this->products) { ?>
+
+					<div id="dashviewDiv">
+						 <div id="dashBoardCotnent-1">
+						 <div id="dashviewDiv-1">
+						 <div class="content">
+		 <p><?php echo $this->trans->_('text_empty_product_special'); ?></p>		 </div>
+		 </div>
+		 </div>
+		  <!-- <div class="buttons">
+    <div class="right"><a href="<?php echo $this->continue; ?>" class="button"><span><?php echo $this->button_continue; ?></span></a></div>
+  </div> -->
+		    </div>
+   <?php } ?>
+                    <!--innerpage_rightContent --></div>
+
+<?if(count($this->pos[bottom])>0){?>
+<div class="container-top">
+<?php echo $this->action('bottom','modules',null,array('mod' =>$this->pos[bottom]));?></div>
+<?}?>				</div>
+            <!--innerContent --></div>
+    	<!--contentArea -->
+

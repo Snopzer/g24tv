@@ -1,0 +1,131 @@
+<div class="main-column"><!--main-max-banner start-->
+<div id="container"><!--container start-->
+
+<? if(count($this->pos[left])>0){?>
+<div id="column-left"><!--column-left start-->
+<?php echo $this->action('left','modules',null,array('mod' =>$this->pos[left]));?>
+<!--column-left End--></div>
+<?}?>
+
+<?if(count($this->pos[right])>0){?>
+<div id="column-right"><!--column-right start-->
+<?php echo $this->action('right','modules',null,array('mod' =>$this->pos[right]));?>
+<!--column-right End--></div>
+<?}?>
+		
+            <div id="content"><!--content start-->
+<?if(count($this->pos[top])>0){?>
+<div id="main-max-banner"><!--start main-max-banner-->
+<?php echo $this->action('top','modules',null,array('mod' =>$this->pos[top]));?>
+<!--End main-max-banner--></div>
+<?}?>
+
+          <div class="breadcrumb"><!--readcrumb start-->
+	<p>
+	<?php foreach ($this->data[breadcrumbs] as $breadcrumb) { ?>
+    <?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
+    <?php } ?></p>
+                 <!--readcrumb End--></div>
+				 
+                  <div class="page-title">
+			 <h1>  <?php echo $this->trans->_('heading_title_affiliate_payment'); ?></h1></div>
+					
+              	<div class="box">    
+  <form action="<?php echo $this->data[action]; ?>" method="post" enctype="multipart/form-data" id="payment">
+   
+   
+   <div class="box-heading"><?php echo $this->trans->_('text_your_payment_affiliate_payment'); ?></div>
+     <div class="box-content">  
+      <table class="form">
+        <tbody>
+          <tr>
+            <td><?php echo $this->trans->_('entry_tax_affiliate_payment'); ?></td>
+            <td><input type="text" name="tax" value="<?php echo $this->data[tax]; ?>" /></td>
+          </tr>
+          <tr>
+            <td><?php echo $this->trans->_('entry_payment_affiliate_payment'); ?></td>
+            <td><?php if ($this->data[payment] == 'cheque') { ?>
+              <input type="radio" class="checkbox" name="payment" value="cheque" id="cheque" checked="checked" />
+              <?php } else { ?>
+              <input type="radio" class="checkbox" name="payment" value="cheque" id="cheque" />
+              <?php } ?>
+              <label for="cheque"><?php echo $this->trans->_('text_cheque_affiliate_payment'); ?></label>
+              <?php if ($this->data[payment] == 'paypal') { ?>
+              <input type="radio" class="checkbox" name="payment" value="paypal" id="paypal" checked="checked" />
+              <?php } else { ?>
+              <input type="radio" class="checkbox" name="payment" value="paypal" id="paypal" />
+              <?php } ?>
+              <label for="paypal"><?php echo $this->trans->_('text_paypal_affiliate_payment'); ?></label>
+              <?php if ($this->data[payment] == 'bank') { ?>
+              <input type="radio" class="checkbox" name="payment" value="bank" id="bank" checked="checked" />
+              <?php } else { ?>
+              <input type="radio" class="checkbox" name="payment" value="bank" id="bank" />
+              <?php } ?>
+              <label for="bank"><?php echo $this->trans->_('text_bank_affiliate_payment'); ?></label></td>
+          </tr>
+        </tbody>
+        <tbody id="payment-cheque" class="payment">
+          <tr>
+            <td><?php echo $this->trans->_('entry_cheque_affiliate_payment'); ?></td>
+            <td><input type="text" name="cheque" value="<?php echo $this->data[cheque]; ?>" /></td>
+          </tr>
+        </tbody>
+        <tbody class="payment" id="payment-paypal">
+          <tr>
+            <td><?php echo $this->trans->_('entry_paypal_affiliate_payment'); ?></td>
+            <td><input type="text" name="paypal" value="<?php echo $this->data[paypal]; ?>" /></td>
+          </tr>
+        </tbody>
+        <tbody id="payment-bank" class="payment">
+          <tr>
+            <td><?php echo $this->trans->_('entry_bank_name_affiliate_payment'); ?></td>
+            <td><input type="text" name="bank_name" value="<?php echo $this->data[bank_name]; ?>" /></td>
+          </tr>
+          <tr>
+            <td><?php echo $this->trans->_('entry_bank_branch_number_affiliate_payment'); ?></td>
+            <td><input type="text" name="bank_branch_number" value="<?php echo $this->data[bank_branch_number]; ?>" /></td>
+          </tr>
+          <tr>
+            <td><?php echo $this->trans->_('entry_bank_swift_code_affiliate_payment'); ?></td>
+            <td><input type="text" name="bank_swift_code" value="<?php echo $this->data[bank_swift_code]; ?>" /></td>
+          </tr>
+          <tr>
+            <td><?php echo $this->trans->_('entry_bank_account_name_affiliate_payment'); ?></td>
+            <td><input type="text" name="bank_account_name" value="<?php echo $this->data[bank_account_name]; ?>" /></td>
+          </tr>
+          <tr>
+            <td><?php echo $this->trans->_('entry_bank_account_number_affiliate_payment'); ?></td>
+            <td><input type="text" name="bank_account_number" value="<?php echo $this->data[bank_account_number]; ?>" /></td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+
+
+						</div>
+						    <div class="buttons">
+      <div class="left"><a href="<?php echo $this->data[back]; ?>" class="button_btn"><span><?php echo $this->trans->_('button_back'); ?></span></a></div>
+      <div class="right"><a onclick="$('#payment').submit();" class="button_btn"><span><?php echo $this->trans->_('button_submit_affiliate_payment'); ?></span></a></div>
+    </div>
+  </form>
+                        <!--box end --></div>
+					
+								 
+	<?if(count($this->pos[bottom])>0){?>
+<div class="content-bottom"><!--content-bottom srtart-->
+<?php echo $this->action('bottom','modules',null,array('mod' =>$this->pos[bottom]));?>
+</div>
+<?}?>
+                <!--rightContainer --></div>
+            <!--innerContent --></div>
+
+	    <script type="text/javascript"><!--
+$('input[name=\'payment\']').bind('change', function() {
+	$('.payment').hide();
+
+	$('#payment-' + this.value).show();
+});
+
+$('input[name=\'payment\']:checked').trigger('change');
+//--></script>

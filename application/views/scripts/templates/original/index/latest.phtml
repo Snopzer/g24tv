@@ -1,0 +1,27 @@
+  <?
+  /*echo "<pre>";
+  print_r($this->data_tab['products']);
+  echo "</pre>";*/
+ foreach($this->data_tab['products'] as $product){?>
+
+		       <div class="proj">
+     <div class="image"><a href="<?php echo $product['href']; ?>" title="<?php echo $product['name']; ?>"><img src="<?php echo $this->url_to_site."timthumb.php?src=".$product['thumb']; ?>" alt="<?php echo $product['name']; ?>" ></a></div>
+     <div class="name"><a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a></div>
+     		<?php if ($product['price']) { ?>
+			<div id="price">
+			<?php if (!$product['special']) { ?>
+			<p class="price"> <?php echo "<strong>".$product['price']."</strong>"; ?></p>
+			<?php } else { ?>
+			<p class="price-old"><?php echo $product['price']; ?></p>
+			<p class="price-new"><?php echo "<strong>".$product['special']."</strong>" ; ?></p>
+			<?php } ?>
+			<?php if ($product['tax']) { ?>
+			<p class="price-tax"><?php echo $this->trans->_(text_tax); ?> <?php echo $product['tax']; ?></p>
+			<?php } ?>
+			</div>
+			<?php } ?>
+      <div class="cart"><a  href="<?php echo $product['href']; ?>" class="button_btn-more">More Details </a></div>
+      </div>
+
+
+	    <?}?>

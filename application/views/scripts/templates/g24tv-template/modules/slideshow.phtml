@@ -1,0 +1,14 @@
+<!-- start content top latest slider -->
+<div class="col-lg-6 col-md-6 col-sm6">             
+	<div class="latest_slider">
+		<!-- Set up your HTML -->
+		<div class="slick_slider">
+			<?foreach($this->info[data][banners] as $k){?>
+				<div class="single_iteam">
+					<img src="<?php echo $this->url_to_site."timthumb.php?src=".$k['image']; ?>" alt="<?echo $k[title];?>" height="<?echo $this->info[data][height];?>" width="<?echo $this->info[data][width];?>">
+					<h2><a class="slider_tittle" href="<?echo $k['link'];?>"><?echo $k[title];?></a></h2>
+				</div>
+			<?}?> 
+		</div>
+	</div>
+</div> <!-- End content top latest slider -->

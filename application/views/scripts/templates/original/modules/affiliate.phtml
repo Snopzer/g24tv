@@ -1,0 +1,30 @@
+<div class="box">
+   <div class="affiliate-div">
+   <div class="modules-box-div">
+<?if(@constant('affiliate_module_title')!=""){?><div class="box-heading"><p><span><?php echo @constant('affiliate_module_title'); ?></span></p></div><?}?>
+			<div class="box-content">
+			<div class="affiliate-account">
+<div class="box-account">
+<ul>
+				<?php
+				if (!$this->info[data][logged]) { ?>
+				<li><a href="<?php echo $this->info[data][login]; ?>"><?php echo $this->trans->_($this->info[data][text_login]); ?></a> </li><li> <a href="<?php echo $this->info[data][register]; ?>"><?php echo $this->trans->_($this->info[data][text_register]); ?></a></li>
+				<li><a href="<?php echo $this->info[data][forgotten]; ?>"><?php echo $this->trans->_($this->info[data][text_forgotten]); ?></a></li>
+				<?php } ?>
+				<li><a href="<?php echo $this->info[data][account]; ?>"><?php echo $this->trans->_($this->info[data][text_account]); ?></a></li>
+				<?php if ($this->info[data][logged]) { ?>
+				<li><a href="<?php echo $this->info[data][edit]; ?>"><?php echo $this->trans->_($this->info[data][text_edit]); ?></a></li>
+				<li><a href="<?php echo $this->info[data][password]; ?>"><?php echo $this->trans->_($this->info[data][text_password]); ?></a></li>
+				<?php } ?>
+				<li><a href="<?php echo $this->info[data][payment]; ?>"><?php echo $this->trans->_($this->info[data][text_payment]); ?></a></li>
+				<li><a href="<?php echo $this->info[data][tracking]; ?>"><?php echo $this->trans->_($this->info[data][text_tracking]); ?></a></li>
+				<li><a href="<?php echo $this->info[data][transaction]; ?>"><?php echo $this->trans->_($this->info[data][text_transaction]); ?></a></li>
+
+				<?php if ($this->info[data][logged]) { ?>
+				<li><a href="<?php echo $this->info[data][logout]; ?>"><?php echo $this->trans->_($this->info[data][text_logout]); ?></a></li>
+				<?php } ?>
+			</ul>
+			</div></div></div>
+		</div>
+	</div>
+	</div>

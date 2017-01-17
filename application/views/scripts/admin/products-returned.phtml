@@ -1,0 +1,348 @@
+<?php
+
+	$act=new Model_Adminaction();
+	$act_ext=new Model_Adminextaction();
+ 	if($_REQUEST['type']==''){?>
+<div class="container_12">
+           <div style="clear:both;" ></div>
+            <div class="grid_12" >
+
+
+				<?if($_REQUEST['msg']!=""){?>
+				<span class="notification n-success"><?=$_REQUEST['msg']?></span>
+				<?}?>
+
+                <div class="bottom-spacing">
+                    <!-- Button -->
+                    <div class="float-right"><?=$this->view_pagination;?>
+					
+                    </div>
+					<form  name="frmfilter" id="frmfilter" method="post" action="">
+			
+					
+					<span><input type="text" name="order_id" id="order_id" onfocus="if(this.value=='Order Id') this.value=''"  value="<?php echo $_REQUEST['order_id']!=""?$_REQUEST['order_id']:'Order Id';?>"> </span> <span><input type="text" name="customer" id="customer" onfocus="if(this.value=='Customer') this.value=''"  value="<?php echo $_REQUEST['customer']!=""?$_REQUEST['customer']:'Customer';?>"> </span> <span><select name="status" id="status"><option value="">Select Status</option><?=$act_ext->getReturnStatusDropdown($_REQUEST['status']);?>></select></span><span> <input type="text" name="date_added" id="date_added" onfocus="if(this.value=='Date Purchased') this.value=''"  value="<?php echo $_REQUEST['date_added']!=""?$_REQUEST['date_added']:'Date Purchased';?>" size="10" ></span> <span>
+					<input type="text" name="date_modified" id="date_modified" onfocus="if(this.value=='Date Modified') this.value=''"  value="<?php echo $_REQUEST['date_modified']!=""?$_REQUEST['date_modified']:'Date Modified';?>" size="10"></span> <span> <input type="submit" name="filter" id="filter" value="filter">
+					
+
+					</form>
+                </div>
+
+
+                <!-- Example table -->
+                <div class="module">
+                	<h2><span><?=$this->actionTitle." [".$this->total_count."]"?></span>  <div class="add-btn-div"><?php //$act->viewAddB(ADMIN_URL_CONTROLLER.$this->actionTitle);?></div> </h2>
+
+                    <div class="module-table-body">
+                    	<form name="frmMain" id="frmMain" method="post" action="<?php echo ADMIN_URL_CONTROLLER.$this->actionTitle?>">
+						<?if($this->total_count>0){?>
+                        <table id="myTable" class="tablesorter">
+                   	  <thead>
+                                <tr>
+								  <th align="center" style="width:5%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#</th>
+                                  <th style="width:10%">Return Id</th>
+								  <th style="width:10%">Order Id</th>
+								  <th style="width:15%">Customer</th>
+								  <th style="width:10%">Status</th>
+								  <th style="width:15%">Date Added</th>
+								  <th style="width:15%">Date Modified</th>
+                                  <th style="width:15%"><input type="checkbox" name="checkall" id="checkall" onClick="Checkall()"/>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+							<?
+					$i=1;
+					if($this->page!=1)
+					{
+						$i+=($this->page-1)*$this->per_page;
+					}
+
+							foreach ($this->results as $result)
+							{
+
+							$class=fmod($i,2)==0?'':'addcolorne';
+							?>
+                              <tr>
+                                <td align="center" class="<?=$class?>"><?=$i?></td>
+                                 <td class="<?=$class?>"><?php echo $result['return_id'];?></td>
+								 <td class="<?=$class?>"><?php echo $result['order_id'];?></td>
+								 <td class="<?=$class?>"><?php echo $result['customer'];?></td>
+								 <td class="<?=$class?>"><?php echo $result['STATUS'];?></td>
+								 <td class="<?=$class?>"><?php echo $result['date_added'];?></td>
+								 <td class="<?=$class?>"><?php echo $result['date_modified'];?></td>
+                                <td class="<?=$class?>">
+
+								<input type="checkbox" name="rid[]" id="rid" value="<?php echo $result[$this->r_id];?>"  />
+								<?php
+									$act->viewEditB(ADMIN_URL_CONTROLLER.$this->actionTitle,$result[$this->r_id],$_REQUEST['page']);
+									$act->viewDelB($this->actionTitle,$result[$this->r_id],$this->r_table,$this->r_id,$_REQUEST['page']);
+								?>
+
+                                </td>
+                              </tr>
+                              <?$i=$i+1;}?>
+
+                            </tbody>
+                        </table><?}else{
+							echo "<table id='myTable' class='tablesorter' border='2'><tr><td align='center'>No records to display</td></tr></table>";
+							}?>
+
+						<input type="hidden" name="page" id="page" value="<?php echo $this->page;?>">
+                        <div class="table-apply">
+ 							<?$act->fnmultipleactdropdown(array('Del'=>'Delete'));?>
+                            </form>
+                        </div>
+                        <div style="clear: both"></div>
+                     </div>
+                </div>
+
+                <?=$this->view_pagination;?>
+			</div>
+             <div class="grid_6">
+		  </div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+        </div>
+		<?php }elseif($_REQUEST['type']=='Add' || 'Edit'){
+ 	/*foreach ($this->data as $result)
+	{} print_r($result);*/?>
+		<div class="container_12">
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+            <div class="grid_12">
+                <div class="module">
+                     <h2><span><?php echo $_REQUEST['type']." ".$this->actionTitle;?></span></h2>
+                     <div id="TabbedPanels1" class="TabbedPanels">
+                       <ul class="TabbedPanelsTabGroup">
+                         <li class="TabbedPanelsTab" tabindex="0">Return Details</li>
+						 <li class="TabbedPanelsTab" tabindex="0">Products Details</li>
+						 <li class="TabbedPanelsTab" tabindex="0">Return History</li>
+						 <li class="iconsec"><?php echo $act->editCancelB($this->actionTitle,$_REQUEST['page']);?> </li>
+						 <li class="iconsec"> <?php if($_REQUEST['type']=='Edit'){ echo $act->editApplyB(ADMIN_URL_CONTROLLER.$this->actionTitle,(int)$_REQUEST['rid'],$_REQUEST['type']);}?></li>
+						 <li class="iconsec"> <?php echo $act->editSaveB(ADMIN_URL_CONTROLLER.$this->actionTitle,(int)$_REQUEST['rid'],$_REQUEST['type'],$_REQUEST['page']);?></li>
+
+                       </ul>
+                       <div class="TabbedPanelsContentGroup">
+                         <div class="TabbedPanelsContent">
+						     <?if($this->msg!=""){ echo '<div><span class="notification n-success">'.$this->msg.'</span></span> ';}?>
+						     <div class="mode-box">
+<h3><span>Return Details</span></h3>
+ 							 <p><label>Return Id :</label><span class="content-d"><?=$this->data[0]['return_id']?></span></p>
+							 <p><label>Order Id :</label><span class="content-d"><?=$this->data[0]['order_id']?></span></p>
+							 <p><label>Order Date :</label><span class="content-d"><?=$this->data[0]['date_ordered']?></span></p>
+							 <p><label>Customer :</label><span class="content-d"><?=$this->data[0]['customer']?></span></p>
+							 <p><label>Email :</label><span class="content-d"><?=$this->data[0]['email']?></span></p>
+							 <p><label>Telephone :</label><span class="content-d"><?=$this->data[0]['telephone']?></span></p>
+							 <p><label>Return Status :</label><span class="content-d"><?=$this->data[0]['status']?></span></p>
+							 <?echo $this->data[0]['comment']!=""?"<p><label>Comments :<label>".$this->data[0]['comment']."</p>":"";?>
+							 <p><label>Date Added :</label><span class="content-d"><?=$this->data[0]['date_added']?></span></p>
+							 <p><label>Date Modified :</label><span class="content-d"><?=$this->data[0]['date_modified']?></span></p>
+					</div>
+						 </div>
+
+						 <div class="TabbedPanelsContent"> <form name="frmEdit" id="frmEdit" method="post">
+
+                             <?if($this->msg!=""){ echo '<div><span class="notification n-success">'.$this->msg.'</span></div>';}?>
+			     <div class="mode-box">
+<h3><span>Product Details</span></h3>
+<table id="product" class="list" width="50%">
+          <thead>
+            <tr>
+              <td class="left">Product</td>
+              <td class="left">Model</td>
+              <td class="right">Quantity</td>
+              <td class="right">Return Reason</td>
+			  <td class="right">Opened</td>
+			  <td class="right">Comment</td>
+			  <td class="right">Return Action</td>
+             </tr>
+          </thead>
+<tbody id="product-row587">
+<?
+ $prod=$act_ext->getReturn((int)$_REQUEST['rid']);
+/*echo "<pre>";
+print_r($prod);
+echo "</pre>";*/
+foreach($prod as $prod)
+{ /*?>
+<tr>
+<td class="left"><a href="products?type=Edit&rid=<?=$prod['products_id']?>"><?=$prod['products_name']?></a>
+<? $opt=$act->db->fetchAll("select * from r_orders_products_option where order_id='".(int)$_REQUEST['rid']."' and order_product_id='".$prod['orders_products_id']."'");
+if(count($opt)>0)
+{
+foreach($opt as $o)
+{?>
+<br>&nbsp;<small> - <?=$o['name']?> : <?=$o['value']?></small>
+<?}}*/?>
+</td>
+
+<td class="left"><?=$prod['product']?></td>
+<td class="right"><?=$prod['model']?></td>
+<td class="right"><?=$prod['quantity']?></td>
+<td class="right"><?=$prod['return_reason']?></td>
+<td class="right"><?echo $prod['opened']=='1'?'Yes':'No';?></td>
+<td class="right"><?=$prod['comment']?></td>
+<td class="right">
+<?$status=$act_ext->getReturnStatuses();?>
+<select name="return_action_id" id="return_action_id" >
+<?php foreach ($status as $return_status) { ?>
+<?php if ($return_status['return_action_id'] == $prod['return_action_id']) { ?>
+<option value="<?php echo $return_status['return_action_id']; ?>" selected="selected"><?php echo $return_status['name']; ?></option>
+<?php } else { ?>
+<option value="<?php echo $return_status['return_action_id']; ?>"><?php echo $return_status['name']; ?></option>
+<?php } ?>
+<?php } ?>
+</select>
+
+</td>
+</tr>
+<?$return_action=$act_ext->getreturnactiondropdown($none);?>
+<?$return_reason=$act_ext->getreturnreasondropdown($none);?>
+<input type="hidden" name="return_action_option" id="return_action_option" value="<?=$return_action?>">
+<input type="hidden" name="return_reason_option" id="return_reason_option" value="<?=$return_reason?>">
+<?
+}?>
+</tbody>
+                         <tfoot>
+
+
+              </table>
+
+</div>
+						 </div></form>
+						 <div class="TabbedPanelsContent">
+                             <?if($this->msg!=""){ echo '<div><span class="notification n-success">'.$this->msg.'</span></div> ';}?>
+							 <p><b>All fields indicated with * are mandatory</b></p>
+<div class="mode-box">
+<h3><span>Return History</span></h3>
+<table class="list">
+<thead>
+<tr>
+<td class="left"><b>Date Added</b></td>
+<td class="left"><b>Comment</b></td>
+<td class="left"><b>Status</b></td>
+<td class="left"><b>Customer Notified</b></td>
+</tr>
+</thead>
+<tbody>
+<?$stats=$act->db->fetchAll("select h.*,s.name from r_return_history h,r_return_status s where h.return_id='".(int)$_REQUEST['rid']."' and s.return_status_id=h.return_status_id and s.language_id=1 order by h.return_history_id desc");
+$i=0;
+foreach($stats as $s)
+{
+$order_status_id=$i==0?$s['return_status_id']:$order_status_id;
+?>
+<tr>
+<td class="left"><?=$s['date_added']?></td>
+<td class="left"><?=$s['comment']?></td>
+<td class="left"><?=$s['name']?></td>
+<td class="left"><?echo $s['notify']=='1'?'Yes':'No';?></td>
+</tr>
+<?$i++;}?>
+</tbody>
+</table>
+ <!-- <form name="frmMain" method="post">
+ <input type="hidden" name="rid[]" id="rid[]" value="<?=$_REQUEST['rid']?>">
+</form>  -->
+<form name="frmordercomment" id="frmordercomment" method="post" action="products-returned?rid=<?=(int)$_REQUEST['rid']?>&type=Edit&play=apply" >
+<p>
+<label>Notify Customer</label>
+<input type="checkbox" name="notify" id="notify" value="1">
+<p>
+<label>Return Status</label>
+<select id="update_return_status" class="input-medium"  tooltiptext="enter return status"  name="update_return_status" ><? echo $act_ext->getreturnstatsdropdown($order_status_id);?></select>
+<input type="hidden" name="play" id="play" value="1">
+</p>
+<p>
+<label>Comments</label>
+<textarea id="status_comments"  tooltiptext=" enter comments for status condition"  name="status_comments" rows="6" cols="50"></textarea>
+</p>
+<p>
+<label></label>
+<input type="submit" value="Add History" class="button">
+</p>
+
+</form>
+</div>
+
+						 </div>
+
+                       </div>
+                  </div>
+                     <div class="module-body">
+                  </div>
+
+                </div>
+        		<div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+           <div style="clear:both;"></div>
+</div>
+		<?php } ?>
+
+<script type='text/javascript' src='<?=PATH_TO_ADMIN_JS?>jquery.autocomplete.js'></script>
+<link rel="stylesheet" type="text/css" href="<?=PATH_TO_ADMIN_JS?>jquery.autocomplete.css" />
+<script type="text/javascript">
+date_pick('#date_added');
+date_pick('#date_modified');
+$().ready(function() {
+	$("#customer").autocomplete("<?php echo @constant('ADMIN_URL_CONTROLLER');?>ajaxprodreturnauto?format=json", {
+		width: 260,
+		matchContains: true,
+		selectFirst: false
+	});
+});
+
+function productautocomplete(product_row) {
+//alert("here")
+	$().ready(function() {
+	$('input[name=\'return_product[' + product_row + '][name]\']').autocomplete("<?php echo @constant('ADMIN_URL_CONTROLLER');?>ajaxpnameauto?format=json", {
+		width: 260,
+		matchContains: true,
+		selectFirst: false,
+
+	});
+});
+
+$().ready(function() {
+	$('input[name=\'return_product[' + product_row + '][model]\']').autocomplete("<?php echo @constant('ADMIN_URL_CONTROLLER');?>ajaxpmodelauto?format=json", {
+		width: 260,
+		matchContains: true,
+		selectFirst: false,
+
+	});
+});
+}
+
+<!--
+$('#product-row587 select').bind('change', function() {
+	var element = this;
+ 	$.ajax({
+		type: 'POST',
+		url: 'product-return-action?return_id=<?echo (int)$_REQUEST[rid]?>&return_action_id=' + this.value,
+		dataType: 'json',
+		//data: $('#product-row587 select'),
+		//data: '?return_action_id=' + this.value,
+
+		beforeSend: function() {
+			$(element).after('<span class="wait">&nbsp;<img src="view/image/loading.gif" alt="" /></span>');
+		},
+		complete: function() {
+			$('.wait').remove();
+		},
+		success: function(json) {
+			$('.success, .warning').remove();
+
+			if (json['error']) {
+				$('#product').before('<span class="notification n-success">' + json['error'] + '</span>');
+			}
+
+			if (json['success']) {
+
+				$('#product').before('<span class="notification n-success">' + json['success'] + '</span>');
+			}
+		}
+	});
+});
+//-->
+</script>

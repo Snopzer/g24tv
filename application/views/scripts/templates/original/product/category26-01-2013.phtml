@@ -1,0 +1,310 @@
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+<script type="text/javascript" src="<?PHP echo $this->url_to_templates;?><?php echo SITE_DEFAULT_TEMPLATE;?>/includes/scripts/lazykarl.min.js"></script>
+<script>
+$().ready(function() {  
+$(".lazyloader").lazyKarl();
+}); 
+</script>
+<style>
+div.lazyimg{  }
+.lazyloader{  }
+</style>
+
+<div class="main-column"><!--main-max-banner start-->
+<div id="container"><!--container start-->
+
+<div id="notification"></div>
+
+<? if(count($this->pos[left])>0){?>
+<div id="column-left"><!--column-left start-->
+<div class="stickem">
+<?php echo $this->action('left','modules',null,array('mod' =>$this->pos[left]));?>
+</div>
+<!--column-left End--></div>
+<?}?>
+
+<?if(count($this->pos[right])>0){?>
+<div id="column-right"><!--column-right start-->
+<?php echo $this->action('right','modules',null,array('mod' =>$this->pos[right]));?>
+<!--column-right End--></div>
+<?}?>
+		
+            <div class="row" id="content"><!--content start-->
+<?if(count($this->pos[top])>0){?>
+<div id="main-max-banner"><!--start main-max-banner-->
+<?php echo $this->action('top','modules',null,array('mod' =>$this->pos[top]));?>
+<!--End main-max-banner--></div>
+<?}?>
+
+          <div class="breadcrumb"><!--readcrumb start-->
+	<p>
+
+                    	<?php    foreach ($this->breadcrumbs as $breadcrumb) { ?>
+<?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a> <?php } ?>                 </p>
+<!--readcrumb End--></div>
+
+
+                   
+  <div class="category-info">
+    <?php if ($this->cat_thumb) { ?>
+    <div class="image"><img src="<?php echo $this->url_to_site."timthumb.php?src=".$this->cat_thumb; ?>" alt="<?php echo $this->cat_heading_title; ?>" /></div>
+    <?php } ?>
+    <?php if ($this->cat_description) { ?>
+    <?php echo "<h2>".$this->cat_heading_title."</h2>"; ?>
+    <?php echo $this->cat_description; ?>
+    <?php } ?>
+  </div>
+  
+  
+<!--start refined subcategory  -->
+  <?
+  if ($this->refineCategories) { ?>
+  <h2><?php echo $this->trans->_('text_refine_product_category'); ?></h2>
+   <div class="lazyloader"> 
+  <div class="category-list">
+    <?php if (count($this->refineCategories) > 0) { ?>
+    
+    <?php for ($i = 0; $i < count($this->refineCategories);) { ?>
+    <ul>
+      <?php $j = $i + ceil(count($this->refineCategories) / 4); ?>
+      <?php for (; $i < $j; $i++) { ?>
+      <?php if (isset($this->refineCategories[$i])) { ?>
+      <li><a href="<?php echo $this->refineCategories[$i]['href']; ?>"><?php echo $this->refineCategories[$i]['name']; ?></a>
+      <div class="lazyimg"><a href="<?php echo $this->refineCategories[$i]['href']; ?>"><img rel="<?php echo $this->url_to_site."timthumb.php?src=".$this->refineCategories[$i]['thumb']; ?>" alt="<?php echo $this->cat_heading_title; ?>" border="0" /></a></div>
+      </li>
+      <?php } ?>
+      <?php } ?>
+    </ul>
+    <?php } }?>
+    
+  </div>
+   </div>
+  <?php }  ?>
+
+
+<!-- end refined sub category -->
+<?
+echo "<pre>";
+print_r($this->products);
+echo "</pre>";
+//exit;
+if($this->products){?>
+
+                   <div class="products"> <!--products Start -->
+<div class="product-filter">
+<div class="display">
+                            	<b><span>View  : </span></b>
+                                   <span class="list"> <a href="<?php echo $_SERVER['REQUEST_URI'][strlen($_SERVER['REQUEST_URI'])-1]=="/"?$_SERVER['REQUEST_URI']."view_prod/list/":$_SERVER['REQUEST_URI']."/view_prod/list";?>" class="<?php echo $_SESSION['PRODUCT_LIST_VIEW']=="grid"?"gridActive":"list";?>">List</a></span>
+                           
+                                  <span class="grid"><a href="<?php echo $_SERVER['REQUEST_URI'][strlen($_SERVER['REQUEST_URI'])-1]=="/"?$_SERVER['REQUEST_URI']."view_prod/grid/":$_SERVER['REQUEST_URI']."/view_prod/grid";?>" class="<?php echo $_SESSION['PRODUCT_LIST_VIEW']=="list"?"gridActive":"list";?>">Grid</a></span>
+                              
+<div id="clear"></div>
+
+                          <!--view --></div>
+
+
+	  
+	   <div class="results">
+							 <?php echo $this->pagination; ?>
+                            	 </div>
+
+                            
+   <div class="limit">   <!--limit start-->
+   
+  <b> <?php echo $this->trans->_('text_limit_product_category');?></b>
+      <select class="show" onchange="location = this.value;">
+        <?php foreach ($this->limits as $limits) { ?>
+        <?php if ($limits['value'] == $this->limit) { ?>
+        <option value="<?php echo $limits['href']; ?>" selected="selected"><?php echo $limits['text']; ?></option>
+        <?php } else { ?>
+        <option value="<?php echo $limits['href']; ?>"><?php echo $limits['text']; ?></option>
+        <?php } ?>
+        <?php } ?>
+      </select>
+	  
+	  <!--limit End-->  </div>
+								
+			      <div class="sort"><!--sort start-->
+                           
+				  <?
+				  //echo "limit".Zend_Controller_Front::getInstance()->getRequest()->getParam('limit');
+				 /* echo "<pre>";
+    print_r($this->limits);
+    echo "</pre>";*/?>
+   <b><?php echo $this->trans->_('text_sort_product_category');?></b>
+
+
+      <select class="show" onchange="location = this.value;">
+        <?php
+
+	foreach ($this->sorts as $sorts) { ?>
+        <?php if ($sorts['value'] == $this->sort . '-' . $this->order) { ?>
+        <option value="<?php echo $sorts['href']; ?>" selected="selected"><?php echo $sorts['text']; ?></option>
+        <?php } else { ?>
+        <option value="<?php echo $sorts['href']; ?>"><?php echo $sorts['text']; ?></option>
+        <?php } ?>
+        <?php } ?>
+      </select>
+ <!--sort end--></div>
+
+                    
+                        <!--products End --> </div>
+						
+						
+						<div class="lazyloader">
+                         <div class="product-<?echo $_SESSION['PRODUCT_LIST_VIEW'];?>">
+                          	<?php
+				$i=0;
+				foreach ($this->products as $product) {
+				$div=fmod($i,2)=='1'?'1':'';
+				$i++;
+				?>
+				<div>
+				
+                            	
+				<?php if ($product['thumb']) { ?>
+                                	<div class="lazyimg"><!--image Start -->
+          	                     	    <a href="<?php echo $product['href']; ?>"><img rel="<?php echo $this->url_to_site."timthumb.php?src=".$product['thumb']; ?>" alt="<?php echo $product['name']; ?>" title="<?php echo $product['name']; ?>" /></a>
+                                    <!--image End --></div>
+				    <?}?>
+                               <div class="left"><!--left start -->
+                                    <div class="name"><a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a></div>
+                                     <div class="description"><p><?php echo $product['description']; ?></p></div>
+                                    <!--left end --></div>
+				         
+				
+				<div class="right">
+						
+						 <?php if ($product['price']) { ?>
+						  
+      <div class="price">
+        <?php if (!$product['special']) { ?>
+       <p class="price"> <?php echo "<strong>".$product['price']."</strong>"; ?></p>
+        <?php } else { ?>
+        <div class="price-old"><?php echo $product['price']; ?></div>
+		 <div class="price-new"><?php echo "<strong>".$product['special']."</strong>" ; ?></div>
+        <?php } ?>
+        <?php if ($product['tax']) { ?>
+         <div class="price-tax"><?php echo $this->trans->_(text_tax_product_product); ?> <?php echo $product['tax']; ?></div>
+        <?php } ?>
+      </div>
+      <?php } ?>
+
+           <?php if ($product['rating']) { ?>
+      <div class="rating"><img src="<?php echo $this->url_to_templates.SITE_DEFAULT_TEMPLATE?>/includes/images/rating-<?php echo $product['rating']; ?>.jpg" alt="<?php echo $product['reviews']; ?>" /></div>
+      <?php } ?>
+
+      <div id="cart"> <!--cart start -->
+                                    
+                                        	<a href="javascript:addToCart('<?php echo $product['product_id'];?>');" class="button"><span>Add to cart</span></a> <!--cart End --></div>
+                                         <div class="compare"> <!--compare srart -->  
+										 <a href="javascript:addToWishList('<?php echo $product['product_id'];?>');" >Add to Wish List</a>
+                                          <a href="javascript:addToCompare('<?php echo $product['product_id'];?>');">Add to Compare</a>
+                                   
+                                    <!--compare End --></div>
+                              
+							  <!--dive--></div>
+                    	
+						</div>     
+			<?}?>
+		</div>
+                           <!--productContainer --></div>
+
+                   <div class="products"> <!--products Start -->
+<div class="product-filter">
+<div class="display">
+                            	<b><span>View  : </span></b>
+                                     <span class="list"><a href="<?php echo $_SERVER['REQUEST_URI'][strlen($_SERVER['REQUEST_URI'])-1]=="/"?$_SERVER['REQUEST_URI']."view_prod/list/":$_SERVER['REQUEST_URI']."/view_prod/list";?>" class="<?php echo $_SESSION['PRODUCT_LIST_VIEW']=="grid"?"gridActive":"list";?>">List</a></span>
+                               
+                                  <span class="grid"> <a href="<?php echo $_SERVER['REQUEST_URI'][strlen($_SERVER['REQUEST_URI'])-1]=="/"?$_SERVER['REQUEST_URI']."view_prod/grid/":$_SERVER['REQUEST_URI']."/view_prod/grid";?>" class="<?php echo $_SESSION['PRODUCT_LIST_VIEW']=="list"?"gridActive":"list";?>">Grid</a></span>
+                              
+<div id="clear"></div>
+
+                          <!--view --></div>
+
+			  
+	  
+	   <div class="results">
+							 <?php echo $this->pagination; ?>
+                            	 </div>
+                            
+   <div class="limit">   <!--limit start-->
+   
+  <b> <?php echo $this->trans->_('text_limit_product_category');?></b>
+      <select class="show" onchange="location = this.value;">
+        <?php foreach ($this->limits as $limits) { ?>
+        <?php if ($limits['value'] == $this->limit) { ?>
+        <option value="<?php echo $limits['href']; ?>" selected="selected"><?php echo $limits['text']; ?></option>
+        <?php } else { ?>
+        <option value="<?php echo $limits['href']; ?>"><?php echo $limits['text']; ?></option>
+        <?php } ?>
+        <?php } ?>
+      </select>
+	  
+	  <!--limit End-->  </div>
+								
+			      <div class="sort"><!--sort start-->
+                           
+				  <?
+				  //echo "limit".Zend_Controller_Front::getInstance()->getRequest()->getParam('limit');
+				 /* echo "<pre>";
+    print_r($this->limits);
+    echo "</pre>";*/?>
+   <b><?php echo $this->trans->_('text_sort_product_category');?></b>
+
+
+      <select class="show" onchange="location = this.value;">
+        <?php
+
+	foreach ($this->sorts as $sorts) { ?>
+        <?php if ($sorts['value'] == $this->sort . '-' . $this->order) { ?>
+        <option value="<?php echo $sorts['href']; ?>" selected="selected"><?php echo $sorts['text']; ?></option>
+        <?php } else { ?>
+        <option value="<?php echo $sorts['href']; ?>"><?php echo $sorts['text']; ?></option>
+        <?php } ?>
+        <?php } ?>
+      </select>
+ <!--sort end--></div>
+
+                    
+                        <!--products End --> </div>
+	<?}?>
+	 <?php if (!$this->categories && !$this->products) { ?>
+  <!--<div class="content"><?php echo $this->trans->_('text_empty'); ?></div>
+  <div class="buttons">
+    <div class="right"><a href="<?php echo $this->continue; ?>" class="button_btn"><span><?php echo $this->button_continue; ?></span></a></div>
+  </div>-->
+
+					<div id="dashviewDiv">
+						 <div id="dashBoardCotnent-1">
+						 <div id="dashviewDiv-1">
+						 <div class="content">
+		 <p><?php echo $this->trans->_('text_empty_product_category'); ?></p>		 </div>
+		 </div>
+		 </div>
+		  <!-- <div class="buttons">
+    <div class="right"><a href="<?php echo $this->continue; ?>" class="button_btn"><span><?php echo $this->button_continue; ?></span></a></div>
+  </div> -->
+		    </div>
+   <?php } ?>
+                    <!--innerpage_rightContent --></div>
+
+
+
+
+                    </div>
+
+	<?if(count($this->pos[bottom])>0){?>
+<div class="content-bottom"><!--content-bottom srtart-->
+<?php echo $this->action('bottom','modules',null,array('mod' =>$this->pos[bottom]));?>
+</div>
+<?}?>			</div>
+            <!--innerContent --></div>
+    	<!--contentArea -->
+
+<script src="<?PHP echo $this->url_to_templates;?><?php echo SITE_DEFAULT_TEMPLATE;?>/includes/scripts/jquery.stickem.js"></script>
+	<script>
+		$(document).ready(function() {
+			$('.main-column').stickem();
+		});
+	</script>

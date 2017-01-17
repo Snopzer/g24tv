@@ -1,0 +1,42 @@
+  
+  <style>
+  
+  #column-left .box .box-fb .box-content {
+    background: none repeat scroll 0 0 transparent;
+    border: 0 none;
+    margin: 0 1px;
+    padding: 0;
+}
+#column-left .box .box-fb {
+    display: table;
+    height: auto;
+    width: 100%;
+}
+  
+  </style>
+  
+  
+  
+    <div class="box">
+	  <div class="box-fb">
+    <div class="box-content">
+ 
+	
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+<!-- <div class="fb-like-box" data-href="https://www.facebook.com/pages/E-commerce-product/463801376982698" data-width="180" data-height="250" data-show-faces="true" data-stream="false" data-header="false"></div> -->
+<div class="fb-like-box" data-href="<?php echo $this->info[data]['fblike']['link'];?>" data-width="<?php echo $this->info[data]['fblike']['width'];?>" data-height="<?php echo $this->info[data]['fblike']['height'];?>" data-show-faces="<?php echo $this->info[data]['fblike']['face'];?>" data-stream="<?php echo $this->info[data]['fblike']['stream'];?>" data-header="<?php echo $this->info[data]['fblike']['header'];?>"></div>
+
+	 
+ 
+			</div>
+		</div>
+	</div>

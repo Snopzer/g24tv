@@ -1,0 +1,81 @@
+.ui-datepicker-trigger { margin:0px 5px; margin-bottom:-11px; }
+.ui-datepicker-links { border:1px solid #BEBEBE; display:block; height:30px; margin-top:0px; }
+#ui-datepicker-div,.ui-datepicker-div,.ui-datepicker-inline{outline:0;line-height:0.8;text-decoration:none;list-style:none;font-family:Trebuchet MS, Arial, sans-serif;background-color:#3e3d3d;font-size:13px;border:1px solid #efeeee;width:15.9em;position:relative;margin:0;padding:1.3em .3em .3em}
+#ui-datepicker-div { background: #F6F6F6; padding:10px;  }
+#ui-datepicker-div,.ui-datepicker-div{z-index:9999;display:none;background:#f6f6f6}
+.ui-datepicker-inline{float:left;display:block}
+.ui-datepicker-next,.ui-datepicker-prev{position:absolute;left:.5em;background:#444 url(../images/date/444444_40x100_textures_02_glass_25.png) 0 50% repeat-x; border-radius: 4px 4px 4px 4px; top: 1.3em}
+.ui-datepicker-next{left:14.6em}
+.ui-datepicker-next:hover,.ui-datepicker-prev:hover{background:#333  repeat-x}
+.ui-datepicker-next a,.ui-datepicker-next label,.ui-datepicker-prev label,.ui-datepicker-prev a{text-indent:-999999px;width:1.3em;height:1.4em;display:block;font-size:1em;background:url("../images/date/ui-icons_ffffff_256x240.png") 50% 50% no-repeat;border:1px solid #777;cursor:pointer}
+.ui-datepicker-next label,.ui-datepicker-next a{background:url(../images/eeeeee_7x7_arrow_right.gif) 50% 50% no-repeat}
+.ui-datepicker-prev a:hover{background:url(../images/date/ffd40f_7x7_arrow_left.gif) 50% 50% no-repeat}
+.ui-datepicker-next a:hover{background:url(../images/date/ffd40f_7x7_arrow_right.gif) 50% 50% no-repeat}
+.ui-datepicker-prev a:active{background:url(../images/date/ffffff_7x7_arrow_left.gif) 50% 50% no-repeat}
+.ui-datepicker-next a:active{background:url(../images/date/ffffff_7x7_arrow_right.gif) 50% 50% no-repeat}
+.ui-datepicker-header select{border:0px solid #777;color:#333;background:none;font-size:1em;line-height:1.4em;position:absolute;top:1.3em;margin:0!important}
+.ui-datepicker-header select.ui-datepicker-new-month{width:7em;left:2.2em}
+.ui-datepicker-header select.ui-datepicker-new-year{width:5em;left:9.4em}
+table.ui-datepicker{width:15.5em;text-align:right}
+table.ui-datepicker td.ui-datepicker-unselectable{border:1px solid transparent;padding:.1em .3em .1em 0}
+table.ui-datepicker td a{display:block;color:#000;background:#fff;cursor:pointer;border: 1px solid #CCCCCC;padding:5px; margin:1px;}
+table.ui-datepicker td a:hover{border:1px solid #444;color:#fff;background:#1c5061 }
+table.ui-datepicker td a:active{border:1px solid #841515;color:#fff;background:#841515 url(images/841515_40x100_textures_02_glass_35.png) 0 50% repeat-x}
+table.ui-datepicker .ui-datepicker-title-row td{text-align:center;font-size:.9em;color:#cfcfcf;text-transform:uppercase;padding:.3em 0}
+table.ui-datepicker td.ui-datepicker-current-day a,table.ui-datepicker td.selected a{color:#000;background:none; url(images/999999_40x100_textures_02_glass_25.png) 0 50% repeat-x}
+table.ui-datepicker td.ui-datepicker-today a{color:#fff;background:#a21111 url(images/a21111_40x100_textures_02_glass_35.png) 0 50% repeat-x}
+.ui-component{border:0;outline:0;line-height:1.3;text-decoration:none;list-style:none;font-family:Trebuchet MS, Arial, sans-serif;font-size:1.1em;margin:0;padding:0}
+.ui-component-content{border:1px solid #777;background:#3e3d3d;color:#cfcfcf}
+.ui-component-content a{color:#cfcfcf;text-decoration:underline}
+.ui-default-state{border:1px solid #777;background:#444 url(../images/date/444444_40x100_textures_02_glass_25.png) 0 50% repeat-x;font-weight:700;color:#cfcfcf!important}
+.ui-default-state:hover,.ui-hover-state{border:1px solid #444;background:#333 url(../images/date/333333_40x100_textures_02_glass_25.png) 0 50% repeat-x;font-weight:700;color:#fff!important}
+.ui-hover-state a{color:#fff}
+.ui-default-state:active,.ui-active-state{border:1px solid #841515;background:#841515 url(../images/date/841515_40x100_textures_02_glass_35.png) 0 50% repeat-x;font-weight:700;color:#fff!important;outline:none}
+.ui-active-state a{color:#fff;outline:none}
+.ui-arrow-right-default{background:url(images/date/eeeeee_7x7_arrow_right.gif) no-repeat 50% 50%}
+.ui-arrow-right-default:hover,.ui-arrow-right-hover{background:url(../images/date/date/ffd40f_7x7_arrow_right.gif) no-repeat 50% 50%}
+.ui-arrow-right-default:active,.ui-arrow-right-active{background:url(../images/date/date/ffffff_7x7_arrow_right.gif) no-repeat 50% 50%}
+.ui-arrow-left-default{background:url(../images/date/date/eeeeee_7x7_arrow_left.gif) no-repeat 50% 50%}
+.ui-arrow-left-default:hover,.ui-arrow-left-hover{background:url(../images/date/date/ffd40f_7x7_arrow_left.gif) no-repeat 50% 50%}
+.ui-arrow-left-default:active,.ui-arrow-left-active{background:url(images/date/ffffff_7x7_arrow_left.gif) no-repeat 50% 50%}
+.ui-arrow-down-default{background:url(images/date/eeeeee_7x7_arrow_down.gif) no-repeat 50% 50%}
+.ui-arrow-down-default:hover,.ui-arrow-down-hover{background:url(images/date/ffd40f_7x7_arrow_down.gif) no-repeat 50% 50%}
+.ui-arrow-down-default:active,.ui-arrow-down-active{background:url(images/date/ffffff_7x7_arrow_down.gif) no-repeat 50% 50%}
+.ui-arrow-up-default{background:url(images/date/eeeeee_7x7_arrow_up.gif) no-repeat 50% 50%}
+.ui-arrow-up-default:hover,.ui-arrow-up-hover{background:url(images/date/ffd40f_7x7_arrow_up.gif) no-repeat 50% 50%}
+.ui-arrow-up-default:active,.ui-arrow-up-active{background:url(images/date/ffffff_7x7_arrow_up.gif) no-repeat 50% 50%}
+.ui-close-default{background:url(images/date/eeeeee_11x11_icon_close.gif) no-repeat 50% 50%}
+.ui-close-default:hover,.ui-close-hover{background:url(images/date/ffd40f_11x11_icon_close.gif) no-repeat 50% 50%}
+.ui-close-default:active,.ui-close-active{background:url(images/date/ffffff_11x11_icon_close.gif) no-repeat 50% 50%}
+.ui-folder-closed-default{background:url(images/date/eeeeee_11x11_icon_folder_closed.gif) no-repeat 50% 50%}
+.ui-folder-closed-default:hover,.ui-folder-closed-hover{background:url(images/date/ffd40f_11x11_icon_folder_closed.gif) no-repeat 50% 50%}
+.ui-folder-closed-default:active,.ui-folder-closed-active{background:url(images/date/ffffff_11x11_icon_folder_closed.gif) no-repeat 50% 50%}
+.ui-folder-open-default{background:url(images/date/eeeeee_11x11_icon_folder_open.gif) no-repeat 50% 50%}
+.ui-folder-open-default:hover,.ui-folder-open-hover{background:url(images/date/ffd40f_11x11_icon_folder_open.gif) no-repeat 50% 50%}
+.ui-folder-open-default:active,.ui-folder-open-active{background:url(images/date/ffffff_11x11_icon_folder_open.gif) no-repeat 50% 50%}
+.ui-doc-default{background:url(images/date/eeeeee_11x11_icon_doc.gif) no-repeat 50% 50%}
+.ui-doc-default:hover,.ui-doc-hover{background:url(images/date/ffd40f_11x11_icon_doc.gif) no-repeat 50% 50%}
+.ui-doc-default:active,.ui-doc-active{background:url(images/date/ffffff_11x11_icon_doc.gif) no-repeat 50% 50%}
+.ui-arrows-leftright-default{background:url(images/date/eeeeee_11x11_icon_arrows_leftright.gif) no-repeat 50% 50%}
+.ui-arrows-leftright-default:hover,.ui-arrows-leftright-hover{background:url(images/date/ffd40f_11x11_icon_arrows_leftright.gif) no-repeat 50% 50%}
+.ui-arrows-leftright-default:active,.ui-arrows-leftright-active{background:url(images/date/ffffff_11x11_icon_arrows_leftright.gif) no-repeat 50% 50%}
+.ui-arrows-updown-default{background:url(images/date/eeeeee_11x11_icon_arrows_updown.gif) no-repeat 50% 50%}
+.ui-arrows-updown-default:hover,.ui-arrows-updown-hover{background:url(images/date/ffd40f_11x11_icon_arrows_updown.gif) no-repeat 50% 50%}
+.ui-arrows-updown-default:active,.ui-arrows-updown-active{background:url(images/date/ffffff_11x11_icon_arrows_updown.gif) no-repeat 50% 50%}
+.ui-minus-default{background:url(images/date/eeeeee_11x11_icon_minus.gif) no-repeat 50% 50%}
+.ui-minus-default:hover,.ui-minus-hover{background:url(images/date/ffd40f_11x11_icon_minus.gif) no-repeat 50% 50%}
+.ui-minus-default:active,.ui-minus-active{background:url(images/date/ffffff_11x11_icon_minus.gif) no-repeat 50% 50%}
+.ui-plus-default{background:url(images/date/eeeeee_11x11_icon_plus.gif) no-repeat 50% 50%}
+.ui-plus-default:hover,.ui-plus-hover{background:url(images/date/ffd40f_11x11_icon_plus.gif) no-repeat 50% 50%}
+.ui-plus-default:active,.ui-plus-active{background:url(images/date/ffffff_11x11_icon_plus.gif) no-repeat 50% 50%}
+.ui-accessible-hidden{position:absolute;left:-99999999px}
+.ui-reset{border:0;outline:0;line-height:1.3;text-decoration:none;font-size:100%;list-style:none;margin:0;padding:0}
+.ui-clearfix:after{content:".";display:block;height:0;clear:both;visibility:hidden}
+.ui-clearfix{display:block}
+* html .ui-clearfix{height:1%}
+.vehicleDetail > td:first-child{border-left:solid 1px #000;border-bottom:solid 1px #000}
+.vehicleDetail > td:last-child{border-right:solid 1px #000;border-bottom:solid 1px #000}
+.vehicleDetail > td:last-child > table > tbody > tr > td:last-child{color:#FFF}
+.showWhenSelected{visibility:hidden}
+.ui-datepicker-control,.ui-datepicker-current,.ui-hidden{display:none}
+table.ui-datepicker .ui-datepicker-title-row td a,.ui-default-state a{color:#333; border:0px; font-size:13px; padding:5px;}

@@ -1,0 +1,32 @@
+<div class="box">
+   <div class="account-model-div">
+  <?if(@constant('account_module_title')!=""){?><div class="box-heading"><p><span><?php echo @constant('account_module_title'); ?></p></span></div><?}?>
+  <div class="account-model">
+ 	 <div class="box-content">
+ 		 <div class="box-account">
+			<ul>
+		<?php
+		if (!$this->info[data][logged]) { ?>
+		<li><a href="<?php echo $this->info[data][login]; ?>"><?php echo $this->trans->_($this->info[data][text_login]); ?></a> </li><li> <a href="<?php echo $this->info[data][register]; ?>"><?php echo $this->trans->_($this->info[data][text_register]); ?></a></li>
+		<li><a href="<?php echo $this->info[data][forgotten]; ?>"><?php echo $this->trans->_($this->info[data][text_forgotten]); ?></a></li>
+		<?php } ?>
+		<li><a href="<?php echo $this->info[data][account]; ?>"><?php echo $this->trans->_($this->info[data][text_account]); ?></a></li>
+		<?php if ($this->info[data][logged]) { ?>
+		<li><a href="<?php echo $this->info[data][edit]; ?>"><?php echo $this->trans->_($this->info[data][text_edit]); ?></a></li>
+		<li><a href="<?php echo $this->info[data][password]; ?>"><?php echo $this->trans->_($this->info[data][text_password]); ?></a></li>
+		<?php } ?>
+		<li><a href="<?php echo $this->info[data][wishlist]; ?>"><?php echo $this->wishlistTotal; ?></a></li>
+		<li><a href="<?php echo $this->info[data][order]; ?>"><?php echo $this->trans->_($this->info[data][text_order]); ?></a></li>
+		<li><a href="<?php echo $this->info[data][download]; ?>"><?php echo $this->trans->_($this->info[data][text_download]); ?></a></li>
+		<li><a href="<?php echo $this->info[data]['return']; ?>"><?php echo $this->trans->_($this->info[data][text_return]); ?></a></li>
+		<li><a href="<?php echo $this->info[data][transaction]; ?>"><?php echo $this->trans->_($this->info[data][text_transaction]); ?></a></li>
+		<li><a href="<?php echo $this->info[data][newsletter]; ?>"><?php echo $this->trans->_($this->info[data][text_newsletter]); ?></a></li>
+		<?php if ($this->info[data][logged]) { ?>
+		<li><a href="<?php echo $this->info[data][logout]; ?>"><?php echo $this->trans->_($this->info[data][text_logout]); ?></a></li>
+		<?php } ?>
+			</ul>
+ 		 </div>
+  		</div>
+		</div>
+	</div>
+</div>

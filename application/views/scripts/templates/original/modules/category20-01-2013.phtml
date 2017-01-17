@@ -1,0 +1,252 @@
+<?
+$categories=$this->info[data][categories];
+$category_id=$this->info[data][categories_id];
+$child_id=$this->info[data][child_id];
+?>
+<style type="text/css">
+.box .dropdown .box-heading { }
+
+.box .dropdown .box-heading span {  float:none; display:table;}
+
+.box-category .box-content ul, .box-category .box-content li { margin:0px; padding:0px; list-style:none;  }
+.box-category .box-content .mega-unit ul ul{ display:block !important ;  position:relative;  }
+.dc-mega-li{ margin-top:-5px; }.mega-1 {position:relative; z-index:99999;}
+.box-category { display:table; width:100%; margin:0px; padding:0px; }
+.box-category .box-content { width: 200px; float: left; padding:0px; display:table; width:99%}
+.box-category .box-content h4 {font-size: 14px; margin: 0 0 5px 0;}
+.box-category .clear {clear: both;}
+
+/* Vertical Mega Menu Styles */
+.box-category .box-content .menu{
+font: bold 13px Arial, sans-serif; 
+line-height: 16px; 
+position: relative; /* Required */
+border-bottom: none;
+}.box-category .box-content .menu li { border-bottom:1px solid #CCD8D6;}
+
+.box-category .box-content .menu li:hover a{ border-right:1px solid #ccc;  }
+.box-category .box-content .menu li a {
+display: block; 
+color: #000; 
+padding: 8px 38px 8px 25px; 
+text-decoration: none;
+}
+
+.box-category .box-content .menu li ul li { border:0px; }
+.box-category .box-content .menu li ul li li { border:0px; }
+.box-category .box-content .menu li ul li li:hover{ border:0px; }
+.box-category .box-content .menu li ul li li.mage-hover:hover{ border:0px; }
+.box-category .box-content .menu li.mega-hover{
+border-top: 1px solid #999;
+border-bottom:1px solid #999;
+}
+.box-category li li li.mega-hover{
+border-top: 0px solid #999;
+border-bottom:0px solid #999;
+}
+.box-category .box-content .menu li a:hover, .box-category .box-content .menu li.mega-hover a {
+background-position: 0 -40px; 
+}
+.menu li.mega-hover .dc-mega{ background:#fff;}
+.box-category .box-content .menu li:hover a.dc-mega { z-index:9999999999999999999; background:#E6E6E6; }
+.box-category .box-content .menu li a.dc-mega { z-index:99; 
+position: relative;
+}
+
+
+.box-category .box-content .menu li:hover a .dc-mega-icon { background:none;}
+/* Add arrow icon to parent links */
+.box-category .box-content .menu li a .dc-mega-icon {
+display: block; 
+padding:0px!important;;
+position: absolute; 
+top: 14px; 
+right: 15px; 
+width: 6px; 
+height: 8px; 
+background:url(../images/cate-icon.png) no-repeat left center;  }
+}
+.box-category .box-content .menu li a:hover .dc-mega-icon, .box-category .box-content .menu li.mega-hover a .dc-mega-icon {
+background-position: 0 0;
+}
+/* Mega menu container */
+.box-category .box-content .menu li .sub-container {
+position: absolute; /* Required */
+overflow: hidden;
+padding: 0 0px 17px 0; /* Padding for drop shadow */
+border:1px solid #999;
+left:176px !important;
+background:#E6E6E6;
+margin-top:-33px !important;
+height:auto!important;
+width:360p!important;
+}
+.box-category .box-content .menu li .sub-container .sub {
+border: none;
+padding: 5px 15px 5px 15px;
+margin-left:-2px;
+margin-top:px;
+position:relative;
+z-index:999;
+background:#E6E6E6;
+display:block !important;
+}
+.box-category .box-content .menu li .sub .row {
+width: 100%; overflow: hidden; /* Clear floats */
+width:350px!important;
+}
+.box-category .box-content .menu li .sub li {
+float:left; 
+width: 165px; 
+font-size: 1em; 
+font-weight: normal;
+}
+.box-category .box-content .menu li .sub li.mega-hdr {
+float: left; /* Required */
+margin: 0 5px 10px 5px;
+border:0px;
+}
+.box-category .box-content .menu li .sub a, .box-category .box-content .menu.left li .sub a {
+background: none; 
+border: none; 
+text-shadow: none;
+float: none;
+color: #000; 
+display: block;
+text-decoration: none; 
+font-size: 0.9em;
+margin-bottom: 0;
+}
+.box-category .box-content .menu li .sub li.mega-hdr a.mega-hdr-a {
+padding: 5px;
+margin-bottom: 5px;
+text-transform: uppercase; 
+font-weight: bold; 
+color: #333;
+font-size: 13px;
+    font-weight: bold;
+text-align:left;
+}
+.box-category .box-content .menu li .sub li.mega-hdr a.mega-hdr-a:hover {
+color: ; 
+text-shadow: none;
+border:0px;
+}
+.box-category .box-content .menu .sub li.mega-hdr li {margin-bottom: 3px;}
+.box-category .box-content .menu .sub li a {
+	padding: 3px 3px 3px ;
+	/*background: url(images/bullet.png) no-repeat 3px 8px;*/
+	display: block;
+    font-size: 11px;
+    font-weight: normal;
+    padding: 0 5px 2px 5px;
+    text-decoration: none;
+	color:#333;
+}
+.box-category .box-content .menu .sub li a:hover {
+text-decoration:underline;
+color:#000;
+border:0px;
+}
+.box-category .box-content .menu li .sub .row li:hover { border:0px; }
+
+.box-category .box-content .menu .sub ul li {
+padding-right: 0;
+}
+
+.box-category .box-content .menu .sub ul li 
+
+/* Styling for menu items with only 2 levels */
+.box-category .box-content .menu li .sub-container.non-mega .sub {
+padding: 20px;
+padding-bottom:0px;
+padding-top:5px;
+background: #E6E6E6;
+}
+.box-category .box-content .menu li .sub-container.non-mega li {
+padding: 5px 3px; 
+margin: 0;
+width: 150px;
+float: none;
+position:relative;
+border:0px;
+} 
+</style>
+
+
+<script type='text/javascript' src='<?PHP echo $this->url_to_templates;?><?php echo SITE_DEFAULT_TEMPLATE;?>/includes/scripts/jquery.hoverIntent.minified.js'></script>
+
+<script type='text/javascript' src='<?PHP echo $this->url_to_templates;?><?php echo SITE_DEFAULT_TEMPLATE;?>/includes/scripts/jquery.dcverticalmegamenu.1.1.js'></script>
+<script type="text/javascript">
+
+$(document).ready(function($){
+	$('#mega-1').dcVerticalMegaMenu({
+		rowItems: '2',
+		speed: 'fast',
+		effect: 'slide',
+		direction: 'right'
+	});
+});
+</script>
+
+
+
+<div class="box">
+<div class="categories-div">
+<dl class="dropdown">
+<dt class="box-heading"><p><span><?php echo $this->trans->_('heading_title_module_category'); ?></span></p></dt>
+<dd class="box-category">
+<div class="box-content">
+
+<ul  id="mega-1" class="menu" >
+<?php foreach ($categories as $category) { ?>
+<li>
+<?php if ($category['category_id'] == $category_id) { ?>
+<a href="<?php echo $category['href']; ?>" class="active"><?php echo $category['name']; ?></a>
+<?php } else { ?>
+<a href="<?php echo $category['href']; ?>"><?php echo $category['name']; ?></a>
+<?php } ?>
+<?php if ($category['children']) { ?>
+<ul>
+<?php foreach ($category['children'] as $child) { ?>
+<li>
+<?php
+if ($child['category_id'] == $child_id) { ?>
+<a href="<?php echo $child['href']; ?>" class="active"> - <?php echo $child['name']; ?></a>
+
+<?php } else { ?>
+<a href="<?php echo $child['href']; ?>"> - <?php echo $child['name']; ?></a>
+<?php } ?>
+<?php if ($child['sub_child']) { ?>
+<ul >
+<?php foreach ($child['sub_child'] as $sub_child) { ?>
+<li>
+<?php
+if ($sub_child['category_id'] == $sub_child_id) { ?>
+<a href="<?php echo $sub_child['href']; ?>" class="active"> - <?php echo $sub_child['name']; ?></a>
+
+<?php } else { ?>
+<a href="<?php echo $sub_child['href']; ?>"> - <?php echo $sub_child['name']; ?></a>
+<?php } ?>
+</li>
+<?php } ?>
+<?if($child['view_more']=='1'){?>
+<li class="more-view"><a href="<?php echo $child['href']; ?>">View More</a></li>
+<?}?>
+</ul>
+<?php } ?>
+
+</li>
+<?php } ?>
+</ul>
+<?php } ?>
+</li>
+<?php } ?>
+</ul>
+
+</div>
+</dd>
+</dl>
+</div>
+</div>
+

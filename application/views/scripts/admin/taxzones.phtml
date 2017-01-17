@@ -1,0 +1,215 @@
+ 
+<?php
+	$act=new Model_Adminaction();
+	$act_ext=new Model_Adminextaction();
+	if($_REQUEST['type']==''){?>
+<div class="container_12">
+           <div style="clear:both;"></div>
+            <div class="grid_12">
+  				<?
+					if($_REQUEST['msg']!=""){?>
+				<span class="notification n-success"><?=base64_decode($_REQUEST['msg']);?></span>
+				<?}?>
+
+                <div class="bottom-spacing">
+                    <!-- Button -->
+                    <div class="float-right"><?=$this->view_pagination;?>
+						<?php $act->viewAddB(ADMIN_URL_CONTROLLER.$this->actionTitle);?>
+                    </div>
+                   </div>
+
+
+                <!-- Example table -->
+                <div class="module">
+                	<h2><span><?=$this->actionTitle." [".$this->total_count."]"?></span></h2>
+
+                    <div class="module-table-body">
+                    	<form name="frmMain" id="frmMain" method="post" action="<?php echo ADMIN_URL_CONTROLLER.$this->actionTitle?>">
+                      <?if($this->total_count>0){?>
+						<table id="myTable" class="tablesorter" border="2">
+                   	  <thead>
+                                <tr>
+								  <th align="center" style="width:5%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#</th>
+                                  <th style="width:20%"><?php echo $act_ext->getSortLable(array("disType"=>$this->disType, "sortby"=>"geo_zone_name", "page"=>$_REQUEST['page'] ,"file"=>"taxzones" ,"label"=>"Zones"));?></th>
+                                  <th style="width:21%">Description</th>
+                                  <th style="width:15%"><input type="checkbox" name="checkall" id="checkall" onClick="Checkall()"/> <a href="#">Action</a></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+							<?
+					$i=1;
+					if($this->page!=1)
+					{
+						$i+=($this->page-1)*$this->per_page;
+					}
+
+							foreach ($this->results as $result)
+							{
+
+							$class=fmod($i,2)==0?'':'addcolorne';
+							?>
+                              <tr>
+                                <td align="center" class="<?=$class?>"><?=$i?></td>
+                                <td class="<?=$class?>"><?php echo $result['geo_zone_name'];?></td>
+                                <td class="<?=$class?>"><?php echo $result['geo_zone_description'];?></td>
+
+                                <td class="<?=$class?>">
+
+								<input type="checkbox" name="rid[]" id="rid" value="<?php echo $result['geo_zone_id'];?>"  />
+								<?php
+									$act->viewEditB(ADMIN_URL_CONTROLLER.$this->actionTitle,$result['geo_zone_id'],$_REQUEST['page']);
+									$act->viewDelB($this->actionTitle,$result['geo_zone_id'],'r_geo_zones','geo_zone_id',$_REQUEST['page']);
+								?>
+
+                                </td>
+                              </tr>
+                              <?$i=$i+1;}?>
+
+                            </tbody>
+                        </table><?}else{
+							echo "<table id='myTable' class='tablesorter' border='2'><tr><td align='center'>No records to display</td></tr></table>";
+							}?>
+
+						<input type="hidden" name="page" id="page" value="<?php echo $this->page;?>">
+                        <div class="table-apply">
+
+
+			       <?$act->fnmultipleactdropdown(array('Del'=>'Delete'));?>
+                            </form>
+                        </div>
+                        <div style="clear: both"></div>
+                     </div>
+                </div>
+
+                <?=$this->view_pagination;?>
+			</div>
+             <div class="grid_6">
+		  </div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+        </div>
+		<?php }elseif($_REQUEST['type']=='Add' || 'Edit'){
+ 	/*foreach ($this->data as $result)
+	{} print_r($result);*/?>
+		<div class="container_12">
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+            <div class="grid_12">
+                <div class="module">
+                     <h2><span><?php echo $_REQUEST['type']." ".$this->actionTitle;?></span></h2>
+                     <div id="TabbedPanels1" class="TabbedPanels">
+                       <ul class="TabbedPanelsTabGroup">
+                         <li class="TabbedPanelsTab" tabindex="0">Details</li>
+                         <li class="iconsec">
+						 <?php echo $act->editCancelB($this->actionTitle,$_REQUEST['page']);?></li>
+                         <li class="iconsec">
+						 <?php echo $act->editApplyB(ADMIN_URL_CONTROLLER.$this->actionTitle,(int)$_REQUEST['rid'],$_REQUEST['type']);?></li>
+                         <li class="iconsec">
+						 <?php echo $act->editSaveB(ADMIN_URL_CONTROLLER.$this->actionTitle,(int)$_REQUEST['rid'],$_REQUEST['type'],$_REQUEST['page']);?></li>
+                       </ul>
+                       <div class="TabbedPanelsContentGroup">
+                         <div class="TabbedPanelsContent"> <form name="frmEdit" method="post" enctype="multipart/form-data">
+                             <?if($this->msg!=""){ echo '<div><span class="notification n-success">'.base64_decode($this->msg).'</span></div> ';}?>
+							 <p><b>All fields indicated with * are mandatory</b></p>
+<div class="mode-box">
+<h3><span>Geo Zone Details</span></h3>
+                             <?  echo $act->field(array('lable'=>'Geo Zone Name','input_title'=>'geo_zone_name','desc'=>'Name of the geo zone. You can define this as anything you like.
+','input_type'=>'input_text','val'=>$this->data[0]['geo_zone_name'],"req"=>'1'));?>
+			
+ <?  echo $act->field(array('lable'=>'Description','input_title'=>'geo_zone_description','desc'=>'Description of the geo zone
+.
+','input_type'=>'input_text','val'=>$this->data[0]['geo_zone_description'],"req"=>'1'));?>
+
+
+        <table id="zone-to-geo-zone" class="list">
+          <thead>
+            <tr>
+              <td class="left">Country</td>
+              <td class="left">Zone</td>
+              <td></td>
+            </tr>
+          </thead>
+          <?php $zone_to_geo_zone_row = 0;
+	//  print_r($this->zone_to_geo_zones);
+	  ?>
+          <?php foreach ($this->zone_to_geo_zones as $zone_to_geo_zone) { ?>
+          <tbody id="zone-to-geo-zone-row<?php echo $zone_to_geo_zone_row; ?>">
+            <tr>
+              <td class="left"><select name="zone_to_geo_zone[<?php echo $zone_to_geo_zone_row; ?>][country_id]"
+
+	      id="country<?php echo $zone_to_geo_zone_row; ?>" onchange="$('#zone<?php echo $zone_to_geo_zone_row; ?>').load('<?echo HTTP_SERVER;?>admin/zone/country_id/' + this.value + '/zone_id/0');">
+
+                  <?php foreach ($this->countries as $country) { ?>
+                  <?php  if ($country['countries_id'] == $zone_to_geo_zone['zone_country_id']) { ?>
+                  <option value="<?php echo $country['countries_id']; ?>" selected="selected"><?php echo $country['countries_name']; ?></option>
+                  <?php } else { ?>
+                  <option value="<?php echo $country['countries_id']; ?>"><?php echo $country['countries_name']; ?></option>
+                  <?php } ?>
+                  <?php } ?>
+                </select></td>
+              <td class="left"><select name="zone_to_geo_zone[<?php echo $zone_to_geo_zone_row; ?>][zone_id]" id="zone<?php echo $zone_to_geo_zone_row; ?>"><option value="0">All Zones</option>
+                </select></td>
+              <td class="left"><a onclick="$('#zone-to-geo-zone-row<?php echo $zone_to_geo_zone_row; ?>').remove();" class="button"><span>Remove</span></a></td>
+            </tr>
+          </tbody>
+          <?php $zone_to_geo_zone_row++; ?>
+          <?php } ?>
+          <tfoot>
+            <tr>
+              <td colspan="2"></td>
+              <td class="left"><a onclick="addGeoZone();" class="button"><span>Add Geo Zone</span></a></td>
+            </tr>
+          </tfoot>
+        </table>
+
+						  </div>
+</div>
+                        </form>
+                       </div>
+                  </div>
+                     <div class="module-body">
+                  </div>
+
+                </div>
+        		<div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+           <div style="clear:both;"></div>
+</div>
+		<?php }?>
+<script type="text/javascript"><!--
+$('#zone-id').load('<?php echo @constant("ADMIN_URL_CONTROLLER");?>zone?country_id=' + $('#country-id').attr('value') + '&zone_id=0');
+//--></script>
+<?php $zone_to_geo_zone_row = 0; ?>
+<?php foreach ($this->zone_to_geo_zones as $zone_to_geo_zone) { ?>
+<script type="text/javascript"><!--
+$('#zone<?php echo $zone_to_geo_zone_row; ?>').load('<?php echo @constant("ADMIN_URL_CONTROLLER");?>zone?country_id=<?php echo $zone_to_geo_zone['zone_country_id']; ?>&zone_id=<?php echo $zone_to_geo_zone['zone_id']; ?>');
+//--></script>
+<?php $zone_to_geo_zone_row++; ?>
+<?php } ?>
+<script type="text/javascript"><!--
+var zone_to_geo_zone_row = <?php echo $zone_to_geo_zone_row; ?>;
+
+function addGeoZone() {
+	html  = '<tbody id="zone-to-geo-zone-row' + zone_to_geo_zone_row + '">';
+	html += '<tr>';
+	html += '<td class="left"><select name="zone_to_geo_zone[' + zone_to_geo_zone_row + '][country_id]" id="country' + zone_to_geo_zone_row + '" onchange="$(\'#zone' + zone_to_geo_zone_row + '\').load(\'<? echo HTTP_SERVER;?>ajax/zone/country_id/\' + this.value + \'/zone_id=0\');">';
+
+	<?php foreach ($this->countries as $country) { ?>
+	html += '<option value="<?php echo $country['countries_id']; ?>"><?php echo addslashes($country['countries_name']); ?></option>';
+	<?php } ?>
+	html += '</select></td>';
+	html += '<td class="left"><select name="zone_to_geo_zone[' + zone_to_geo_zone_row + '][zone_id]" id="zone' + zone_to_geo_zone_row + '"></select></td>';
+	html += '<td class="left"><a onclick="$(\'#zone-to-geo-zone-row' + zone_to_geo_zone_row + '\').remove();" class="button"><span>Remove</span></a></td>';
+	html += '</tr>';
+	html += '</tbody>';
+
+	$('#zone-to-geo-zone > tfoot').before(html);
+
+	$('#zone' + zone_to_geo_zone_row).load('<?php echo @constant("ADMIN_URL_CONTROLLER");?>zone?country_id=' + $('#country' + zone_to_geo_zone_row).attr('value') + '&zone_id=0');
+
+	zone_to_geo_zone_row++;
+}
+//--></script>

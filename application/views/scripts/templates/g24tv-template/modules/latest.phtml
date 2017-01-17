@@ -1,0 +1,15 @@
+<!-- start content top latest slider -->
+<div class="col-lg-6 col-md-6 col-sm6">             
+	<div class="latest_slider">
+		<!-- Set up your HTML -->
+		<div class="slick_slider">
+			<?php foreach ($this->info[data][products] as $product) { ?>
+				<div class="single_iteam">
+					<img src="<?php echo $this->url_to_site."timthumb.php?src=".$product['thumb']; ?>" alt="<?echo $k[title];?>" height="450px;" width="700px;">
+
+					<h2><a class="slider_tittle" href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a></h2>
+				</div>
+			<?}?> 
+		</div>
+	</div>
+	</div> <!-- End content top latest slider -->

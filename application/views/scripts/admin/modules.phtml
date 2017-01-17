@@ -1,0 +1,161 @@
+<?php
+$act=new Model_Adminaction();
+$act_ext=new Model_Adminextaction();
+/*echo "<pre>";
+print_r($this->data[extensions]);
+echo "</pre>";*/
+
+ 	if($_REQUEST['type']==''){?>
+<div class="container_12">
+           <div style="clear:both;"></div>
+            <div class="grid_12">
+  				<?
+					if($_REQUEST['msg']!=""){?>
+				<span class="notification n-success"><?=base64_decode($_REQUEST[msg]);?></span>
+				<?}?>
+
+                <div class="bottom-spacing">
+                    <!-- Button -->
+                    <div class="float-right"><?php echo  $this->paginationControl($this->modules,'sliding','admin/pagelinks.phtml');?>
+						<?php $act->viewAddB(ADMIN_URL_CONTROLLER.$this->actionTitle);?>
+                    </div>
+                    <!-- Table records filtering -->
+
+
+                </div>
+
+
+                <!-- Example table -->
+                <div class="module">
+                	<h2><span><?=$this->actionTitle." [".sizeof($this->data[extensions])."]"?></span></h2>
+
+                    <div class="module-table-body">
+                    	<form name="frmMain" id="frmMain" method="post" action="<?php echo ADMIN_URL_CONTROLLER.$this->actionTitle?>">
+                        <table id="myTable" class="tablesorter">
+                   	  <thead>
+                                <tr>
+								  <th align="center" style="width:5%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#</th>
+                                  <th style="width:20%">Modules<?//echo $act_ext->getSortLable(array("disType"=>$this->disType, "sortby"=>"name", "page"=>$_REQUEST['page'] ,"file"=>"customergroup" ,"label"=>"Customer Group Name"));?></th>
+                                  <th style="width:15%">Type</th>
+				  <th style="width:15%">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+							<?
+					$i=1;
+					if($_REQUEST['page']=="" || $_REQUEST['page']=="1")
+					{
+						$i=1;
+					}else
+					{
+						$i+=($_REQUEST['page']-1)*@constant('ADMIN_PAGE_LIMIT');
+					}
+							//echo "<pre>";
+							foreach ($this->modules as $result)
+							{
+								/*if($result['type']=="paid" && $result['status']==0)
+								{
+									continue;
+								}*/
+								//print_r($result);
+							$class=fmod($i,2)==0?'':'addcolorne';
+							?>
+                              <tr>
+                                <td align="center" class="<?=$class?>"><?=$i?></td>
+                                <td class="<?=$class?>"><?php echo $result['name'];?></td>
+				<td class="<?=$class?>"><?php echo "<b>".ucfirst($result['type'])."</b>";?></td>
+                                <td class="<?=$class?>">
+
+								<!-- <input type="checkbox" name="rid[]" id="rid" value="<?php echo $result[$this->r_id];?>"  /> -->
+								<?php
+									//$act->viewEditB(ADMIN_URL_CONTROLLER.$this->actionTitle,$result[$this->r_id],$_REQUEST['page']);
+									//$act->viewDelB($this->actionTitle,$result[$this->r_id],$this->r_table,$this->r_id,$_REQUEST['page']);
+								if($result['type']=="paid" && $result['status']==0)
+								{
+									echo "<a href='#'>Buy</a> ";
+								}else
+								{
+									foreach($result[action] as $k)
+									{
+										echo "<a href='".$k['href']."'>[".$k['text']."]</a> ";
+									}
+								}
+								?>
+
+                                </td>
+                              </tr>
+                              <?$i=$i+1;}
+			      //echo "</pre>";
+			      ?>
+
+                            </tbody>
+                        </table>
+
+						<input type="hidden" name="page" id="page" value="<?php echo $this->page;?>">
+                        <div class="table-apply">
+                             <!-- <div>
+                            <span>Apply action to selected:</span>
+							<?$arrmact=array('Del'=>'Delete');
+							  $act->viewMultipleAction($arrmact);?>
+
+                            </div> -->
+	      			<?//$act->fnmultipleactdropdown(array('Del'=>'Delete'));?>
+                           </form>
+                        </div>
+                        <div style="clear: both"></div>
+                     </div>
+                </div>
+
+                <?=$this->view_pagination;?>
+			</div>
+             <div class="grid_6">
+		  </div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+        </div>
+		<?php }elseif($_REQUEST['type']=='Add' || 'Edit'){
+ 	/*foreach ($this->data as $result)
+	{} print_r($result);*/?>
+		<div class="container_12">
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+            <div class="grid_12">
+                <div class="module">
+                     <h2><span><?php echo $_REQUEST['type']." ".$this->actionTitle;?></span></h2>
+                     <div id="TabbedPanels1" class="TabbedPanels">
+                       <ul class="TabbedPanelsTabGroup">
+                         <li class="TabbedPanelsTab" tabindex="0">Details </li>
+                         <li class="iconsec">
+						 <?php echo $act->editCancelB($this->actionTitle,$_REQUEST['page']);?></li>
+                         <li class="iconsec">
+						 <?php
+						 if($_REQUEST['type']=='Edit'){
+						 echo $act->editApplyB(ADMIN_URL_CONTROLLER.$this->actionTitle,$_REQUEST['rid'],$_REQUEST['type']);
+		}					?></li>
+                         <li class="iconsec">
+						 <?php echo $act->editSaveB(ADMIN_URL_CONTROLLER.$this->actionTitle,$_REQUEST['rid'],$_REQUEST['type'],$_REQUEST['page']);?></li>
+                       </ul>
+                       <div class="TabbedPanelsContentGroup">
+                         <div class="TabbedPanelsContent"> <form name="frmEdit" method="post" enctype="multipart/form-data">
+                             <?if($this->msg!=""){ echo '<div><span class="notification n-success">'.base64_decode($this->msg).'</span></div> ';}?>
+							 <p><b>All fields indicated with * are mandatory</b></p>
+                            <? echo $act->field(array('lable'=>'Customer Group Name','input_title'=>'name','desc'=>'enter customer group name','input_type'=>'input_text','val'=>$this->data[0]['name'],"req"=>'1'));
+                            ?>
+
+
+						 </div>
+                        </form>
+                       </div>
+                  </div>
+                     <div class="module-body">
+                  </div>
+
+                </div>
+        		<div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+           <div style="clear:both;"></div>
+</div>
+		<?php }?>

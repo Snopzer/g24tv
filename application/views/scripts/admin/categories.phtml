@@ -1,0 +1,266 @@
+<?php
+	$act=new Model_Adminaction();
+	if($_REQUEST['type']==''){?>
+<div class="container_12">
+           <div style="clear:both;"></div>
+            <div class="grid_12">
+  				<?
+					if($_REQUEST['msg']!=""){?>
+				<span class="notification n-success"><?=base64_decode($_REQUEST['msg']);?></span>
+				<?}?>
+
+                <div class="bottom-spacing">
+                    <!-- Button -->
+                    <div class="float-right">
+		    <?=$this->view_pagination;?>
+					
+                    </div>
+                    <!-- Table records filtering -->
+                    </div>
+
+
+                <!-- Example table -->
+                <div class="module">
+                	<h2><span><?=$this->actionTitle." [".$this->total_count."]"?></span> 	<div class="add-btn-div"><?php $act->viewAddB(ADMIN_URL_CONTROLLER.$this->actionTitle);?></div></h2>
+
+                    <div class="module-table-body">
+                    	<form name="frmMain" id="frmMain" method="post" action="<?php echo ADMIN_URL_CONTROLLER.$this->actionTitle?>">
+<?if($this->total_count>0){?>
+					 <table id="myTable" class="tablesorter">
+                   	  <thead>
+                                <tr>
+				  <th align="center" style="width:5%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#</th>
+				   <!-- <th style="width:3%">Par_id</th> -->
+				  <th style="width:3%">Cat_id</th>
+                                  <th style="width:20%">Category</th>
+				  <th style="width:13%">Sort Order</th>
+                                  <th style="width:15%"><input type="checkbox" name="checkall" id="checkall" onClick="Checkall()"/> <a href="#">Action</a></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+							<?
+					$i=1;
+					if($this->page!=1)
+					{
+						$i+=($this->page-1)*$this->per_page;
+					}
+
+							foreach ($this->results as $result)
+							{
+
+							$class=fmod($i,2)==0?'':'addcolorne';
+							?>
+                              <tr>
+                                <td align="center" class="<?=$class?>"><?=$i?></td>
+				<!-- <td align="center" class="<?=$class?>"><?=$result['parent_id']?></td> -->
+				<td align="center" class="<?=$class?>"><?=$result['categories_id']?></td>
+				<td class="<?=$class?>"><?php echo $act->tep_output_generated_category_path($result['categories_id']); ?></td>
+                                <td class="<?=$class?>"><?php echo $result['sort_order'];?></td>
+                                <td class="<?=$class?>">
+
+								<input type="checkbox" name="rid[]" id="rid" value="<?php echo $result['categories_id'];?>"  />
+								<?php
+									$act->viewEditB(ADMIN_URL_CONTROLLER.$this->actionTitle,$result['categories_id'],$_REQUEST['page']);
+									$act->viewDelB($this->actionTitle,$result['categories_id'],'r_categories','categories_id',$_REQUEST['page']);
+								?>
+
+                                </td>
+                              </tr>
+                              <?$i=$i+1;}?>
+
+                            </tbody>
+                        </table><?}else{
+								echo "<table id='myTable' class='tablesorter' border='2'><tr><td align='center'>No records to display</td></tr></table>";}?>
+
+						<input type="hidden" name="page" id="page" value="<?php echo $this->page;?>">
+                        <div><div  class="left-table-bottm"><a href="<?php echo ADMIN_URL_CONTROLLER.$this->actionTitle."?type=undo"?>" class="button">Undo Recenlty Deleted</a></div></div>
+			<div class="table-apply">
+						<?$act->fnmultipleactdropdown(array('Del'=>'Delete'));?>
+                             </form>
+                        </div>
+                        <div style="clear: both"></div>
+                     </div>
+                </div>
+
+                <?=$this->view_pagination;?>
+			</div>
+             <div class="grid_6">
+		  </div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+        </div>
+		<?php }elseif($_REQUEST['type']=='Add' || 'Edit'){
+ 	/*foreach ($this->data as $result)
+	{} print_r($result);*/?>
+		<div class="container_12">
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+            <div class="grid_12">
+                <div class="module">
+                     <h2><span><?php echo $_REQUEST['type']." ".$this->actionTitle;?></span></h2>
+                     <div id="TabbedPanels1" class="TabbedPanels">
+                       <ul class="TabbedPanelsTabGroup">
+                         <li class="TabbedPanelsTab" tabindex="0">General</li>
+			 <li class="TabbedPanelsTab" tabindex="0">Details</li>
+			  <li class="TabbedPanelsTab" tabindex="0">Filters</li>
+                         <li class="iconsec">
+						 <?php echo $act->editCancelB($this->actionTitle,$_REQUEST['page']);?></li>
+                         
+						 <?php echo $act->editApplyB(ADMIN_URL_CONTROLLER.$this->actionTitle,(int)$_REQUEST['rid'],$_REQUEST['type']);?> 
+                         <li class="iconsec">
+						 <?php echo $act->editSaveB(ADMIN_URL_CONTROLLER.$this->actionTitle,(int)$_REQUEST['rid'],$_REQUEST['type'],$_REQUEST['page']);?></li>
+                       </ul>
+                       <div class="TabbedPanelsContentGroup">
+                         <div class="TabbedPanelsContent"> <form name="frmEdit" method="post" enctype="multipart/form-data">
+                             <?if($this->msg!=""){ echo '<div><span class="notification n-success">'.base64_decode($this->msg).'</span></div> ';}
+
+								if($_REQUEST['type']=='Edit')
+								{
+									$ret=$act->getEditdetails('r_categories_description','categories_id',(int)$_REQUEST['rid']);
+									$rcat=$act->getEditdetails('r_categories','categories_id',(int)$_REQUEST['rid']);
+									foreach($ret as $res)
+									{
+										$lang[$res['language_id']]=array("categories_name" =>$res['categories_name'],"meta_keywords"=>$res['meta_keywords'],"meta_description" =>$res['meta_description'],"categories_description" =>$res['categories_description']);
+									}
+								}
+
+
+							 ?>
+
+							 <p><b>All fields indicated with * are mandatory</b></p>
+<div class="mode-box">
+<h3><span>Category Title & Description</span></h3>
+						   <?
+						   echo $act->lang_field(array('lable'=>'Category Name','input_title'=>'categories_name','desc'=>'enter category name','input_type'=>'input_text','val'=>$lang,"req"=>'1'));
+
+					
+						   echo $act->lang_field(array('lable'=>'Category  Description','input_title'=>'categories_description','desc'=>'enter category description','input_type'=>'textarea','val'=>$lang,"req"=>'0'));
+						   ?>
+					</div>
+					<div class="mode-box">
+<h3><span>Meta Details</span></h3>
+						  <? echo $act->lang_field(array('lable'=>'Meta Keywords','input_title'=>'meta_keywords','desc'=>'enter meta keywords','input_type'=>'textarea','val'=>$lang,"req"=>'1'));
+
+						   echo $act->lang_field(array('lable'=>'Meta Description','input_title'=>'meta_description','desc'=>'enter meta description','input_type'=>'textarea','val'=>$lang,"req"=>'0'));?></div>
+
+						 </div>
+						 <div class="TabbedPanelsContent">
+<div class="mode-box">
+<h3><span>Category Details</span></h3>
+						 	 <p>
+                                <label>*Parent Category</label>
+								<?echo $act->tep_draw_pull_down_menu('parent_id', $act->tep_get_category_tree_cache(),$rcat[0]['parent_id'], '');
+						   ?>
+
+                            </p>
+							<p>
+                                <label>*Image</label>
+                                <input name="categories_image" id="categories_image"  type="file" class="input-medium" value="<?=$this->data[0]['categories_image'];?>" tooltipText="upload category image"/>
+						    <a href="#" style="color:black;cursor:pointer;text-decoration:underline;" class="tt"><?=$rcat[0]['categories_image'];?><span class="tooltip"><img src="<?=PATH_TO_UPLOADS."categories/".$rcat[0]['categories_image'];?>"  /></span></a></p>
+						   
+	
+
+                             
+						   <input name="prev_image" id="prev_image" type="hidden" value="<?=$rcat[0]['categories_image'];?>" />
+	   <p><label>Status</label><select name="status" id="status" tooltipText="select status"><?php echo $act->reviewstatusdropdown($rcat[0]['status']);?></select></p>
+
+
+</div>
+  <div class="mode-box">
+<h3><span>Seo Url</span></h3>
+<?  
+ echo $act->field(array('lable'=>'Seo Keyword','input_title'=>'keyword','desc'=>'keyword must be globally unique and should not contain special characters like !@#$%^&*(){}[]~`.,/\|?+=',
+     'input_type'=>'input_text','val'=>$this->seo_keyword,"req"=>'0'));?>
+</div>     
+<div class="mode-box">
+<h3><span>Navigation Settings</span></h3>
+<?echo $act->field(array('lable'=>'Columns','input_title'=>'column','desc'=>'Number of columns to use for the bottom 3 categories. Only works for the top parent categories.
+','input_type'=>'input_text','val'=>$rcat[0]['column'],"req"=>'0'));
+
+
+?>
+
+
+							<p><label>Top</label><input type="checkbox" name="top" id="top" <?echo $chk=$rcat[0]['top']=='1'?'checked':'';?> value="1" tooltipText="Display in the top menu bar. Only works for the top parent categories." ><br>Note:Display in the top menu bar. Only works for the top parent categories.</p>
+							<?  echo $act->field(array('lable'=>'Sort Order','input_title'=>'sort_order','desc'=>'Enter sort order number
+','input_type'=>'input_text','val'=>$rcat[0]['sort_order'],"req"=>'0'));?>
+							</div>
+
+						   </div>
+ <div class="TabbedPanelsContent">
+ <?
+ if($rcat[0]['filters']!="")
+ {
+ $exp=explode("&",$rcat[0]['filters']);
+ foreach($exp as $k=>$v)
+ {
+	$exp1=explode("#",$v);
+	$arrfil[]=$exp1[0];
+	$arrfilsort[$exp1[0]]=$exp1[1];
+
+ }
+
+ }
+ ?>
+ <div class="mode-box">
+<h3><span>Filters</span></h3>
+<table><tr> <td class="addcolornet">Filter Name</td><td class="addcolornet">Sort Order</td></tr>
+<tr><td class="addcolornet">Price : <input type="checkbox" name="filter[p]" id="filter[p]" value="p" <?if(@in_array("p",$arrfil)){ echo "checked";}?>></td><td ><input type="text" name="sort[p]" id="sort[p]" value="<?=$arrfilsort[p]?>"></td>
+</tr>
+<tr><td class="addcolornet">Manufacturer : <input type="checkbox" name="filter[m]" id="filter[m]" value="m" <?if(@in_array("m",$arrfil)){ echo "checked";}?> ></td><td><input type="text" name="sort[m]" id="sort[m]" value="<?=$arrfilsort[m]?>" ></td>
+</tr>
+<?$filter=$act->getFilter();
+/*echo "<pre>";
+print_r($filter);
+echo "</pre>";*/
+foreach($filter as $k=>$v)
+{
+$chk="";
+if(@in_array($v[option_id],$arrfil)){ $chk="checked";}
+echo '<tr><td class="addcolornet">'.$v[name].' : <input type="checkbox" name="filter['.$v[option_id].']" id="filter['.$v[option_id].']" value="'.$v[option_id].'" '.$chk.' ></td><td><input type="text" name="sort['.$v[option_id].']" id="sort['.$v[option_id].']" value="'.$arrfilsort[$v[option_id]].'"></td>
+</tr>';
+}
+?>
+
+</table>
+</div>
+</div>
+
+                        </form>
+                       </div>
+                  </div>
+                     <div class="module-body">
+                  </div>
+
+                </div>
+        		<div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+           <div style="clear:both;"></div>
+</div>
+
+<!--start fck editor-->
+<script type="text/javascript" >
+window.onload = function()
+{</script>
+<?$select = $act->db->fetchAll("select * from r_languages order by sort_order");
+foreach($select as $row){?>
+<script type="text/javascript" >
+
+	if(document.getElementById('categories_description_<?=$row[languages_id]?>'))
+	{
+		var oFCKeditor = new FCKeditor('categories_description_<?=$row[languages_id]?>') ;
+		oFCKeditor.BasePath = "<?=PUBLIC_PATH?>js/fckeditor/" ;
+		oFCKeditor.Height = 300;
+		oFCKeditor.Width = '96%';
+		oFCKeditor.ReplaceTextarea() ;
+	}
+</script>
+<?}?><script type="text/javascript" >
+	}
+</script>
+<!--end fck editor -->
+		<?php }?>
+

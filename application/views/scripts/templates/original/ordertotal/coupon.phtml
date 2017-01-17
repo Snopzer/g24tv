@@ -1,0 +1,38 @@
+<?$couponObj=new Model_OrderTotal();
+$data=$couponObj->coupon();
+if($data!=""){?>
+<div>
+  <div class="cart-heading"><?php echo $data['heading_title_coupon']; ?></div>
+  <div class="cart-content" id="coupon"><?php echo $data['entry_coupon']; ?>&nbsp;
+    <input type="text" name="coupon" value="<?php echo $data['coupon']; ?>" />
+    &nbsp;<a id="button-coupon" class="button_btn"><span><?php echo $data['button_coupon']; ?></span></a></div>
+</div>
+<?}?>
+<script type="text/javascript"><!--
+$('#button-coupon').bind('click', function() {
+	$.ajax({
+		type: 'POST',
+		url: '<?echo HTTP_SERVER;?>order-total/couponcalculate',
+		data: $('#coupon :input'),
+		dataType: 'json',
+		beforeSend: function() {
+			$('.success, .warning').remove();
+			$('#button-coupon').attr('disabled', true);
+			$('#button-coupon').after('<span class="wait">&nbsp;<img src="<?php echo URL_TO_TEMPLATES.SITE_DEFAULT_TEMPLATE?>/includes/images/loading.gif" alt="" /></span>');
+		},
+		complete: function() {
+			$('#button-coupon').attr('disabled', false);
+			$('.wait').remove();
+		},
+		success: function(json) {
+			if (json['error']) {
+				$('#basket').before('<div class="warning">' + json['error'] + '<img src="<?php echo URL_TO_TEMPLATES.SITE_DEFAULT_TEMPLATE?>/includes/images/loading.gif" alt="" class="close" /></div>');
+			}
+
+			if (json['redirect']) {
+				location = json['redirect'];
+			}
+		}
+	});
+});
+//--></script>

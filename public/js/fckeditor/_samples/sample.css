@@ -1,0 +1,7 @@
+body,td,th,input,select,textarea{font-size:12px;font-family:Arial, Verdana, Sans-Serif}
+h1{font-weight:700;font-size:180%;margin-bottom:10px}
+form{margin:0;padding:0}
+#outputSample{table-layout:fixed;width:100%}
+pre{white-space:pre-line;word-wrap:break-word;margin:0;padding:0}
+#outputSample thead th{color:#ddd;background-color:#999;white-space:nowrap;padding:4px}
+#outputSample tbody th{vertical-align:top;text-align:left}

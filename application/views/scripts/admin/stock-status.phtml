@@ -1,0 +1,175 @@
+<?php
+$act=new Model_Adminaction();
+$act_ext=new Model_Adminextaction();
+
+	  $rcat1=$act->getEditdetails('r_configuration','configuration_key','\'DEFAULT_OUT_STOCK_STATUS_ID\'');
+	  $rcat2=$act->getEditdetails('r_configuration','configuration_key','\'DEFAULT_AVAILABILITY_STOCK_STATUS_ID\'');
+	if($_REQUEST['type']==''){?>
+<div class="container_12">
+           <div style="clear:both;"></div>
+            <div class="grid_12">
+  				<?
+					if($_REQUEST['msg']!=""){?>
+				<span class='<?php echo $_REQUEST['m']==""?"notification n-success":"notification n-error"?>'><?=base64_decode($_REQUEST['msg']);?></span>
+				<?}?>
+
+                <div class="bottom-spacing">
+                    <!-- Button -->
+                    <div class="float-right"><?=$this->view_pagination;?>
+						
+                    </div>
+                    <!-- Table records filtering -->
+
+
+                </div>
+
+
+                <!-- Example table -->
+                <div class="module">
+                	<h2><span><?=$this->actionTitle." [".$this->total_count."]"?></span> <div class="add-btn-div"><?php $act->viewAddB(ADMIN_URL_CONTROLLER.$this->actionTitle);?> </div>  </h2>
+
+                    <div class="module-table-body">
+                    	<form name="frmMain" id="frmMain" method="post" action="<?php echo ADMIN_URL_CONTROLLER.$this->actionTitle?>">
+                        <table id="myTable" class="tablesorter">
+                   	  <thead>
+                                <tr>
+				  <th align="center" style="width:5%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#</th>
+				  <th align="center" style="width:2%">Sid</th>
+                                  <th style="width:20%"><?php echo $act_ext->getSortLable(array("disType"=>$this->disType, "sortby"=>"name", "page"=>$_REQUEST['page'] ,"file"=>"stock-status" ,"label"=>"Stock Status"));?></th>
+                                  <th style="width:15%"><input type="checkbox" name="checkall" id="checkall" onClick="Checkall()"/> <a href="#">Action</a></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+							<?
+					$i=1;
+					if($this->page!=1)
+					{
+						$i+=($this->page-1)*$this->per_page;
+					}
+
+							foreach ($this->results as $result)
+							{
+
+							$class=fmod($i,2)==0?'':'addcolorne';
+							?>
+                              <tr>
+                                <td align="center" class="<?=$class?>"><?=$i?></td>
+				<td align="center" class="<?=$class?>"><?=$result['stock_status_id'];?></td>
+                                 <td class="<?=$class?>"><?php echo $result['name']," "; echo $rcat1[0]['configuration_value']==$result['stock_status_id']?'[default out of stock]':'';
+							echo $rcat2[0]['configuration_value']==$result['stock_status_id']?'[default availability]':'';?></td>
+                                                 <td class="<?=$class?>">
+
+								<input type="checkbox" name="rid[]" id="rid" value="<?php echo $result[$this->r_id];?>"  />
+								<?php
+									$act->viewEditB(ADMIN_URL_CONTROLLER.$this->actionTitle,$result[$this->r_id],$_REQUEST['page']);
+									$act->viewDelB($this->actionTitle,$result[$this->r_id],$this->r_table,$this->r_id,$_REQUEST['page']);
+								?>
+
+                                </td>
+                              </tr>
+                              <?$i=$i+1;}?>
+
+                            </tbody>
+                        </table>
+
+						<input type="hidden" name="page" id="page" value="<?php echo $this->page;?>">
+                        <div class="table-apply">
+
+			     <?$act->fnmultipleactdropdown(array('Del'=>'Delete'));?>
+                            </form>
+                        </div>
+                        <div style="clear: both"></div>
+                     </div>
+                </div>
+
+                <?=$this->view_pagination;?>
+			</div>
+             <div class="grid_6">
+		  </div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+        </div>
+		<?php }elseif($_REQUEST['type']=='Add' || 'Edit'){
+ 	/*foreach ($this->data as $result)
+	{} print_r($result);*/?>
+		<div class="container_12">
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+            <div class="grid_12">
+                <div class="module">
+                     <h2><span><?php echo $_REQUEST['type']." ".$this->actionTitle;?></span></h2>
+                     <div id="TabbedPanels1" class="TabbedPanels">
+                       <ul class="TabbedPanelsTabGroup">
+                         <li class="TabbedPanelsTab" tabindex="0">Details</li>
+                         <li class="iconsec">
+						 <?php echo $act->editCancelB($this->actionTitle,$_REQUEST['page']);?></li>
+                         
+						 <?php
+						 if($_REQUEST['type']=='Edit'){
+						 echo '<li class="iconsec">';
+						 echo $act->editApplyB(ADMIN_URL_CONTROLLER.$this->actionTitle,(int)$_REQUEST['rid'],$_REQUEST['type']);
+						 echo '</li>';
+		}					?>
+                         <li class="iconsec">
+						 <?php echo $act->editSaveB(ADMIN_URL_CONTROLLER.$this->actionTitle,(int)$_REQUEST['rid'],$_REQUEST['type'],$_REQUEST['page']);?></li>
+                       </ul>
+                       <div class="TabbedPanelsContentGroup">
+                         <div class="TabbedPanelsContent"> <form name="frmEdit" method="post" enctype="multipart/form-data">
+                             <?if($this->msg!=""){ echo '<div><span class="notification n-success">'.base64_decode($this->msg).'</span></div> ';}?>
+							 <p><b>All fields indicated with * are mandatory</b></p>
+
+						<div class="mode-box">
+<h3><span>Stock Status Details</span></h3>	  <?
+
+
+								//echo "value of ".$rcat[0]['configuration_value'];
+
+								if($_REQUEST['type']=='Edit')
+								$ret=$act->db->fetchAll("select o.name as stock,o.language_id,l.name,l.directory,l.image,l.code from r_stock_status o, r_languages l where o.stock_status_id='".(int)$_REQUEST['rid']."' and l.languages_id=o.language_id");
+								else
+								$ret=$act->db->fetchAll("select languages_id as language_id,directory,name,code,image from r_languages");
+
+								if(count($ret)>0)
+								{
+									$i=0;
+									foreach($ret as $res)
+									{
+
+										echo '<p>';
+
+										echo '<label>Stock Status</label>';
+										echo '<input type="text" name="name_'.$res['language_id'].'" id="name_'.$res['language_id'].'" class="input-medium" tooltipText=" The status that will be displayed when a product runs out or default 0
+" value="'.$res['stock'].'" >';
+										echo '</p>';
+
+									$i++;
+									}
+								}
+
+
+										$chk3=$rcat1[0]['configuration_value']==(int)$_REQUEST['rid']?'checked':'';
+
+										echo '<p><label>Set as Default for out of stock status</label><input type="radio" name="default" id="default" '.$chk3.' tooltipText="Set as Default for out of stock status" value="DEFAULT_OUT_STOCK_STATUS_ID" ></p>';
+
+										$chk4=$rcat2[0]['configuration_value']==(int)$_REQUEST['rid']?'checked':'';
+										echo '<p><label>Set as Default for Availability</label><input type="radio" name="default" id="default" '.$chk4.' tooltipText="Set as Default for availability" value="DEFAULT_AVAILABILITY_STOCK_STATUS_ID" ></p>';
+
+
+								?></div>
+
+						 </div>
+                        </form>
+                       </div>
+                  </div>
+                     <div class="module-body">
+                  </div>
+
+                </div>
+        		<div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+           <div style="clear:both;"></div>
+</div>
+		<?php }?>

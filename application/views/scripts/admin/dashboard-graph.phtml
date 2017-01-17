@@ -1,0 +1,163 @@
+ <?$act=new Model_Adminaction();
+$act_ext=new Model_Adminextaction();
+$range=$_REQUEST['range'];
+ if($this->range=='year')
+{
+	$label='\'Jan\',\'Feb\',\'Mar\',\'Apr\',\'May\',\'Jun\',\'Jul\',\'Aug\',\'Sep\',\'Oct\',\'Nov\',\'Dec\'';
+	$table_label=array('1'=>'Jan','2'=>'Feb','3'=>'Mar','4'=>'Apr','5'=>'May','6'=>'Jun','7'=>'Jul','8'=>'Aug','9'=>'Sep','10'=>'Oct','11'=>'Nov','12'=>'Dec');
+
+}else if($this->range=='month')
+{
+	$m_sel=(int)date(m);
+
+	$days = (date('t', mktime(0,0,0,$m_sel))+1);
+	 for ($i=1; $i<$days; $i++)
+	 {
+	    $label=$label.$pre."'".$i."'";
+		$pre=",";
+	 }
+}else if($this->range=='week')
+{
+	$label='\'Sun\',\'Mon\',\'Tue\',\'Wed\',\'Thu\',\'Fri\',\'Sat\'';
+	$table_label=array('0'=>'Sun','1'=>'Mon','2'=>'Tue','3'=>'Wed','4'=>'Thu','5'=>'Fri','6'=>'Sat');
+}else if($this->range=='day')
+{
+	for ($i = 0; $i < 24; $i++) {
+			//$hours[] = array($i, date('H', mktime($i, 0, 0, date('n'), date('j'), date('Y'))));
+			$label=$label.$pre."'".date('H', mktime($i, 0, 0, date('n'), date('j'), date('Y')))."'";
+			$pre=",";
+			}
+//echo "<pre>";
+//print_r($hours);
+}
+//echo "value of  ".$label;
+?>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+		<script type="text/javascript" src="<?=PATH_TO_ADMIN_JS?>highcharts.js"></script>
+		<!--[if IE]>
+			<script type="text/javascript" src="<?=PATH_TO_ADMIN_JS?>excanvas.compiled.js"></script>
+		<![endif]-->
+
+
+		<!-- 2. Add the JavaScript to initialize the chart on document ready -->
+		<script type="text/javascript">
+		$(document).ready(function() {
+			var chart = new Highcharts.Chart({
+				chart: {
+					renderTo: 'container11',
+					defaultSeriesType: 'column'
+				},
+				title: {
+					text: 'Total Order and Customers registered as per the selected Range'
+				},
+				xAxis: {
+					categories: [<?=$label;?>]
+				},
+				yAxis: {
+					title: {
+						text: 'Orders/Customers'
+					}
+				},
+				tooltip: {
+					formatter: function() {
+						/*return '<b>'+ this.series.name +'</b><br/>'+
+							this.y +' '+ this.x.toLowerCase();*/
+							return '<b>'+ this.series.name +'</b><br/>'+
+							this.y ;
+					}
+				},
+				plotOptions: {
+					column: {
+						data: 'datatable',
+						// define a custom data parser function for both series
+						dataParser: function(data) {
+							var table = document.getElementById(data),
+								// get the data rows from the tbody element
+								rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr'),
+								// define the array to hold the real data
+								result = [],
+								// decide which column to use for this series
+								column = { 'Customers': 0, 'Orders': 1 }[this.options.name];
+
+							// loop through the rows and get the data depending on the series (this) name
+							for (var i = 0; i < rows.length; i++) {
+								result.push(
+									parseInt(
+										rows[i].getElementsByTagName('td')[column]. // the data cell
+										innerHTML
+									)
+								);
+							}
+							return result;
+						}
+					}
+				},
+				series: [{
+					name: 'Customers'
+				}, {
+					name: 'Orders'
+				}]
+			});
+
+
+		});
+		</script>
+
+	</head>
+
+<form name="frmGraph" id="frmGraph" method="post" action="">
+<div id="banner-table" style="width:100%;height:300px;">
+<table border="0">
+<tr><td>Range : </td><td>
+
+<!-- <select name="range" id="range" onchange="$('#banner-table').load('http://192.168.1.8/mve_front/public/admin/dashboard-graph?range=' + this.value);"> -->
+ <select name="range" id="range" onchange="document.getElementById('frmGraph').submit();">
+<option value="day" <?echo $_REQUEST['range']=='day'?'selected':'';?> >Today</option>
+<option value="week" <?echo $_REQUEST['range']=='week'?'selected':'';?> >This Week</option>
+<option value="month" <?echo $_REQUEST['range']=='month'?'selected':'';?> >This Month</option>
+<option value="year" <?echo $_REQUEST['range']=='year'?'selected':'';?> >This Year</option>
+</select>
+</td>
+</tr>
+</table>
+<form>
+		<!-- 3. Add the container -->
+		<div id="container11" style="width: 600px; height: 250px; margin: 0 auto"></div>
+
+
+<?
+ //echo "<pre>";
+//print_r($this->data);
+
+if($this->range=='year' || $this->range=='month' || $this->range=='week' || $this->range=='day'){?>
+		<table id="datatable" style="display:none;" >
+			<thead>
+				<tr>
+					<th>Years</th>
+					<th>Customers</th>
+					<th>Orders</th>
+				</tr>
+			</thead>
+			<tbody>
+			<?
+			$i=0;
+			foreach($this->data[order][data] as $k){
+			if($this->range=='year')
+			{
+				$table_label=$table_label[$k[0]];
+			}else
+			{
+				$table_label=$k[0];
+			}
+				?>
+				<tr>
+					<th><?=$table_label?></th>
+					<td><?=$this->data[customer][data][$i][1]?></td>
+					<td><?=$k[1]?></td>
+				</tr>
+				 <?$i++;}?>
+			</tbody>
+		</table>
+		<?}?>
+
+</div>

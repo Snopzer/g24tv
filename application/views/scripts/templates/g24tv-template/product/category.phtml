@@ -1,0 +1,71 @@
+<!-- start site main content -->
+<section id="mainContent">
+	<div class="content_top">
+		<div class="row">
+			<?if(count($this->pos[top])>0){?>
+				<?php echo $this->action('top','modules',null,array('mod' =>$this->pos[top]));?>
+			<?}?>
+		</div>
+	</div>
+	<!-- start main content bottom -->
+	<div class="content_bottom">
+		<div class="col-lg-8 col-md-8">
+            <!-- start content bottom left -->
+			<div class="content_bottom_left">
+				
+				<div class="archive_style_1">
+					<?php if($this->products){?>
+					<h2>                  
+						<span class="bold_line"><span></span></span>
+						<span class="solid_line"></span>
+						<span class="title_text">Latest Updates</span>
+					</h2>	
+					<?php
+						$i=0;
+						foreach ($this->products as $product) {
+						?>
+						<div class="single_archive wow fadeInDown">
+							<div class="archive_imgcontainer">
+								<?php echo '<img src="'.$this->url_to_site."timthumb.php?src=".$product['thumb'].'" alt="'.$product['name'].'" title="'.$product['name'].'" />'; ?>
+							</div>
+							<div class="archive_caption">
+								<h2><a href="<?=$product['href']?>"><?php echo str_replace('\"', '"',str_replace("\'", "'", $product['name'])); ?></a></h2>
+								<p><?php echo str_replace('\"', '"',str_replace("\'", "'", $product['description'])); ?></p>
+								</div>
+							<a class="read_more" href="<?=$product['href']?>"><span>Read More.</span></a>
+						</div>
+					<? } ?>	
+					
+				<div class="pagination_area">
+					<?php echo $this->pagination; ?>
+				</div>
+				<? } ?>
+				<?php if(!$this->products){?>
+				<h2>                  
+						<span class="bold_line"><span></span></span>
+						<span class="solid_line"></span>
+						<span class="title_text">No Articles Found</span>
+					</h2>	
+				<?}?>
+				</div>
+				<? if(count($this->pos[left])>0){?>
+					<?php echo $this->action('left','modules',null,array('mod' =>$this->pos[left]));?>
+				<?}?>
+			</div><!--End content_bottom_left-->                 
+		</div>
+		<!-- start content bottom right -->
+		<div class="col-lg-4 col-md-4">
+			<div class="content_bottom_right">
+				<?if(count($this->pos[right])>0){?>
+					<?php echo $this->action('right','modules',null,array('mod' =>$this->pos[right]));?>
+				<?}?>
+				
+			</div>
+		</div>
+	</div>  
+	<div class="content_middle">
+		<?if(count($this->pos[bottom])>0){?>
+			<?php echo $this->action('bottom','modules',null,array('mod' =>$this->pos[bottom]));?>
+		<?}?>
+	</div><!-- End main content middle -->
+</section><!-- End site main content -->

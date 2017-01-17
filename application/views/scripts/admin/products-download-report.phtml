@@ -1,0 +1,88 @@
+<?php
+	$act=new Model_Adminaction();
+	$act_ext=new Model_Adminextaction();
+ 	if($_REQUEST['type']==''){?>
+<div class="container_12">
+           <div style="clear:both;" ></div>
+            <div class="grid_12" >
+
+
+				<?if($_REQUEST['msg']!=""){?>
+				<span class="notification n-error"><?=base64_decode($_REQUEST['msg']);?></span>
+				<?}?>
+
+                <div class="bottom-spacing">
+                    <!-- Button -->
+                    <div class="float-right"><?=$this->view_pagination;?>
+						<?php //$act->viewAddB(ADMIN_URL_CONTROLLER.$this->actionTitle);?>
+                    </div>
+					<form  name="frmfilter" id="frmfilter" method="post" action="">
+                   <input type="text" name="date_start" id="date_start" onfocus="if(this.value=='Start Date') this.value=''"  value="<?php echo $_REQUEST['date_start']!=""?$_REQUEST['date_start']:'Start Date';?>" > <input type="text" name="date_end" id="date_end" onfocus="if(this.value=='Date End') this.value=''"  value="<?php echo $_REQUEST['date_end']!=""?$_REQUEST['date_end']:'End Date';?>"> <input type="submit" name="filter" id="filter" value="filter">   <script type="text/javascript">
+						
+						date_pick('#date_start');
+						date_pick('#date_end');
+						/*dateFormat:"%d-%m-%Y"*/
+						</script>
+					</form>
+                </div>
+
+
+                <!-- Example table -->
+                <div class="module">
+                	<h2><span><?=$this->actionTitle." [".$this->total_count."]"?></span></h2>
+
+                    <div class="module-table-body">
+                    	<form name="frmMain" id="frmMain" method="post" action="<?php echo ADMIN_URL_CONTROLLER.$this->actionTitle?>">
+						<?if($this->total_count>0){?>
+                        <table id="myTable" class="tablesorter">
+                   	  <thead>
+                                <tr>
+								  <th align="center" style="width:5%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#</th>
+                                  <th style="width:15%">Products Name</th>
+								  <th style="width:15%">Total</th>
+								  <th style="width:15%">Action</th>
+								</tr>
+                            </thead>
+                            <tbody>
+
+							<?
+					$i=1;
+					if($this->page!=1)
+					{
+						$i+=($this->page-1)*$this->per_page;
+					}
+
+							foreach ($this->results as $result)
+							{
+
+							$class=fmod($i,2)==0?'':'addcolorne';
+							?>
+                              <tr>
+                                <td align="center" class="<?=$class?>"><?=$i?></td>
+                                 <td class="<?=$class?>"><?php echo $result['products_name'];?></td>
+								 <td class="<?=$class?>"><?php echo $result['total'];?></td>
+								 <td class="<?=$class?>"><a href="products?type=Edit&rid=<?php echo $result['products_id'];?>">Edit</a></td>
+								</tr>
+                              <?$i=$i+1;}?>
+
+                            </tbody>
+                        </table><?}else{
+							echo "<table id='myTable' class='tablesorter' border='2'><tr><td align='center'>No records to display</td></tr></table>";
+							}?>
+
+						<input type="hidden" name="page" id="page" value="<?php echo $this->page;?>">
+                           </form>
+                        </div>
+                        <div style="clear: both"></div>
+                     </div>
+                </div>
+
+                <?=$this->view_pagination;?>
+			</div>
+             <div class="grid_6">
+		  </div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+        </div>
+		<?php }?>

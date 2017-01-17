@@ -1,0 +1,73 @@
+<div class="main-column"><!--main-max-banner start-->
+<div id="container"><!--container start-->
+
+<? if(count($this->pos[left])>0){?>
+<div id="column-left"><!--column-left start-->
+<?php echo $this->action('left','modules',null,array('mod' =>$this->pos[left]));?>
+<!--column-left End--></div>
+<?}?>
+
+<?if(count($this->pos[right])>0){?>
+<div id="column-right"><!--column-right start-->
+<?php echo $this->action('right','modules',null,array('mod' =>$this->pos[right]));?>
+<!--column-right End-->
+<?}?>
+		
+            <div id="content"><!--content start-->
+<?if(count($this->pos[top])>0){?>
+<div id="main-max-banner"><!--start main-max-banner-->
+<?php echo $this->action('top','modules',null,array('mod' =>$this->pos[top]));?>
+<!--End main-max-banner--></div>
+<?}?>
+
+          <div class="breadcrumb"><!--readcrumb start-->
+	<p>
+	<?php foreach ($this->data[breadcrumbs] as $breadcrumb) { ?>
+    <?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
+    <?php } ?></p>
+                  <!--readcrumb End --></div>
+				  
+                   <div class="page-title">
+<h1><span>  <?php echo $this->trans->_('heading_title_account_download'); ?> </span> </h1></div>
+						
+                  <div class="box">
+				   <div class="box-account-download">
+			 <div class="pagination"><?php echo $this->data[pagination]; ?></div>
+				  <div class="box-content">
+				  
+    <?php
+if(count($this->data[downloads])>0)
+{
+    foreach ($this->data[downloads] as $download) { ?>
+  <div class="download-list">
+    <div class="list-title-bar">
+    <div class="download-id"><b><?php echo $this->trans->_('text_order_account_download'); ?></b> <?php echo $download['order_id']; ?></div>
+    <div class="download-status"><b><?php echo $this->trans->_('text_size_account_download'); ?></b> <?php echo $download['size']; ?></div>
+	</div>
+    <div class="download-content">
+      <div><b><?php echo $this->trans->_('text_name_account_download'); ?></b> <?php echo $download['name']; ?><br />
+        <b><?php echo $this->trans->_('text_date_added_account_download'); ?></b> <?php echo $download['date_added']; ?></div>
+      <div><b><?php echo $this->trans->_('text_remaining_account_download'); ?></b> <?php echo $download['remaining']; ?></div>
+      <div class="download-info"><a href="<?php echo $download['href']; ?>" class="button_btn"><span><?php echo $this->trans->_('text_download_account_download'); ?></span></a></div>
+    </div>
+  </div>
+  <?php } ?>
+  <div class="pagination"><?php echo $this->data[pagination]; ?></div>
+<?}else{?>
+<div class="download-content"><?php echo $this->trans->_('text_empty_account_download'); ?></div>
+<?}?>
+  </div>
+  </div>
+
+						</div>
+                    <!--box end --></div>
+					 
+			<?if(count($this->pos[bottom])>0){?>
+<div class="content-bottom"><!--content-bottom srtart-->
+<?php echo $this->action('bottom','modules',null,array('mod' =>$this->pos[bottom]));?>
+</div>
+<?}?>
+                         
+<!--container End-->
+           <!--main-max-banner End-->  <!--rightContainer --></div>
+            <!--innerContent --></div></div>

@@ -1,0 +1,74 @@
+<?
+$categories=$this->info[data][categories];
+$category_id=$this->info[data][categories_id];
+$child_id=$this->info[data][child_id];
+?>
+ 
+<div class="box">
+<div class="categories-div">
+<div class="modules-box-div">
+<?php if(@constant('category_module_title')!="") {?><dt class="box-heading"><p><span>
+<?php echo @constant('category_module_title'); ?></span></p></dt><?}?>
+	<div class="categories-linkes">
+		<div class="box-content">
+		<ul>
+		
+<?php foreach ($categories as $category) { ?>
+<li>
+<?php if ($category['category_id'] == $category_id) { ?>
+<a href="<?php echo $category['href']; ?>" class="active"><?php echo $category['name']; ?></a>
+<?php } else { ?>
+<a href="<?php echo $category['href']; ?>"><?php echo $category['name']; ?></a>
+<?php } ?>
+<?php if ($category['children']) { ?>
+   <div class="style-sub">
+
+<?php foreach ($category['children'] as $child) { ?>
+<ul>
+<li>
+<?php
+if ($child['category_id'] == $child_id) { ?>
+<a href="<?php echo $child['href']; ?>" class="active"> - <?php echo $child['name']; ?></a>
+
+<?php } else { ?>
+<a href="<?php echo $child['href']; ?>"> - <?php echo $child['name']; ?></a>
+<?php } ?>
+<?php if ($child['sub_child']) { ?>
+<ul >
+
+<?php foreach ($child['sub_child'] as $sub_child) { ?>
+<li>
+<?php
+if ($sub_child['category_id'] == $sub_child_id) { ?>
+<a href="<?php echo $sub_child['href']; ?>" class="active"> - <?php echo $sub_child['name']; ?></a>
+
+<?php } else { ?>
+<a href="<?php echo $sub_child['href']; ?>"> - <?php echo $sub_child['name']; ?></a>
+<?php } ?>
+</li>
+<?php } ?>
+<?if($child['view_more']=='1'){?>
+<li class="more-view"><a href="<?php echo $child['href']; ?>">View More</a></li>
+<?}?>
+</ul>
+
+<?php } ?>
+
+</li>
+</ul>
+<?php } ?>
+
+</div>
+<?php } ?>
+</li>
+<?php } ?>
+</ul>
+
+		</div>
+	</div></div>
+</div></div>
+
+
+
+
+

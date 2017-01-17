@@ -1,0 +1,504 @@
+<?php
+	$act=new Model_Adminaction();
+	$act_ext=new Model_Adminextaction();
+ 	if($_REQUEST['type']==''){?>
+<div class="container_12">
+           <div style="clear:both;" ></div>
+            <div class="grid_12" >
+
+
+				<?if($_REQUEST['msg']!=""){?>
+				<span class="notification n-success"><?=base64_decode($_REQUEST['msg'])?></span>
+				<?}?>
+
+                <div class="bottom-spacing">
+
+                    <!-- Button -->
+                    <div class="float-right">
+		 
+		    <?=$this->view_pagination;?>
+                     </div>
+					<form  name="frmfilter" id="frmfilter" method="post" action="">
+                  
+				   
+
+<span><input type="text" name="order_id" id="order_id" onkeydown="if(this.value=='Order Id') this.value=''"  value="<?php echo $_REQUEST['order_id']!=""?$_REQUEST['order_id']:'Order Id';?>"> </span>
+
+<span><input type="text" name="customer" id="customer" onkeydown="if(this.value=='Customer') this.value=''"  value="<?php echo $_REQUEST['customer']!=""?$_REQUEST['customer']:'Customer';?>" > </span>
+
+<span><select name="status" id="status"><option value="">Select</option>
+		  <option value="0" <?php echo $_REQUEST['status']=='0'?'selected':'';?>>Order Incomplete </option>
+		    <?=$act_ext->getorderstatsdropdown($_REQUEST['status']);?>></select></span>  
+		  <span>	<input type="text" name="date_added" id="date_added" onkeydown="if(this.value=='Date Purchased') this.value=''"  value="<?php echo $_REQUEST['date_added']!=""?$_REQUEST['date_added']:'Date Purchased';?>"> </span>
+		  <span><input type="submit" name="filter" id="filter" value="filter"></span>
+			
+			
+
+					</form>
+                </div>
+
+
+                <!-- Example table -->
+                <div class="module">
+                	<h2><span><?=$this->actionTitle." [".$this->total_count."]"?></span> <div class="add-btn-div"><?php echo  $act->viewAddB(ADMIN_URL_CONTROLLER.$this->actionTitle); ?> </div>  </h2>
+
+                    <div class="module-table-body">
+                    	<form name="frmMain" id="frmMain" method="post" action="<?php echo ADMIN_URL_CONTROLLER.$this->actionTitle?>">
+						<?if($this->total_count>0){?>
+                        <table id="myTable" class="tablesorter">
+                   	  <thead>
+                                <tr>
+								  <th align="center" style="width:5%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#</th>
+                                  <th style="width:15%">Order Id</th>
+								  <th style="width:15%"><?echo $act_ext->getSortLable(array("status"=>$_REQUEST['status'],"order_id"=>$_REQUEST['order_id'],"customer"=>$_REQUEST['customer'],"date_added"=>$_REQUEST['date_added'],"date_modified"=>$_REQUEST['date_modified'],"disType"=>$this->disType, "sortby"=>"o.customers_name", "page"=>$_REQUEST['page'] ,"file"=>"orders" ,"label"=>"Customer"));?></th>
+								  <th style="width:15%"><?echo $act_ext->getSortLable(array("status"=>$_REQUEST['status'],"order_id"=>$_REQUEST['order_id'],"customer"=>$_REQUEST['customer'],"date_added"=>$_REQUEST['date_added'],"date_modified"=>$_REQUEST['date_modified'],"disType"=>$this->disType, "sortby"=>"o.orders_status", "page"=>$_REQUEST['page'] ,"file"=>"orders" ,"label"=>"Status"));?></th>
+								  <th style="width:15%"><?echo $act_ext->getSortLable(array("status"=>$_REQUEST['status'],"order_id"=>$_REQUEST['order_id'],"customer"=>$_REQUEST['customer'],"date_added"=>$_REQUEST['date_added'],"date_modified"=>$_REQUEST['date_modified'],"disType"=>$this->disType, "sortby"=>"o.total", "page"=>$_REQUEST['page'] ,"file"=>"orders" ,"label"=>"Order Total"));?></th>
+								  <th style="width:20%"><?echo $act_ext->getSortLable(array("status"=>$_REQUEST['status'],"order_id"=>$_REQUEST['order_id'],"customer"=>$_REQUEST['customer'],"date_added"=>$_REQUEST['date_added'],"date_modified"=>$_REQUEST['date_modified'],"disType"=>$this->disType, "sortby"=>"o.date_purchased", "page"=>$_REQUEST['page'] ,"file"=>"orders" ,"label"=>"Date Purchased"));?></th>
+                                  <th style="width:15%"><input type="checkbox" name="checkall" id="checkall" onClick="Checkall()"/> <a href="javascript:fnprint()">Print Invoice</a></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+							<?
+					$i=1;
+					if($this->page!=1)
+					{
+						$i+=($this->page-1)*$this->per_page;
+					}
+
+							foreach ($this->results as $result)
+							{
+
+							$class=fmod($i,2)==0?'':'addcolorne';
+							?>
+                              <tr>
+                                <td align="center" class="<?=$class?>"><?=$i?></td>
+                                 <td class="<?=$class?>"><?php echo $result['orders_id'];?></td>
+				 <td class="<?=$class?>"><?php echo $result['customers_name'];?></td>
+				 <td class="<?=$class?>"><?php echo $result['orders_status_name'];?></td>
+				 <td class="<?=$class?>"><?php echo $result['symbol_left'].number_format($result['total']*$result['currency_value'],2).$result['symbol_right'];?></td>
+				 <td class="<?=$class?>"><?php echo $result['date_purchased'];?></td>
+                                <td class="<?=$class?>">
+
+								<input type="checkbox" name="rid[]" id="rid" value="<?php echo $result[$this->r_id];?>"  />
+								<?php
+									$act->viewEditB(ADMIN_URL_CONTROLLER.$this->actionTitle,$result[$this->r_id],$_REQUEST['page']);
+									$act->viewDelB($this->actionTitle,$result[$this->r_id],$this->r_table,$this->r_id,$_REQUEST['page']);
+								?>
+
+                                </td>
+                              </tr>
+                              <?$i=$i+1;}?>
+
+                            </tbody>
+                        </table><?}else{
+							echo "<table id='myTable' class='tablesorter' border='2'><tr><td align='center'>No records to display</td></tr></table>";
+							}?>
+
+						<input type="hidden" name="page" id="page" value="<?php echo $this->page;?>">
+                        <div class="table-apply">
+ 							<?$act->fnmultipleactdropdown(array('Del'=>'Delete'));?>
+                            </form>
+                        </div>
+                        <div style="clear: both"></div>
+                     </div>
+                </div>
+
+                <?=$this->view_pagination;?>
+			</div>
+             <div class="grid_6">
+		  </div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+        </div>
+		<?php }elseif($_REQUEST['type']=='Add' || 'Edit'){
+ 	/*foreach ($this->data as $result)
+	{} print_r($result);*/?>
+		<div class="container_12">
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+            <div class="grid_12">
+                <div class="module">
+                     <h2><span><?php echo $_REQUEST['type']." ".$this->actionTitle;?></span></h2>
+                     <div id="TabbedPanels1" class="TabbedPanels">
+                       <ul class="TabbedPanelsTabGroup">
+                         <li class="TabbedPanelsTab" tabindex="0">Order Details</li>
+						 <li class="TabbedPanelsTab" tabindex="0">Payment Details</li>
+						 <?if($this->data[0]['shipping_method']!=""){?>
+						 <li class="TabbedPanelsTab" tabindex="0">Shipping Details</li>
+						 <?}?>
+						 <li class="TabbedPanelsTab" tabindex="0">Products</li>
+						 <li class="TabbedPanelsTab" tabindex="0">Order History</li>
+						 <li class="iconsec">
+						 <?php echo $act->editCancelB($this->actionTitle,$_REQUEST['page']);?>
+						 </li>
+                         <li class="iconsec">
+						<a href="javascript:fnprint();">Print Invoice</a>
+						 </li>
+                       </ul>
+                       <div class="TabbedPanelsContentGroup">
+                         <div class="TabbedPanelsContent">
+		 <div class="mode-box">
+<h3><span>Order Details</span></h3>
+                             <?if($this->msg!=""){ echo '<div><span class="notification n-success">'.base64_decode($this->msg).'</span></div> ';}else if($_REQUEST['msg']!=""){ echo '<div><span class="notification n-success">'.base64_decode($_REQUEST['msg']).'</span></div> ';}?>
+			     					
+							 <p><b>All fields indicated with * are mandatory</b></p>
+							 <?if($this->data[0]['invoice_id']=='0'){?>
+							 <p><i>Note:To convert incomplete orders to geniue orders generate invoice id by clicking generate invoice link below invoice no textbox and update order status in orderhistory tab.</i></p>
+							 <?}?>
+                            <? echo $act->field(array('lable'=>'Order Id','input_title'=>'order_id','desc'=>'enter order id','input_type'=>'input_text','val'=>$this->data[0]['orders_id'],"req"=>'1'));
+
+							echo $act->field(array('lable'=>'Invoice No','input_title'=>'invoice_id','desc'=>'invoice','input_type'=>'input_text','val'=>INVOICE_PREFIX.$this->data[0]['invoice_id'],"req"=>'1'));
+							if($this->data[0]['invoice_id']=='0'){
+							echo "<lable id='lable_invoice'><a href='javascript:genInvoice();'>Generate Invoice</a></lable>";
+							}
+							echo $act->field(array('lable'=>'Customer','input_title'=>'enter customer name','desc'=>'customer name','input_type'=>'input_text','val'=>$this->data[0]['customers_name'],"req"=>'1'));
+
+							echo $act->field(array('lable'=>'Customer Group Name','input_title'=>'group_name','desc'=>'enter customer group name','input_type'=>'input_text','val'=>$this->data[0]['group_name'],"req"=>'1'));
+
+							echo $act->field(array('lable'=>'Ip address','input_title'=>'ip_address','desc'=>'enter ip address','input_type'=>'input_text','val'=>$this->data[0]['ip_address'],"req"=>'1'));
+
+							echo $act->field(array('lable'=>'Email','input_title'=>'email','desc'=>'enter customer group name','input_type'=>'input_text','val'=>$this->data[0]['customers_email_address'],"req"=>'1'));
+
+							echo $act->field(array('lable'=>'Telephone','input_title'=>'telephone','desc'=>'eneter contact number','input_type'=>'input_text','val'=>$this->data[0]['customers_telephone'],"req"=>'1'));
+
+							echo $act->field(array('lable'=>'Total','input_title'=>'total','desc'=>'enetr total value','input_type'=>'input_text','val'=>$this->data[0]['symbol_left'].number_format($this->data[0]['total']*$this->data[0]['currency_value'],2).$this->data[0]['symbol_right'],"req"=>'1'));
+							if($this->data[0]['rewards']>0)
+							{
+								echo $act->field(array('lable'=>'Reward Points','input_title'=>'reward','desc'=>'reward points obtained','input_type'=>'input_text','val'=>$this->data[0]['rewards'],"req"=>'0'));
+							
+								echo "<input type='hidden' name='hid_cust_id' id='hid_cust_id' value='".$this->data[0]['customers_id']."'>";
+								$acctRewdObj=new Model_AccountReward();
+								$rew=$acctRewdObj->getTotalCustomerRewardsByOrderId((int)$_REQUEST['rid']);
+ 								if($rew=='0')
+								{
+									echo "<div id='reward-apply'><a href='javascript:addReward();'>Apply Reward Points</a></div>";
+								}else
+								{
+									echo "<div id='reward-apply'><a href='javascript:removeReward();'>Remove Reward Points</a></div>";
+								}
+							}
+
+							if($this->data[0]['affiliate_id']!="0")
+							{
+								$affObj=new Model_Affiliate();
+								$aff=$affObj->getAffiliate($this->data[0]['affiliate_id']);
+								/*echo "<pre>";
+								print_r($aff);
+								echo "</pre>";*/
+								echo $act->field(array('lable'=>'Affiliate Name','input_title'=>'affiliate_name','desc'=>'affiliate name','input_type'=>'input_text','val'=>$aff['firstname']." ".$aff['lastname'],"req"=>'0'));
+
+								echo "<a href='affiliate?type=Edit&rid=".$aff['affiliate_id']."'>Details</a>";
+
+								$currObj=new Model_currencies();
+								$comission=$currObj->format($this->data[0]['commission'],true, $this->data[0]['currency'], $this->data[0]['currency_value']);
+								echo $act->field(array('lable'=>'Commission','input_title'=>'commission','desc'=>'Commission Obtained','input_type'=>'input_text','val'=>$comission,"req"=>'0'));
+								$afftransObj=new Model_AffiliateTransaction();
+								$com_status=$afftransObj->getTotalTransactionsByOrderId($this->data[0]['orders_id']);
+ 								if($com_status=='0')
+								{
+									echo "<div id='apply'><a href='javascript:addCommission();'>Apply Commission</a></div>";
+								}else
+								{
+									echo "<div id='apply'><a href='javascript:removeCommission();'>Remove Commission</a></div>";
+								}
+								echo "<input type='hidden' name='hid_aff_id' id='hid_aff_id' value='".$this->data[0]['affiliate_id']."'><input type='hidden' name='hid_aff_com' id='hid_aff_com' value='".$this->data[0]['commission']."'>";
+							}
+							echo $act->field(array('lable'=>'Order Status','input_title'=>'enter status of the order','desc'=>'order status','input_type'=>'input_text','val'=>$this->data[0]['orders_status_name'],"req"=>'1'));
+
+							echo $act->field(array('lable'=>'Date Purchased','input_title'=>'enter purchase date','desc'=>'date purchased','input_type'=>'input_text','val'=>$this->data[0]['date_purchased'],"req"=>'1'));
+
+							echo $act->field(array('lable'=>'Last Modified','input_title'=>'enter last modified date','desc'=>'last modified','input_type'=>'input_text','val'=>$this->data[0]['last_modified'],"req"=>'1'));
+
+                            ?></div>
+						 </div>
+						
+						 <div class="TabbedPanelsContent">
+						 							 <div class="mode-box">
+<h3><span>Payment Details</span></h3>
+                             <?if($this->msg!=""){ echo '<div><span class="notification n-success">'.base64_decode($this->msg).'</span></div> ';}?>
+							 <p><b>All fields indicated with * are mandatory</b></p>
+                            <? echo $act->field(array('lable'=>'Customer Name','input_title'=>'billing_name','desc'=>'enter billing name of the customer','input_type'=>'input_text','val'=>$this->data[0]['billing_name'],"req"=>'1'));
+
+						 echo $act->field(array('lable'=>'Company','input_title'=>'enter billing name of the company','desc'=>'billing company','input_type'=>'input_text','val'=>$this->data[0]['billing_company'],"req"=>'1'));
+
+						 echo $act->field(array('lable'=>'Street Address','input_title'=>'enter billing name of the street address','desc'=>'billing street address','input_type'=>'input_text','val'=>$this->data[0]['billing_street_address'],"req"=>'1'));
+
+						 echo $act->field(array('lable'=>'Suburb','input_title'=>'billing_suburb','desc'=>'enter biiling name of the suburb','input_type'=>'input_text','val'=>$this->data[0]['billing_suburb'],""=>'1'));
+
+						 echo $act->field(array('lable'=>'city','input_title'=>'billing_city','desc'=>'enter billing name of the city','input_type'=>'input_text','val'=>$this->data[0]['billing_city'],"req"=>'1'));
+
+						 echo $act->field(array('lable'=>'Post Code','input_title'=>'enter billing name of the postalcode','desc'=>'billing post code','input_type'=>'input_text','val'=>$this->data[0]['billing_postcode'],"req"=>'1'));
+
+						 echo $act->field(array('lable'=>'State','input_title'=>'enter billing name of the state','desc'=>'billing state','input_type'=>'input_text','val'=>$this->data[0]['billing_zone'],"req"=>'1'));
+
+						 echo $act->field(array('lable'=>'Country','input_title'=>'enter billing name of the country','desc'=>'billing country','input_type'=>'input_text','val'=>$this->data[0]['billing_country'],"req"=>'1'));
+
+						 echo $act->field(array('lable'=>'Payment Method','input_title'=>'enter payment method','desc'=>'payment method','input_type'=>'input_text','val'=>$this->data[0]['payment_method'],"req"=>'1'));
+                            ?></div>
+						 </div>
+						 <?if($this->data[0]['shipping_method']!=""){?>
+						 <div class="TabbedPanelsContent">
+						 							 <div class="mode-box">
+<h3><span>Shipping Details</span></h3>
+                             <?if($this->msg!=""){ echo '<div><span class="notification n-success">'.base64_decode($this->msg).'</span></div> ';}?>
+							 <p><b>All fields indicated with * are mandatory</b></p>
+                            <? echo $act->field(array('lable'=>'Name','input_title'=>'del_name','desc'=>'enter customer name','input_type'=>'input_text','val'=>$this->data[0]['delivery_name'],"req"=>'1'));
+
+						 echo $act->field(array('lable'=>'Company','input_title'=>'company','desc'=>'enter company address','input_type'=>'input_text','val'=>$this->data[0]['delivery_company'],"req"=>'1'));
+
+						 echo $act->field(array('lable'=>'Street address','input_title'=>'saddress','desc'=>'enter street address','input_type'=>'input_text','val'=>$this->data[0]['delivery_street_address'],"req"=>'1'));
+
+						 echo $act->field(array('lable'=>'Suburb','input_title'=>'suburb','desc'=>'eneter suburb','input_type'=>'input_text','val'=>$this->data[0]['delivery_suburb'],"req"=>'1'));
+
+						 echo $act->field(array('lable'=>'City','input_title'=>'city','desc'=>'enter city name','input_type'=>'input_text','val'=>$this->data[0]['delivery_city'],"req"=>'1'));
+
+						 echo $act->field(array('lable'=>'Post Code','input_title'=>'post_code','desc'=>'enetr postal code','input_type'=>'input_text','val'=>$this->data[0]['delivery_postcode'],"req"=>'1'));
+
+						 echo $act->field(array('lable'=>'State','input_title'=>'state','desc'=>'state','input_type'=>'input_text','val'=>$this->data[0]['delivery_zone'],"req"=>'1'));
+
+						 echo $act->field(array('lable'=>'Country','input_title'=>'country','desc'=>'country','input_type'=>'input_text','val'=>$this->data[0]['delivery_country'],"req"=>'1'));
+
+						 echo $act->field(array('lable'=>'Shipping Method','input_title'=>'shipping_method','desc'=>'enter shipping method','input_type'=>'input_text','val'=>$this->data[0]['shipping_method'],"req"=>'1'));
+
+                            ?></div>
+						</div>
+						<?}?>
+
+						 <div class="TabbedPanelsContent">
+						 							 <div class="mode-box">
+<h3><span>Product Details</span></h3>
+                             <?if($this->msg!=""){ echo '<div><span class="notification n-success">'.base64_decode($this->msg).'</span></div> ';}?>
+<table id="product" class="list">
+          <thead>
+            <tr>
+              <td class="left">Product</td>
+              <td class="left">Model</td>
+              <td class="right">Quantity</td>
+              <td class="right">Unit Price</td>
+
+              <td class="right">Total</td>
+            </tr>
+          </thead>
+<tbody id="product-row587">
+<?$prod=$act->db->fetchAll("select p.*,o.currency_id,c.symbol_left,c.symbol_right from r_orders_products p,r_orders o,r_currencies c where p.orders_id='".(int)$_REQUEST['rid']."' and p.orders_id=o.orders_id and c.currencies_id=o.currency_id");
+foreach($prod as $prod)
+{ ?>
+<tr>
+<td class="left"><a href="products?type=Edit&rid=<?=$prod['products_id']?>"><?=$prod['products_name']?></a>
+<? $opt=$act->db->fetchAll("select * from r_orders_products_option where order_id='".(int)$_REQUEST['rid']."' and order_product_id='".$prod['orders_products_id']."'");
+if(count($opt)>0)
+{
+//echo "<pre>";
+foreach($opt as $o)
+{
+//print_r($opt);
+?>
+<br>&nbsp;<small> - <?=$o['name']?> : <?if($o['type']!='file'){ echo $o['value']; }else { echo "<a href='".@constant("ADMIN_URL_CONTROLLER")."order-download-file?rid=".(int)$_REQUEST[rid]."&oid=".$o['order_option_id']."'>".substr($o['value'], 0, strrpos($o['value'], '.'))."</a>";}?></small>
+<?}}?>
+</td>
+<td class="left"><?=$prod['products_model']?></td>
+<td class="right"><?=$prod['products_quantity']?></td>
+<td class="right"><?=$prod['symbol_left'].number_format($prod['products_price'],2).$prod['symbol_right']?></td>
+<td class="right"><?=$prod['symbol_left'].number_format($prod['final_price'],2).$prod['symbol_right']?></td>
+</tr>
+<?
+}?>
+</tbody>
+<?$ord=$act->db->fetchAll("select * from r_orders_total where orders_id='".(int)$_REQUEST['rid']."' order by sort_order asc");
+foreach($ord as $ot)
+{ ?>
+<tbody id="totals">
+<tr>
+<td colspan="4" class="right"><?=$ot['title']?></td>
+<td class="right"><?=$ot['text']?></td>
+</tr>
+</tbody>
+<?}?>
+    <? $downloads=$act->db->query("select * from r_orders_products_download where orders_id='".(int)$_REQUEST['rid']."'");
+//echo "value of ".$downloads->rowCount();
+ ?>            </table>       
+ </div>
+ <?php if ($downloads->rowCount()) { ?>
+ 		 <div class="mode-box">
+<h3><span>Order Downloads</span></h3>
+        
+        <table class="list">
+          <thead>
+            <tr>
+              <td class="left"><b>Name</b></td>
+              <td class="left"><b>File Name</b></td>
+              <td class="right"><b>Downloads Left</b></td>
+            </tr>
+          </thead>
+          <tbody>
+            <?php 
+	   
+	    foreach ($downloads as $download) { ?>
+            <tr>
+              <td class="left"><?php echo $download['name']; ?></td>
+              <td class="left"><?php echo $download['orders_products_filename']; ?></td>
+              <td class="right"><?php echo $download['remaining']; ?></td>
+            </tr>
+            <?php } ?>
+          </tbody>
+        </table></div>
+        <?php } ?>
+
+						 </div>
+						 <div class="TabbedPanelsContent">
+						 							 <div class="mode-box">
+<h3><span>Order History</span></h3>
+                             <?if($this->msg!=""){ echo '<div><span class="notification n-success">'.base64_decode($this->msg).'</span></div> ';}?>
+							 <p><b>All fields indicated with * are mandatory</b></p>
+
+<table class="list">
+<thead>
+<tr>
+<td class="left"><b>Date Added</b></td>
+<td class="left"><b>Comment</b></td>
+<td class="left"><b>Status</b></td>
+<td class="left"><b>Customer Notified</b></td>
+</tr>
+</thead>
+<tbody>
+<?$stats=$act->db->fetchAll("select h.*,s.orders_status_name from r_orders_status_history h,r_orders_status s where h.orders_id='".(int)$_REQUEST['rid']."' and s.orders_status_id=h.orders_status_id and s.language_id=1 order by h.orders_status_history_id desc");
+$i=0;
+foreach($stats as $s)
+{
+$order_status_id=$i==0?$s['orders_status_id']:$order_status_id;
+?>
+<tr>
+<td class="left"><?=$s['date_added']?></td>
+<td class="left"><?=$s['comments']?></td>
+<td class="left"><?=$s['orders_status_name']?></td>
+<td class="left"><?echo $s['customer_notified']=='1'?'Yes':'No';?></td>
+</tr>
+<?$i++;}?>
+</tbody>
+</table>
+ <form name="frmMain" method="post">
+ <input type="hidden" name="rid[]" id="rid[]" value="<?=(int)$_REQUEST['rid']?>">
+</form>
+<form name="frmordercomment" id="frmordercomment" method="post" action="orders?rid=<?=(int)$_REQUEST['rid']?>&type=Edit&play=apply" >
+<p>
+<label>Notify Customer</label>
+<input type="checkbox" name="notify" id="notify" value="1">
+<p>
+<label>Order Status</label>
+<select id="update_order_status" class="input-medium"  tooltiptext="order status"  name="update_order_status" ><? echo $act_ext->getorderstatsdropdown($order_status_id);?></select>
+<input type="hidden" name="play" id="play" value="1">
+<input type="hidden" name="language_id" id="language_id" value="<?echo $this->data[0]['language_id'];?>">
+<input type="hidden" name="customers_name" id="customers_name" value="<?echo $this->data[0]['customers_name'];?>">
+</p>
+<p>
+<label>Comments</label>
+<textarea id="status_comments"   tooltiptext="status comments"  name="status_comments" rows="4" cols="50"></textarea>
+
+</p>
+<p>
+<label></label>
+<input type="submit" value="Add History" class="button"></p>
+</form>
+</div>
+
+						 </div>
+
+                       </div>
+                  </div>
+                     <div class="module-body">
+                  </div>
+
+                </div>
+        		<div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+           <div style="clear:both;"></div>
+</div>
+		<?php } ?>
+
+
+<script type="text/javascript">
+function fnprint()
+{
+ 	document.frmMain.target="_blank";
+	document.frmMain.action="<?php echo @constant('ADMIN_URL_CONTROLLER');?>invoice";
+	document.frmMain.submit();
+	//target="_blank"
+	//window.open('<?=ADMIN_URL_CONTROLLER?>invoice'','_blank');
+}
+date_pick('#date_added');
+date_pick('#date_modified');
+$().ready(function() {
+	$("#customer").autocomplete("<?php echo @constant('ADMIN_URL_CONTROLLER');?>ajaxorderauto?format=json", {
+		width: 260,
+		matchContains: true,
+		selectFirst: false
+	});
+});
+
+
+function addCommission()
+{
+		$.ajax({
+		url: 'add-commission',
+		data:$('input[name=\'order_id\'],input[name=\'hid_aff_id\'],input[name=\'hid_aff_com\']'),
+		dataType: 'json',
+		success: function(json) {
+			$('#apply').html(json['success']);
+		}
+		});
+
+}
+
+function genInvoice()
+{
+	$.ajax({
+	url: 'generate-invoice',
+	data:$('input[name=\'order_id\']'),
+	dataType: 'json',
+	success: function(json) {
+	$('#lable_invoice').html(json['success']);
+	$('#invoice_id').val(json['invoice_id']);
+	}
+	});
+}
+
+
+function removeCommission()
+{
+	$.ajax({
+		url: 'remove-commission',
+		data:$('input[name=\'order_id\'],input[name=\'hid_aff_id\'],input[name=\'hid_aff_com\']'),
+		dataType: 'json',
+		success: function(json) {
+			$('#apply').html(json['success']);
+		}
+		});
+}
+
+function addReward()
+{
+		$.ajax({
+		url: 'addreward',
+		data:$('input[name=\'order_id\'],input[name=\'hid_cust_id\'],input[name=\'reward\']'),
+		dataType: 'json',
+		success: function(json) {
+			$('#reward-apply').html(json['success']);
+		}
+		});
+
+}
+function removeReward()
+{
+	$.ajax({
+		url: 'removereward',
+		data:$('input[name=\'order_id\']'),
+		dataType: 'json',
+		success: function(json) {
+			$('#reward-apply').html(json['success']);
+		}
+		});
+}
+</script>

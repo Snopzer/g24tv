@@ -1,0 +1,152 @@
+<?php
+	$act=new Model_Adminaction();
+	$act_ext=new Model_Adminextaction();
+	if($_REQUEST['type']==''){?>
+<div class="container_12">
+           <div style="clear:both;"></div>
+            <div class="grid_12">
+  				<?
+					if($_REQUEST['msg']!=""){?>
+				<span class='<?php echo $_REQUEST['m']==""?"notification n-success":"notification n-error"?>'><?=base64_decode($_REQUEST['msg']);?></span>
+				<?}?>
+				
+                <div class="bottom-spacing">
+                    <!-- Button -->
+                    <div class="float-right"><?=$this->view_pagination;?>
+						
+                    </div>
+                    <!-- Table records filtering -->
+                    
+                    
+                </div>
+                
+                
+                <!-- Example table -->
+                <div class="module">
+                	<h2><span><?=$this->actionTitle." [".$this->total_count."]"?></span> <div class="add-btn-div" ><?php $act->viewAddB(ADMIN_URL_CONTROLLER.$this->actionTitle);?></div> </h2>
+                    
+                    <div class="module-table-body">
+                    	<form name="frmMain" id="frmMain" method="post" action="<?php echo ADMIN_URL_CONTROLLER.$this->actionTitle?>"> 
+                        <table id="myTable" class="tablesorter">
+                   	  <thead>
+                                <tr>
+								  <th align="center" style="width:5%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#</th>
+                                  <th style="width:20%"><?echo $act_ext->getSortLable(array("disType"=>$this->disType, "sortby"=>"name", "page"=>$_REQUEST['page'] ,"file"=>"gift-voucher-theme" ,"label"=>"Theme Title"));?></th>
+                                  <th style="width:15%"><input type="checkbox" name="checkall" id="checkall" onClick="Checkall()"/> <a href="#">Check All</a></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+						
+							<? 
+					$i=1;
+					if($this->page!=1)
+					{
+						$i+=($this->page-1)*$this->per_page;
+					}
+
+							foreach ($this->results as $result) 
+							{
+							 
+							$class=fmod($i,2)==0?'':'addcolorne';
+							?>
+                              <tr>
+                                <td align="center" class="<?=$class?>"><?=$i?></td>
+                                 <td class="<?=$class?>"><?php echo $result['name'];?></td>
+                                <td class="<?=$class?>">
+                                
+								<input type="checkbox" name="rid[]" id="rid" value="<?php echo $result[$this->r_id];?>"  />
+								<?php 
+									$act->viewEditB(ADMIN_URL_CONTROLLER.$this->actionTitle,$result[$this->r_id],$_REQUEST['page']);
+									$act->viewDelB($this->actionTitle,$result[$this->r_id],$this->r_table,$this->r_id,$_REQUEST['page']);
+								?>	
+								
+                                </td>
+                              </tr>
+                              <?$i=$i+1;}?>
+                                 
+                            </tbody>
+                        </table>
+
+						<input type="hidden" name="page" id="page" value="<?php echo $this->page;?>">
+                        <div class="table-apply">
+                               <?$act->fnmultipleactdropdown(array('Del'=>'Delete'));?>
+							 </form>
+                        </div>
+                        <div style="clear: both"></div>
+                     </div>  
+                </div>  
+
+                <?=$this->view_pagination;?>
+			</div>  
+             <div class="grid_6">
+		  </div>  
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+        </div>  
+		<?php }elseif($_REQUEST['type']=='Add' || 'Edit'){ 
+ 	/*foreach ($this->data as $result) 
+	{} print_r($result);*/?>
+		<div class="container_12">
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+            <div class="grid_12">
+                <div class="module">
+                     <h2><span><?php echo $_REQUEST['type']." ".$this->actionTitle;?></span></h2>
+                     <div id="TabbedPanels1" class="TabbedPanels">
+                       <ul class="TabbedPanelsTabGroup">
+                         <li class="TabbedPanelsTab" tabindex="0">Details</li>
+                         <li class="iconsec">
+						 <?php echo $act->editCancelB($this->actionTitle,$_REQUEST['page']);?></li>
+                         <li class="iconsec">
+						 <?php 
+						 if($_REQUEST['type']=='Edit'){
+						 echo $act->editApplyB(ADMIN_URL_CONTROLLER.$this->actionTitle,(int)$_REQUEST['rid'],$_REQUEST['type']);
+		}					?></li>
+                         <li class="iconsec">
+						 <?php echo $act->editSaveB(ADMIN_URL_CONTROLLER.$this->actionTitle,(int)$_REQUEST['rid'],$_REQUEST['type'],$_REQUEST['page']);?></li>
+                       </ul> 
+                       <div class="TabbedPanelsContentGroup">
+                         <div class="TabbedPanelsContent"> <form name="frmEdit" method="post" enctype="multipart/form-data">
+                             <?if($this->msg!=""){ echo '<div><span class="notification n-success">'.base64_decode($this->msg).'</span></div> ';}
+                             	$ret=$act->getEditdetails('r_voucher_theme_description','voucher_theme_id',(int)$_REQUEST['rid']);
+								$rcat=$act->getEditdetails('r_voucher_theme','voucher_theme_id',(int)$_REQUEST['rid']);
+								if(count($ret)>0)
+								{
+									foreach($ret as $res)
+									{
+										$lang[$res['language_id']]=array("name" =>$res['name']);
+									}
+								}
+								
+								?>
+							 <p><b>All fields indicated with * are mandatory</b></p>
+                            <div class="mode-box">
+<h3><span>Voucher Theme Details</span></h3>
+
+                            <?php echo $act->lang_field(array('lable'=>'Theme Title','input_title'=>'name','desc'=>'enter theme title','input_type'=>'input_text','val'=>$lang,"req"=>'1'));
+                            ?>
+							<!-- <p><label>Image</label><input type="file" name="image" id="image" ></p> -->
+							<p>
+                                <label>*Image</label>
+                                <input name="image" id="image"  type="file" class="input-medium" value="<?=$this->data[0]['image'];?>" tooltipText="upload image"/>
+								     <a href="#" style="color:black;cursor:pointer;text-decoration:underline;" class="tt"><?=$rcat[0]['image'];?><span class="tooltip"><img src="<?=PATH_TO_UPLOADS."image/".$rcat[0]['image'];?>"  /></span></a>
+						   </p>
+						   
+                        
+						   <input name="prev_image" id="prev_image" type="hidden" value="<?=$rcat[0]['image'];?>" />
+</div>
+						 </div>
+                        </form>
+                       </div>
+                  </div>
+                     <div class="module-body">
+                  </div> 
+
+                </div>  
+        		<div style="clear:both;"></div>
+            </div> 
+            <div style="clear:both;"></div>
+           <div style="clear:both;"></div>
+</div>
+		<?php }?>

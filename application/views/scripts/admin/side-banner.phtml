@@ -1,0 +1,228 @@
+<?php
+$act=new Model_Adminaction();
+$act_ext=new Model_Adminextaction();
+ 	if($_REQUEST['type']==''){?>
+<div class="container_12">
+           <div style="clear:both;"></div>
+            <div class="grid_12">
+  				<?
+					if($_REQUEST['msg']!=""){?>
+				<span class="notification n-success"><?=base64_decode($_REQUEST['msg']);?></span>
+				<?}?>
+
+                <div class="bottom-spacing">
+                    <!-- Button -->
+                    <div class="float-right"><?=$this->view_pagination;?>
+						
+                    </div>
+                    <!-- Table records filtering -->
+
+
+                </div>
+
+
+                <!-- Example table -->
+                <div class="module">
+                	<h2><span><?=$this->actionTitle." [".$this->total_count."]"?></span> <div class="add-btn-div"><?php $act->viewAddB(ADMIN_URL_CONTROLLER.$this->actionTitle);?></div>  </h2>
+
+                    <div class="module-table-body">
+                    	<form name="frmMain" id="frmMain" method="post" action="<?php echo ADMIN_URL_CONTROLLER.$this->actionTitle?>">
+			<?if($this->total_count>0){?>
+                        <table id="myTable" class="tablesorter">
+                   	  <thead>
+                                <tr>
+								  <th align="center" style="width:5%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#</th>
+                                  <th style="width:20%"><?echo $act_ext->getSortLable(array("disType"=>$this->disType, "sortby"=>"name", "page"=>$_REQUEST['page'] ,"file"=>"side-banner" ,"label"=>"Banner"));?></th>
+								  <th style="width:20%"><?echo $act_ext->getSortLable(array("disType"=>$this->disType, "sortby"=>"status", "page"=>$_REQUEST['page'] ,"file"=>"side-banner" ,"label"=>"Status"));?></th>
+                                  <th style="width:15%"><input type="checkbox" name="checkall" id="checkall" onClick="Checkall()"/> <a href="#">Action</a></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+							<?
+					$i=1;
+					if($this->page!=1)
+					{
+						$i+=($this->page-1)*$this->per_page;
+					}
+
+							foreach ($this->results as $result)
+							{
+
+							$class=fmod($i,2)==0?'':'addcolorne';
+							?>
+                              <tr>
+                                <td align="center" class="<?=$class?>"><?=$i?></td>
+                                 <td class="<?=$class?>"><?php echo $result['name'];?></td>
+								 <td class="<?=$class?>"><?php echo $result['status']=='1'?STATUS_ENABLE_1:STATUS_DISABLE_0;?></td>
+                                <td class="<?=$class?>">
+
+								<input type="checkbox" name="rid[]" id="rid" value="<?php echo $result[$this->r_id];?>"  />
+								<?php
+									$act->viewEditB(ADMIN_URL_CONTROLLER.$this->actionTitle,$result[$this->r_id],$_REQUEST['page']);
+									$act->viewDelB($this->actionTitle,$result[$this->r_id],$this->r_table,$this->r_id,$_REQUEST['page']);
+								?>
+
+                                </td>
+                              </tr>
+                              <?$i=$i+1;}?>
+
+                            </tbody>
+                        </table><?}else{
+							echo "<table id='myTable' class='tablesorter' border='2'><tr><td align='center'>No records to display</td></tr></table>";
+							}?>
+
+						<input type="hidden" name="page" id="page" value="<?php echo $this->page;?>">
+                        <div class="table-apply">
+                             <!-- <div>
+                            <span>Apply action to selected:</span>
+							<?$arrmact=array('Del'=>'Delete');
+							  $act->viewMultipleAction($arrmact);?>
+
+                            </div> -->
+	      			<?$act->fnmultipleactdropdown(array('Del'=>'Delete'));?>
+                           </form>
+                        </div>
+                        <div style="clear: both"></div>
+                     </div>
+                </div>
+
+                <?=$this->view_pagination;?>
+			</div>
+             <div class="grid_6">
+		  </div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+        </div>
+		<?php }elseif($_REQUEST['type']=='Add' || 'Edit'){
+ 	/*foreach ($this->data as $result)
+	{} print_r($result);*/?>
+		<div class="container_12">
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+            <div class="grid_12">
+                <div class="module">
+                     <h2><span><?php echo $_REQUEST['type']." ".$this->actionTitle;?></span></h2>
+                     <div id="TabbedPanels1" class="TabbedPanels">
+                       <ul class="TabbedPanelsTabGroup">
+                         <li class="TabbedPanelsTab" tabindex="0">Details</li>
+                         <li class="iconsec">
+						 <?php echo $act->editCancelB($this->actionTitle,$_REQUEST['page']);?></li>
+                         <li class="iconsec">
+						 <?php
+						 if($_REQUEST['type']=='Edit'){
+						 echo $act->editApplyB(ADMIN_URL_CONTROLLER.$this->actionTitle,(int)$_REQUEST['rid'],$_REQUEST['type']);
+		}					?></li>
+                         <li class="iconsec">
+						 <?php echo $act->editSaveB(ADMIN_URL_CONTROLLER.$this->actionTitle,(int)$_REQUEST['rid'],$_REQUEST['type'],$_REQUEST['page']);?></li>
+                       </ul>
+                       <div class="TabbedPanelsContentGroup">
+                         <div class="TabbedPanelsContent"> <form name="frmEdit" method="post" enctype="multipart/form-data">
+                             <?if($this->msg!=""){ echo '<div><span class="notification n-success">'.base64_decode($this->msg).'</span></div> ';}?>
+							 <p><b>All fields indicated with * are mandatory</b></p>
+                  <div class="mode-box">
+<h3><span>Banner Details</span></h3>
+			     <table class="form">
+          <tr>
+      
+            <td><?
+		echo $act->field(array('lable'=>'Banner Name','input_title'=>'name','desc'=>'enter banner name','input_type'=>'input_text','val'=>$this->banner[0][name],"req"=>'1'));
+		?><!--<input type="text" name="name" value="<?php echo $this->banner[0][name]; ?>" size="100" />-->
+             </td>
+          </tr>
+          <tr>
+
+            <td> 
+	      
+		<?
+		echo $act->field(array('lable'=>'status','input_title'=>'status','desc'=>'enable or disable Banner','input_type'=>'select','val'=>$act->reviewstatusdropdown($this->banner[0]['status']),"req"=>'0'));
+		?>
+	  </td>
+          </tr>
+        </table>
+        <table id="images" class="list">
+          <thead>
+            <tr>
+              <td class="left">Title</td>
+              <td class="left">Link</td>
+              <td class="left">Image</td>
+              <td></td>
+            </tr>
+          </thead>
+          <?php $image_row = 0;
+	  ?>
+          <?php foreach ($this->banner_images as $banner_image) { ?>
+          <tbody id="image-row<?php echo $image_row; ?>">
+            <tr>
+              <td class="left"><?php foreach ($this->languages as $language) { ?>
+                <input type="text" name="banner_image[<?php echo $image_row; ?>][banner_image_description][<?php echo $language['languages_id']; ?>][title]" value="<?php echo isset($banner_image['banner_image_description'][$language['languages_id']]) ? $banner_image['banner_image_description'][$language['languages_id']]['title'] : ''; ?>" />
+                <br />
+               <?php } ?></td>
+              <td class="left">
+			  <input type="text" class="title-div-design" name="banner_image[<?php echo $image_row; ?>][link]" value="<?php echo $banner_image['link']; ?>" />
+			  </td>
+              <td class="left">
+			  
+	      <input type="file" class="title-div-design" class="images-desplaying" name="image<?php echo $image_row; ?>" value="<?php echo $banner_image['image']; ?>" id="image<?php echo $image_row; ?>"  />
+		  
+	      <input type="hidden" name="preimage<?php echo $image_row; ?>" value="<?php echo $banner_image['image']; ?>" id="preimage<?php echo $image_row; ?>"  />
+		  
+		 <a href="#" style="color:black;cursor:pointer;text-decoration:underline;" class="tt"><?=$banner_image[image];?><span class="tooltip"><img src="<?=PATH_TO_UPLOADS."banners/".$banner_image[image];?>"  /></span></a>
+		 </td>
+              <td class="left">
+			  <a onclick="$('#image-row<?php echo $image_row; ?>').remove();" class="button"><span>Remove Banner</span></a>
+			  </td>
+            </tr>
+          </tbody>
+          <?php $image_row++; ?>
+          <?php } ?>
+          <tfoot>
+            <tr>
+              <td colspan="3"></td>
+              <td class="left"><a onclick="addImage();" class="button"><span>Add Banner</span></a></td>
+            </tr>
+          </tfoot>
+        </table>
+
+
+		</div>				 </div>
+                        </form>
+                       </div>
+                  </div>
+                     <div class="module-body">
+                  </div>
+
+                </div>
+        		<div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+           <div style="clear:both;"></div>
+</div>
+		<?php }?>
+<?php //echo $image_row; ?>
+		<script type="text/javascript"><!--
+var image_row = <?php echo $image_row; ?>;
+
+function addImage() {
+
+    html  = '<tbody id="image-row' + image_row + '">';
+	html += '<tr>';
+    html += '<td class="left">';
+	<?php foreach ($this->languages as $language) { ?>
+	html += '<input type="text" name="banner_image[' + image_row + '][banner_image_description][<?php echo $language['languages_id']; ?>][title]" value="" /> <br />';
+    <?php } ?>
+	html += '</td>';
+	html += '<td class="left"><input type="text" name="banner_image[' + image_row + '][link]" value="" /></td>';
+	//html += '<td class="left"><input type="file" name="banner_image[' + image_row + '][image]" value="" id="image' + image_row + '" /></td>';
+	html += '<td class="left"><input type="file" class="title-div-design" name="image' + image_row + '" value="" id="image' + image_row + '" /><input type="hidden" name="preimage<?php echo $image_row; ?>" value="" id="preimage<?php echo $image_row; ?>"  /></td>';
+	html += '<td class="left"><a onclick="$(\'#image-row' + image_row  + '\').remove();" class="button"><span>Remove Banner</span></a></td>';
+	html += '</tr>';
+	html += '</tbody>';
+
+	$('#images tfoot').before(html);
+
+	image_row++;
+}
+ 
+//--></script>

@@ -1,0 +1,9 @@
+<?php 
+echo '<ul>';
+foreach($this->pagesInRange as $page)
+{
+	//echo '<a href="'.$this->url(array('page'=>$page."/q/blue".$this->data[q]."/dd/0".$this->data['dd'])).'">'.$page.'</a>';
+	echo '<li><a href="'.$this->url(array('page'=>$page)).'">'.$page.'</a></li>';
+}                                	
+    //echo  '<li><a href="#" class="active">1</a></li>';
+echo '</ul>'; 

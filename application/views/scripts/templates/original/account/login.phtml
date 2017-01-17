@@ -1,0 +1,122 @@
+<div class="main-column"><!--main-max-banner start-->
+<div id="container"><!--container start-->
+<div id="notification"></div>
+<? if(count($this->pos[left])>0){?>
+<div id="column-left"><!--column-left start-->
+<?php echo $this->action('left','modules',null,array('mod' =>$this->pos[left]));?>
+<!--column-left End--></div>
+<?}?>
+<?if(count($this->pos[right])>0){?>
+<div id="column-right"><!--column-right start-->
+<?php echo $this->action('right','modules',null,array('mod' =>$this->pos[right]));?>
+<!--column-right End--></div>
+<?}?>
+<div id="content"><!--content start-->
+<?if(count($this->pos[bottom])>0){?>
+<div class="content-bottom"><!--content-bottom srtart-->
+<?php echo $this->action('bottom','modules',null,array('mod' =>$this->pos[bottom]));?>
+</div>
+<?}?>
+
+                	<div class="breadcrumb"><!--readcrumb start-->
+<p>
+                    	<?php    foreach ($this->data[breadcrumbs] as $breadcrumb) { ?>
+<?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a> <?php } ?></p>                   <!--readcrumb End--></div>
+
+
+                    <div id="innerpage_rightContent">
+
+   <?php if ($this->data[success]) { ?>
+  <div class="success"><?php echo $this->data[success]; ?></div>
+  <?php } ?>
+  <?php if ($this->data[error_warning]) { ?>
+  <div class="warning"><?php echo $this->data[error_warning]; ?></div>
+  <?php } ?>
+
+<!--<div class="page-title">
+			 <h1> <?php echo $this->trans->_('text_login_account_login')?></h1>
+	</div>-->
+<div class="box">
+<div class="loging-box">
+<div class="box-heading"> <p><span> <?php echo $this->trans->_('text_login_account_login')?> </span> </p> </div>
+
+<div class="box-content">
+
+<div class="login-content" id="login-div-box">
+
+    <div class="left">
+	
+      <h2><?php echo $this->trans->_('text_new_customer_account_login'); ?></h2>
+      <div class="content">
+        <p class="register" ><b><?php echo $this->trans->_('text_register_account_login'); ?></b></p>
+        <p class="para"><?php echo stripslashes($this->trans->_('text_register_account_account_login')); ?></p>
+        <a href="<?php echo $this->data[register]; ?>" class="button_btn"><span><?php echo $this->trans->_('button_continue'); ?></span></a></div>
+    </div>
+	
+	
+	
+    <div class="right">
+      <h2><?php echo $this->trans->_('text_returning_customer_account_login'); ?></h2>
+      <form action="<?php echo $this->data[action]; ?>" method="post" enctype="multipart/form-data" id="login">
+        <div class="content" id="login-ids">
+          
+		  <div><p><?php echo $this->trans->_('text_i_am_returning_customer_account_login');?></p></div>
+		  
+		  <div class="from-div-li">
+          <div class="name"><?php echo $this->trans->_('entry_email_account_login'); ?></div> 
+          <div class="email"><input type="text" name="email" onblur="if(this.value=='') this.value='<?php echo $this->trans->_('entry_email_account_login');?>'" onfocus="if(this.value=='<?php echo $this->trans->_('entry_email_account_login');?>') this.value=''" value="<?php echo $this->trans->_('entry_email_account_login');?>" /></div>
+		  </div>
+           <div class="from-div-li">
+          <div class="name"><?php echo $this->trans->_('entry_password_account_login'); ?></div>
+          <div class="email"><input type="password" name="password" onblur="if(this.value=='') this.value='<?php echo $this->trans->_('entry_password_account_login');?>'" onfocus="if(this.value=='<?php echo $this->trans->_('entry_password_account_login');?>') this.value=''" value="<?php echo $this->trans->_('entry_password_account_login');?>"  /></div>
+		  </div>
+		  
+		    <div class="from-div-li">
+          <div class="name"></div>
+         <div class="email">&nbsp;&nbsp;<a href="<?php echo $this->data[forgotten]; ?>" class="forget-color"><?php echo $this->trans->_('text_forgotten_account_login'); ?></a></div>
+		 </div>
+		 
+         <div class="name"></div>
+          <div class="email">&nbsp;&nbsp;<a onclick="$('#login').submit();" class="button_btn"><span><?php echo $this->trans->_('button_login'); ?></span></a></div>
+          <?php if ($this->data[redirect]) { ?>
+          <input type="hidden" name="redirect" value="<?php echo $this->data[redirect]; ?>" />
+          <?php } ?>
+        </div>
+      </form>
+	
+	  <div id="clear"></div>
+    </div>
+	 <div id="clear"></div>
+  </div> 
+  
+  <div id="clear"></div>
+   </div> 
+   </div> 
+  <div id="clear"></div>
+	 </div>
+
+
+<?if(count($this->pos[bottom])>0){?>
+<div class="container-top">
+<?php echo $this->action('bottom','modules',null,array('mod' =>$this->pos[bottom]));?></div>
+<?}?>				
+
+<div id="clear"></div>
+</div>
+<div id="clear"></div>
+</div>
+
+<div id="clear"></div>
+</div>
+<div id="clear"></div>
+</div>
+
+<script type="text/javascript">
+<!--
+$('#login input').keydown(function(e) {
+	if (e.keyCode == 13) {
+		$('#login').submit();
+	}
+});
+//-->
+</script>

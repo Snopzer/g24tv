@@ -1,0 +1,152 @@
+<?php
+$act=new Model_Adminaction();
+$act_ext=new Model_Adminextaction();
+	if($_REQUEST['type']==''){?>
+<div class="container_12">
+           <div style="clear:both;"></div>
+            <div class="grid_12">
+  				<?
+					if($_REQUEST['msg']!=""){?>
+				<span class="notification n-error"><?=$_REQUEST['msg']?></span>
+				<?}?>
+
+                <div class="bottom-spacing">
+                    <!-- Button -->
+                    <div class="float-right">
+						<?php $act->viewAddB(ADMIN_URL_CONTROLLER.$this->actionTitle);?>
+                    </div>
+                    <!-- Table records filtering -->
+
+
+                </div>
+
+
+                <!-- Example table -->
+                <div class="module">
+                	<h2><span><?=$this->actionTitle." [".$this->total_count."]"?></span></h2>
+
+                    <div class="module-table-body">
+                    	<form name="frmMain" id="frmMain" method="post" action="<?php echo ADMIN_URL_CONTROLLER.$this->actionTitle?>">
+                        <table id="myTable" class="tablesorter">
+                   	  <thead>
+                                <tr>
+								  <th align="center" style="width:5%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#</th>
+                                  <th style="width:20%"><?php echo $act_ext->getSortLable(array("disType"=>$this->disType, "sortby"=>"title", "page"=>$_REQUEST['page'] ,"file"=>"alert" ,"label"=>"Title"));?></th>
+                                  <th style="width:15%">Edit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+							<?
+					$i=1;
+					if($this->page!=1)
+					{
+						$i+=($this->page-1)*$this->per_page;
+					}
+
+							foreach ($this->results as $result)
+							{
+
+							$class=fmod($i,2)==0?'':'addcolorne';
+							?>
+                              <tr>
+                                <td align="center" class="<?=$class?>"><?=$i?></td>
+                                 <td class="<?=$class?>"><?php echo $result['title'];?></td>
+                                 <td class="<?=$class?>">
+
+								<?php
+									$act->viewEditB(ADMIN_URL_CONTROLLER.$this->actionTitle,$result[$this->r_id],$_REQUEST['page']);
+									$act->viewDelB($this->actionTitle,$result[$this->r_id],$this->r_table,$this->r_id,$_REQUEST['page']);
+								?>
+
+                                </td>
+                              </tr>
+                              <?$i=$i+1;}?>
+
+                            </tbody>
+                        </table>
+
+						<input type="hidden" name="page" id="page" value="<?php echo $this->page;?>">
+                        <div class="table-apply">
+                             </form>
+                        </div>
+                        <div style="clear: both"></div>
+                     </div>
+                </div>
+
+                <?=$this->view_pagination;?>
+			</div>
+             <div class="grid_6">
+		  </div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+        </div>
+		<?php }elseif($_REQUEST['type']=='Add' || 'Edit'){
+ 	/*foreach ($this->data as $result)
+	{} print_r($result);*/?>
+		<div class="container_12">
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+            <div class="grid_12">
+                <div class="module">
+                     <h2><span><?php echo $_REQUEST['type']." ".$this->actionTitle;?></span></h2>
+                     <div id="TabbedPanels1" class="TabbedPanels">
+                       <ul class="TabbedPanelsTabGroup">
+                         <li class="TabbedPanelsTab" tabindex="0">Details</li>
+                         <li class="iconsec">
+						 <?php echo $act->editCancelB($this->actionTitle,$_REQUEST['page']);?></li>
+                         <li class="iconsec">
+						 <?php
+						 if($_REQUEST['type']=='Edit'){
+						 echo $act->editApplyB(ADMIN_URL_CONTROLLER.$this->actionTitle,$_REQUEST['rid'],$_REQUEST['type']);
+		}					?></li>
+                         <li class="iconsec">
+						 <?php echo $act->editSaveB(ADMIN_URL_CONTROLLER.$this->actionTitle,$_REQUEST['rid'],$_REQUEST['type'],$_REQUEST['page']);?></li>
+                       </ul>
+                       <div class="TabbedPanelsContentGroup">
+                         <div class="TabbedPanelsContent"> <form name="frmEdit" method="post" enctype="multipart/form-data">
+                             <?if($this->msg!=""){ echo '<div><span class="notification n-success">'.$this->msg.'</span></div> ';}?>
+							 <p><b>All fields indicated with * are mandatory</b></p>
+
+							  <?
+								//echo "value of ".$rcat[0]['configuration_value'];
+
+								if($_REQUEST['type']=='Edit')
+								$ret=$act->db->fetchAll("select o.title,o.value,o.description ,o.language_id,l.name,l.image,l.code from r_alert o, r_languages l where o.alert_id='".$_REQUEST['rid']."' and l.languages_id=o.language_id");
+								else
+								$ret=$act->db->fetchAll("select languages_id as language_id,name,code,image from r_languages");
+
+								if(count($ret)>0)
+								{
+									$i=0;
+									foreach($ret as $res)
+									{
+										if($i=='0')
+										{
+											echo '<p><label>'.$res['title'].'</label></p>';
+										}
+
+										echo '<p>';
+										//echo '<label>Text</label>';
+										echo '<input type="text" name="value_'.$res['language_id'].'" id="value_'.$res['language_id'].'" class="input-medium" tooltipText="'.$res['description'].'" value="'.$res['value'].'" ></p><img title="'.$res['value'].'" src="http://localhost/mve/public/uploads/'.$res['image'].'" alt="'.$res['name'].'" /></p>';
+										echo '<p>';
+										$i++;
+									}
+								}
+								?>
+
+						 </div>
+                        </form>
+                       </div>
+                  </div>
+                     <div class="module-body">
+                  </div>
+
+                </div>
+        		<div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+           <div style="clear:both;"></div>
+</div>
+		<?php }?>

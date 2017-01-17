@@ -1,0 +1,353 @@
+<?php
+	$act=new Model_Adminaction();
+	$act_ext=new Model_Adminextaction();
+ 	if($_REQUEST['type']==''){?>
+<div class="container_12">
+           <div style="clear:both;"></div>
+            <div class="grid_12">
+  				<?
+					if($_REQUEST['msg']!=""){?>
+				<span class="notification n-success"><?=base64_decode($_REQUEST['msg'])?></span>
+				<?}?>
+
+                <div class="bottom-spacing">
+                    <!-- Button -->
+                    <div class="float-right"><?=$this->view_pagination;?>
+						
+                    </div>
+                    <!-- Table records filtering -->
+                    <form  name="frmfilter" id="frmfilter" method="post" action="">
+		    <input type="text" name="affname" id="affname" 
+		     onfocus="if(this.value=='Affiliate Name') this.value=''"  value="<?php echo $_REQUEST['affname']!=""?$_REQUEST['affname']:'Affiliate Name';?>"> 
+		    <input type="text" name="affemailid" id="affemailid"  onfocus="if(this.value=='Email') this.value=''"  value="<?php echo $_REQUEST['affemailid']!=""?$_REQUEST['affemailid']:'Email';?>">  <input type="submit" name="filter" id="filter" value="filter">
+					</form>
+                </div>
+
+
+                <!-- Example table -->
+                <div class="module">
+                	<h2><span><?=$this->actionTitle." [".$this->total_count."]"?></span> <div class="add-btn-div" ><?php $act->viewAddB(ADMIN_URL_CONTROLLER.$this->actionTitle);?> </div>  </h2>
+
+                    <div class="module-table-body">
+                    	<form name="frmMain" id="frmMain" method="post" action="<?php echo ADMIN_URL_CONTROLLER.$this->actionTitle?>">
+                        <?if($this->total_count>0){?>
+			<table id="myTable" class="tablesorter">
+                   	  <thead>
+                                <tr>
+								  <th align="center" style="width:5%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#</th>
+                                  <th style="width:15%"><?echo $act_ext->getSortLable(array("affname"=>$_REQUEST['affname'],"affemailid"=>$_REQUEST['affemailid'],"disType"=>$this->disType, "sortby"=>"firstname", "page"=>$_REQUEST['page'] ,"file"=>"affiliate" ,"label"=>"Affiliate Name"));?></th>
+				  <th style="width:15%"><?echo $act_ext->getSortLable(array("affname"=>$_REQUEST['affname'],"affemailid"=>$_REQUEST['affemailid'],"disType"=>$this->disType, "sortby"=>"email", "page"=>$_REQUEST['page'] ,"file"=>"affiliate" ,"label"=>"Email"));?></th>
+				  <th style="width:15%"><?echo $act_ext->getSortLable(array("file"=>"affiliate" ,"label"=>"Telephone"));?></th> 
+				  <th style="width:10%"><?echo $act_ext->getSortLable(array("affname"=>$_REQUEST['affname'],"affemailid"=>$_REQUEST['affemailid'],"disType"=>$this->disType, "sortby"=>"status", "page"=>$_REQUEST['page'] ,"file"=>"affiliate" ,"label"=>"Status"));?></th>
+				  <th style="width:8%"><?echo $act_ext->getSortLable(array("affname"=>$_REQUEST['affname'],"affemailid"=>$_REQUEST['affemailid'],"disType"=>$this->disType, "sortby"=>"approved", "page"=>$_REQUEST['page'] ,"file"=>"affiliate" ,"label"=>"Approved"));?></th>
+				  <th style="width:17%"><?echo $act_ext->getSortLable(array("affname"=>$_REQUEST['affname'],"affemailid"=>$_REQUEST['affemailid'],"disType"=>$this->disType, "sortby"=>"date_added", "page"=>$_REQUEST['page'] ,"file"=>"affiliate" ,"label"=>"Date Added"));?></th>
+                                  <th style="width:13%"><input type="checkbox" name="checkall" id="checkall" onClick="Checkall()"/> <a href="#">Check All</a></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+							<?
+					$i=1;
+					if($this->page!=1)
+					{
+						$i+=($this->page-1)*$this->per_page;
+					}
+
+							foreach ($this->results as $result)
+							{
+
+							$class=fmod($i,2)==0?'':'addcolorne';
+							?>
+                              <tr>
+                                <td align="center" class="<?=$class?>"><?=$i?></td>
+                                 <td class="<?=$class?>"><?php echo $result['name'];?></td>
+								 <td class="<?=$class?>"><?php echo $result['email'];?></td>
+								 <td class="<?=$class?>"><?php echo $result['telephone'];?></td> 
+								 <td class="<?=$class?>"><?php echo $result['status']=='1'?'Enable':'Disable';?></td>
+								 <td class="<?=$class?>"> <?php echo $result['approved']=='1'?'Yes':'No';?></td>
+								 <td class="<?=$class?>"><?php echo $result['date_added'];?></td>
+
+                                <td class="<?=$class?>">
+
+								<input type="checkbox" name="rid[]" id="rid" value="<?php echo $result[$this->r_id];?>"  />
+								<?php
+									$act->viewEditB(ADMIN_URL_CONTROLLER.$this->actionTitle,$result[$this->r_id],$_REQUEST['page']);
+									$act->viewDelB($this->actionTitle,$result[$this->r_id],$this->r_table,$this->r_id,$_REQUEST['page']);
+								?>
+
+                                </td>
+                              </tr>
+                              <?$i=$i+1;}?>
+
+                            </tbody>
+                        </table><?}else{
+							echo "<table id='myTable' class='tablesorter' border='2'><tr><td align='center'>No records to display</td></tr></table>";
+							}?>
+
+						<input type="hidden" name="page" id="page" value="<?php echo $this->page;?>">
+                        <div class="table-apply">
+                             <?$act->fnmultipleactdropdown(array('Pub'=>'Approved','UnPub'=>'Disable','Del'=>'Delete'));?>
+                            </form>
+                        </div>
+                        <div style="clear: both"></div>
+                     </div>
+                </div>
+
+                <?=$this->view_pagination;?>
+			</div>
+             <div class="grid_6">
+		  </div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+        </div>
+		<?php }elseif($_REQUEST['type']=='Add' || 'Edit'){
+ 	/*foreach ($this->data as $result)
+	{} print_r($result);*/?>
+		<div class="container_12">
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+            <div class="grid_12">
+                <div class="module">
+                     <h2><span><?php echo $_REQUEST['type']." ".$this->actionTitle;?></span></h2>
+                     <div id="TabbedPanels1" class="TabbedPanels">
+                       <ul class="TabbedPanelsTabGroup">
+                         <li class="TabbedPanelsTab" tabindex="0">General</li>
+			 <li class="TabbedPanelsTab" tabindex="0">Payment Details</li>
+			 <?if($_REQUEST['type']=='Edit'){?>
+			 <li class="TabbedPanelsTab" tabindex="0">Transactions</li>
+			<?}?>
+                         <li class="iconsec"><?php echo $act->editCancelB($this->actionTitle,$_REQUEST['page']);?></li>
+                          <?php	echo $act->editApplyB(ADMIN_URL_CONTROLLER.$this->actionTitle,$_REQUEST['rid'],$_REQUEST['type']);?> 
+			<li class="iconsec">
+			<?php echo $act->editSaveB(ADMIN_URL_CONTROLLER.$this->actionTitle,$_REQUEST['rid'],$_REQUEST['type'],$_REQUEST['page']);?></li>
+                       </ul>
+                       <div class="TabbedPanelsContentGroup">
+                         <div class="TabbedPanelsContent"> <form name="frmEdit" method="post" enctype="multipart/form-data">
+
+                     <?if($this->msg!=""){ echo '<div><span class="notification n-success">'.base64_decode($this->msg).'</span></div> ';} ?>
+
+ 
+		 <p><b>All fields indicated with * are mandatory</b></p>
+		 <div class="mode-box">
+<h3><span>Personal Details</span></h3>
+		<?  echo $act->field(array('lable'=>'First Name','input_title'=>'r_affiliate[firstname]','desc'=>'enter first name','input_type'=>'input_text','val'=>$this->data[0]['firstname'],"req"=>'1'));
+
+		echo $act->field(array('lable'=>'Last Name','input_title'=>'r_affiliate[lastname]','desc'=>'enter last name','input_type'=>'input_text','val'=>$this->data[0]['lastname'],"req"=>'1'));
+
+		echo $act->field(array('lable'=>'Telephone','input_title'=>'r_affiliate[telephone]','desc'=>'enter telephone number','input_type'=>'input_text','val'=>$this->data[0]['telephone'],"req"=>'1'));
+
+		echo $act->field(array('lable'=>'Fax','input_title'=>'r_affiliate[fax]','desc'=>'enter fax','input_type'=>'input_text','val'=>$this->data[0]['fax'],"req"=>'0'));
+
+		echo $act->field(array('lable'=>'Company','input_title'=>'r_affiliate[company]','desc'=>'enter company','input_type'=>'input_text','val'=>$this->data[0]['company'],"req"=>'0'));
+
+		echo $act->field(array('lable'=>'Address 1','input_title'=>'r_affiliate[address_1]','desc'=>'enter address','input_type'=>'input_text','val'=>$this->data[0]['address_1'],"req"=>'1'));
+
+		echo $act->field(array('lable'=>'Address 2','input_title'=>'r_affiliate[address_2]','desc'=>'enter address 2','input_type'=>'input_text','val'=>$this->data[0]['address_2'],"req"=>'0'));
+
+		echo $act->field(array('lable'=>'City','input_title'=>'r_affiliate[city]','desc'=>'enter city','input_type'=>'input_text','val'=>$this->data[0]['city'],"req"=>'0'));
+
+		echo $act->field(array('lable'=>'Post Code','input_title'=>'r_affiliate[postcode]','desc'=>'enter post code','input_type'=>'input_text','val'=>$this->data[0]['postcode'],"req"=>'1'));?>
+
+		<p>
+		<label>Country</label>
+		<select   name="r_affiliate[country_id]" id="r_affiliate[country_id]" onchange="ajax_call(this.value)";>
+		<option value="0">select</option>
+		<?
+		$act->getcountrydropdown($this->data[0]['country_id']);?>
+
+		</select>
+		</p>
+		<p ><label>Zone</label><select id="zone_id" name="r_affiliate[zone_id]" ><?=$act->getzonedropdown($this->data[0]['country_id'],$this->data[0]['zone_id'])?></select></p>
+		<div id="textbox" class="scrollbox">
+		</div>
+		<!-- echo $act->field(array('lable'=>'Country','input_title'=>'r_affiliate[country_id]','desc'=>'enter country','input_type'=>'input_text','val'=>$this->data[0]['country_id'],"req"=>'1'));
+
+		echo $act->field(array('lable'=>'Region / State','input_title'=>'r_affiliate[zone_id]','desc'=>'enter region','input_type'=>'input_text','val'=>$this->data[0]['zone_id'],"req"=>'1')); -->
+		<?$code=$_REQUEST['type']=='Add'?strtotime("now"):$this->data[0]['code'];?>
+</div>
+<div class="mode-box">
+<h3><span>Login Details</span></h3>
+<?
+if($_REQUEST['type']=='Edit')
+		{
+			echo $act->field(array('lable'=>'Email','input_title'=>'r_affiliate[email]','desc'=>'enter email address','input_type'=>'input_text','val'=>$this->data[0]['email'],"req"=>'1',"readonly"=>"readonly"));
+		}else
+		{
+			echo $act->field(array('lable'=>'Email','input_title'=>'r_affiliate[email]','desc'=>'enter email address','input_type'=>'input_text','val'=>$this->data[0]['email'],"req"=>'1'));
+		}
+		echo $act->field(array('lable'=>'Password','input_title'=>'r_affiliate[password]','desc'=>'enter password','input_type'=>'password','val'=>$act_ext->getDecryptPassword($this->data[0]['password']),"req"=>'1'));
+?>
+
+</div>
+<div class="mode-box">
+<h3><span>Tracking Code/Status</span></h3>
+		<p>
+		<label>*Tracking Code</label>
+		<input id="r_affiliate[code]" class="input-medium" type="text" tooltiptext="auto generated tracking code" value="<?=$code?>" title="code" name="r_affiliate[code]" readonly >
+		</p>
+
+
+		<?
+
+
+		echo $act->field(array('lable'=>'status','input_title'=>'r_affiliate[status]','desc'=>'enable or disable review','input_type'=>'select','val'=>$act->reviewstatusdropdown($this->data[0]['status']),"req"=>'0'));
+
+
+
+		?>
+		</div>
+		</div>
+		<div class="TabbedPanelsContent">
+<div class="mode-box">
+<h3><span>Payment Details</span></h3>
+		<?
+		$comm=$_REQUEST['type']=='Edit'?$this->data[0]['commission']:AFFLIATE_COMMISSION;
+		echo $act->field(array('lable'=>'Commission','input_title'=>'r_affiliate[commission]','desc'=>'Percentage the affiliate recieves on each order.','input_type'=>'input_text','val'=>$comm,"req"=>'1'));
+
+		echo $act->field(array('lable'=>'Tax id','input_title'=>'r_affiliate[tax]','desc'=>'enter tax id','input_type'=>'input_text','val'=>$this->data[0]['tax'],"req"=>'0'));
+		?>
+		<p><label>Payment Method</label>
+		<input id="cheque" type="radio" value="cheque" <?echo $this->data[0]['payment']=='cheque'?'checked':'';?>  name="r_affiliate[payment]" onclick="fnaffpayment(this.value)" >	Cheque
+		<input id="paypal" type="radio" value="paypal" name="r_affiliate[payment]" <?echo $this->data[0]['payment']=='paypal'?'checked':'';?> onclick="fnaffpayment(this.value)" >  PayPal
+		<input id="bank" type="radio" <?echo $this->data[0]['payment']=='bank'?'checked':'';?> value="bank" name="r_affiliate[payment]" onclick="fnaffpayment(this.value)">  Bank Transfer
+		</p>
+
+		<p id="row_cheque" style="display:none"><label>cheque</label>
+		<input id="r_affiliate[cheque]" type="input" value="<?=$this->data[0]['cheque']?>" name="r_affiliate[cheque]" >
+		</p>
+
+		<p id="row_paypal" style="display:none" ><label>paypal</label>
+		<input id="r_affiliate[paypal]" type="input" value="<?=$this->data[0]['paypal']?>" name="r_affiliate[paypal]">
+		</p>
+		<table id="row_bank" style="display:none" ><tr><td>Bank Name</td><td>ABA/BSB number (Branch Number)</td><td>SWIFT Code</td><td>* Account Name</td><td>* Account Number</td></tr>
+		<tr><td><input id="r_affiliate[bank_name]" type="input" value="<?=$this->data[0]['bank_name']?>" name="r_affiliate[bank_name]"></td>
+		<td><input id="r_affiliate[bank_branch_number]" type="input" value="<?=$this->data[0]['bank_branch_number']?>" name="r_affiliate[bank_branch_number]"></td>
+		<td><input id="r_affiliate[bank_swift_code]" type="input" value="<?=$this->data[0]['bank_swift_code']?>" name="r_affiliate[bank_swift_code]"></td>
+		<td> <input id="r_affiliate[bank_account_name]" type="input" value="<?=$this->data[0]['bank_account_name']?>" name="r_affiliate[bank_account_name]"></td>
+		<td> <input id="r_affiliate[bank_account_number]" type="input" value="<?=$this->data[0]['bank_account_number']?>" name="r_affiliate[bank_account_number]"></td>
+		</tr></table>
+		</form>
+		</div>
+		</div>
+
+		<?if($_REQUEST['type']=='Edit'){?>
+		<div class="TabbedPanelsContent">
+		<div class="mode-box">
+<h3><span>Add Transaction </span></h3>
+		<form name="frmtransaction" method="post" action="">
+		<?echo $act->field(array('lable'=>'Description','input_title'=>'r_affiliate_transaction[description]','desc'=>'description.','input_type'=>'input_text','val'=>$this->data[0]['description'],"req"=>'0'));
+
+		echo $act->field(array('lable'=>'Amount','input_title'=>'r_affiliate_transaction[amount]','desc'=>'amount.','input_type'=>'input_text','val'=>$this->data[0]['amount'],"req"=>'0'));
+
+		?>
+		<input type="hidden" name="trans" id="trans" value="1">
+		<input type="hidden" name="trans_email" id="trans" value="<?=$this->data[0]['email']?>">
+		<input type="submit" name="add_transaction" id="add_transaction" class="button" value="Add Transaction">
+		</form></div>
+		<div class="mode-box">
+		<h3><span>Transaction Details</span></h3>
+		<table class="list">
+		<thead>
+		<tr>
+		<td class="left">Date Added</td>
+		<td class="left">Description</td>
+		<td class="right">Amount</td>
+		</tr>
+
+		</thead>
+		<tbody>
+		<?$aff=$act->db->fetchAll("select * from r_affiliate_transaction where affiliate_id='".(int)$_REQUEST['rid']."' order by date_added desc");
+		
+		$total=$act->db->fetchRow('select sum(amount) as amt from r_affiliate_transaction where affiliate_id="'.(int)$_REQUEST['rid'].'"');
+		$currency=new Model_currencies();	
+		foreach($aff as $k){?>
+		<tr>
+		<td class="left"><?=$k[date_added]?></td>
+		<td class="left"><?=$k[description];?></td>
+		<td class="right"><?=$currency->format($k[amount]);?></td>
+		</tr>
+		<?}
+		echo '<tr><td>&nbsp;</td><td class="right"><b>Balance:</b></td><td class="right">'.$currency->format($total[amt]).'</td></tr></tbody></table>';?>
+		</tbody>
+		</table>
+		</div>
+		</div>
+
+						<?}?>
+                       </div>
+                  </div>
+                     <div class="module-body">
+                  </div>
+
+                </div>
+        		<div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+           <div style="clear:both;"></div>
+</div>
+ <!-- <div id="sure" ><input type="hidden" name="rel[products]" id="rel[products]"  value="" >close<input type="checkbox" name="del" id="del"  value="sure" onclick="fnclose(this.value);"></div> -->
+		<?php }?>
+<!-- <script type='text/javascript' src='<?=ADMIN_URL_CONTROLLER?>js/jquery.autocomplete.js'></script>
+<link rel="stylesheet" type="text/css" href="<?=ADMIN_URL_CONTROLLER?>js/jquery.autocomplete.css" /> -->
+<script type="text/javascript">
+$().ready(function() {
+	$("#affname").autocomplete("<?=ADMIN_URL_CONTROLLER?>ajaxaffnameauto?format=json", {
+		width: 260,
+		matchContains: true,
+		selectFirst: false
+	});
+});
+
+$().ready(function() {
+	$("#affemailid").autocomplete("<?=ADMIN_URL_CONTROLLER?>ajaxaffemailauto?format=json", {
+		width: 260,
+		matchContains: true,
+		selectFirst: false
+	});
+});
+
+</script>
+
+<script type="text/javascript">
+ window.onload=function(){fnaffpayment('<?=$this->data[0]['payment']?>');}
+function fnaffpayment(val)
+{
+ 		 if(val=='paypal')
+		 {
+			 document.getElementById('row_paypal').style.display="";
+			 document.getElementById('row_cheque').style.display="none";
+			 document.getElementById('row_bank').style.display="none";
+		 }
+
+		 if(val=='cheque')
+		 {
+			 document.getElementById('row_cheque').style.display="";
+			 document.getElementById('row_bank').style.display="none";
+			 document.getElementById('row_paypal').style.display="none";
+		 }
+
+		 if(val=='bank')
+		 {
+			 document.getElementById('row_bank').style.display="";
+			 document.getElementById('row_paypal').style.display="none";
+			 document.getElementById('row_cheque').style.display="none";
+		 }
+}
+</script>
+
+<script type="text/javascript">
+    //var baseUrl="<?php echo $this->baseUrl(); ?>";
+      //alert($('#r_affiliate["country_id"]').val());
+	function ajax_call(val){
+        $.ajax({
+            url: '<?php echo @constant("ADMIN_URL_CONTROLLER");?>ajaxzone?format=json&q='+val,
+            dataType:'json',
+			success: function(data){
+				//alert(data.test)
+                $('#zone_id').html(data.test);
+				$('#textbox').append(data.div);
+            }
+        });
+    }
+</script>

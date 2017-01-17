@@ -1,0 +1,14 @@
+<?php 
+/*echo '<div class="links"><ul>';
+foreach($this->pagesInRange as $page)
+{
+	$class=$page==$this->current?'active':'';
+	echo '<li><a href="'.Zend_Controller_Front::getInstance()->getRequest()->getActionName().'?page='.$page.'" class="'.$class.'" >'.$page.'</a></li>';
+}                                	
+echo '</ul></div>'; 
+echo "<div class='results'>Showing ".$this->firstItemNumber." to ".$this->lastItemNumber." of ".$this->totalItemCount." (".$this->pageCount." Pages)</div>";*/
+$action=Zend_Controller_Front::getInstance()->getRequest()->getActionName();
+if($this->first!=$this->last)
+{
+	echo '<div class="pagination"><a href="'.$action.'?page='.$this->first.'"><span> First</span></a> <a href="'.$action.'?page='.$this->previous.'"><span> Prev</span></a><a href="'.$action.'?page='.$this->next.'"><span>Next </span></a><a href="'.$action.'?page='.$this->last.'"><span>Last </span></a><div style="clear: both;"></div></div>';
+}

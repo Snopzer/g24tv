@@ -1,0 +1,219 @@
+<?
+/*echo "<pre>";
+print_r($this->data);
+echo "</pre>";*/?>
+<div id="<?php echo $this->data[type]; ?>-address">
+
+
+					
+                          <div id="chkOutContent">
+		  	<div id="caption"><p><?php echo $_SESSION['OBJ']['tr']->_(text_checkout_payment_address_checkout_checkout);?></p><!--caption --></div>
+                            	<div id="chkOutConient_block">
+
+									 <div class="chkout-block">
+									 <?php
+/*echo "<pre>";
+print_r($addresses);
+echo "</pre>";*/
+$this->data[type]="payment";
+if ($this->data[addresses]) { ?>
+<p><input type="radio" class="radio" name="<?php echo $this->data[type]; ?>_address" value="existing" id="<?php echo $this->data[type]; ?>-address-existing" checked="checked" />
+<label for="<?php echo $this->data[type]; ?>-address-existing"><?php echo $_SESSION['OBJ']['tr']->_(text_address_existing_checkout_checkout); ?></label></p>
+<div id="<?php echo $this->data[type]; ?>-existing"><?
+/*echo "<pre>";
+print_r($this->data[addresses]);
+echo "</pre>";*/
+?>
+  <select name="payment_address_id" style="width: 100%; margin-bottom: 15px;" size="5">
+    <?php foreach ($this->data[addresses] as $address) { ?>
+    <?php if ($address['address_id'] == $this->data['payment_address_id']) { ?>
+    <option value="<?php echo $address['address_id']; ?>" selected="selected"><?php echo $address['firstname']; ?> <?php echo $address['lastname']; ?>, <?php echo $address['address_1']; ?>, <?php echo $address['entry_city']; ?>,<?php echo $address['zone']; ?>, <?php echo $address['country']; ?></option>
+    <?php } else { ?>
+    <option value="<?php echo $address['address_id']; ?>"><?php echo $address['firstname']; ?> <?php echo $address['lastname']; ?>, <?php echo $address['address_1']; ?>, <?php echo $address['entry_city']; ?>,<?php echo $address['zone']; ?>, <?php echo $address['country']; ?></option>
+    <?php } ?>
+    <?php } ?>
+  </select>
+</div></div>
+<?php } ?>
+<div class="chkout-block"><p>
+  <input type="radio" class="radio" name="<?php echo $this->data[type]; ?>_address" value="new" id="<?php echo $this->data[type]; ?>-address-new" />
+  <label for="<?php echo $this->data[type]; ?>-address-new"><?php echo $_SESSION['OBJ']['tr']->translate('text_address_new_checkout_checkout'); ?></label>
+</p></div>
+<div id="<?php echo $this->data[type]; ?>-new" style="display: none;">
+  <table class="form" id="<?php echo $this->data[type]; ?>-address">
+    <tr>
+      <td><span class="required">*</span> <?php echo $_SESSION['OBJ']['tr']->_('entry_firstname_checkout_checkout'); ?></td>
+      <td><input type="text" name="payment_firstname" value="" class="large-field" /></td>
+    </tr>
+    <tr>
+      <td><span class="required">*</span> <?php echo $_SESSION['OBJ']['tr']->_('entry_lastname_checkout_checkout'); ?></td>
+      <td><input type="text" name="payment_lastname" value="" class="large-field" /></td>
+    </tr>
+    <tr>
+      <td><?php echo $_SESSION['OBJ']['tr']->_('entry_company_checkout_checkout'); ?></td>
+      <td><input type="text" name="payment_company" value="" class="large-field" /></td>
+    </tr>
+    <tr>
+      <td><span class="required">*</span> <?php echo $_SESSION['OBJ']['tr']->_('entry_address_1_checkout_checkout'); ?></td>
+      <td><input type="text" name="payment_address_1" value="" class="large-field" /></td>
+    </tr>
+    <tr>
+      <td><?php echo $_SESSION['OBJ']['tr']->_('entry_address_2_checkout_checkout'); ?></td>
+      <td><input type="text" name="payment_address_2" value="" class="large-field" /></td>
+    </tr>
+    <tr>
+      <td><span class="required">*</span> <?php echo $_SESSION['OBJ']['tr']->_('entry_city_checkout_checkout'); ?></td>
+      <td><input type="text" name="payment_city" value="" class="large-field" /></td>
+    </tr>
+    <tr>
+      <td><span class="required">*</span> <?php echo $_SESSION['OBJ']['tr']->_('entry_postcode_checkout_checkout'); ?></td>
+      <td><input type="text" name="payment_postcode" value="" class="large-field" /></td>
+    </tr>
+    <tr>
+      <td><span class="required">*</span> <?php echo $_SESSION['OBJ']['tr']->_('entry_country_checkout_checkout'); ?></td>
+       <td><select name="payment_country_id" class="large-field" onchange="$('#<?php echo $this->data[type]; ?>-address select[name=\'payment_zone_id\']').load('<?echo $this->view->url_to_site;?>ajax/zone/country_id/' + this.value);">
+          <option value=""><?php echo $text_select; ?></option>
+          <?php foreach ($this->data[countries] as $country) { ?>
+          <?php if ($country['countries_id'] == $this->data[country_id]) { ?>
+          <option value="<?php echo $country['countries_id']; ?>" selected="selected"><?php echo $country['countries_name']; ?></option>
+          <?php } else { ?>
+          <option value="<?php echo $country['countries_id']; ?>"><?php echo $country['countries_name']; ?></option>
+          <?php } ?>
+          <?php } ?>
+        </select></td>
+    </tr>
+    <tr>
+      <td><span class="required">*</span> <?php echo $_SESSION['OBJ']['tr']->_('entry_zone_checkout_checkout'); ?></td>
+      <td><select name="payment_zone_id" class="large-field">
+        </select></td>
+    </tr>
+  </table>
+</div>
+<br />
+<!-- <div class="buttons">
+  <div class="right"><a id="button-address" class="button_btn"><span><?php echo $_SESSION['OBJ']['tr']->_('button_continue'); ?></span></a></div>
+</div> -->
+</div>
+ <script type="text/javascript"><!--
+$('#chkOutConient_block select[name=\'zone_id\']').load('<?echo $this->view->url_to_site;?>ajax/zone/country_id/<?php echo $this->data[country_id]; ?>');
+
+$('#chkOutConient_block input[name=\'<?php echo $this->data[type]; ?>_address\']').live('change', function() {
+	if (this.value == 'new') {
+		$('#<?php echo $this->data[type]; ?>-existing').hide();
+		$('#<?php echo $this->data[type]; ?>-new').show();
+	} else {
+
+		$('#<?php echo $this->data[type]; ?>-existing').show();
+		$('#<?php echo $this->data[type]; ?>-new').hide();
+	}
+});
+//--></script>
+                              <!--chkOutConient_block --></div>
+							  
+							  <!--star -->
+							   <div id="chkOutContent-right">
+						  	<div id="caption"><p><?php echo $_SESSION['OBJ']['tr']->_(text_checkout_shipping_address_checkout_checkout);?></p><!--caption --></div>
+                            	<div id="chkOutConient_block">
+
+									 <div class="chkout-block">
+									 <?php
+/*echo "<pre>";
+print_r($addresses);
+echo "</pre>";*/
+$this->data[type]="shipping";
+if ($this->data[addresses]) { ?>
+<p><input type="radio" class="radio" name="<?php echo $this->data[type]; ?>_address" value="existing" id="<?php echo $this->data[type]; ?>-address-existing" checked="checked" />
+<label for="<?php echo $this->data[type]; ?>-address-existing"><?php echo $_SESSION['OBJ']['tr']->_(text_address_existing_checkout_checkout); ?></label></p>
+<div id="<?php echo $this->data[type]; ?>-existing"><?
+/*echo "<pre>";
+print_r($this->data[addresses]);
+echo "</pre>";*/
+?>
+  <select name="shipping_address_id" style="width: 100%; margin-bottom: 15px;" size="5">
+    <?php foreach ($this->data[addresses] as $address) { ?>
+    <?php if ($address['address_id'] == $this->data['shipping_address_id']) { ?>
+    <option value="<?php echo $address['address_id']; ?>" selected="selected"><?php echo $address['firstname']; ?> <?php echo $address['lastname']; ?>, <?php echo $address['address_1']; ?>, <?php echo $address['entry_city']; ?>,<?php echo $address['zone']; ?>, <?php echo $address['country']; ?></option>
+    <?php } else { ?>
+    <option value="<?php echo $address['address_id']; ?>"><?php echo $address['firstname']; ?> <?php echo $address['lastname']; ?>, <?php echo $address['address_1']; ?>, <?php echo $address['entry_city']; ?>,<?php echo $address['zone']; ?>, <?php echo $address['country']; ?></option>
+    <?php } ?>
+    <?php } ?>
+  </select>
+</div></div>
+<?php } ?>
+<div class="chkout-block"><p>
+  <input type="radio" class="radio" name="<?php echo $this->data[type]; ?>_address" value="new" id="<?php echo $this->data[type]; ?>-address-new" />
+  <label for="<?php echo $this->data[type]; ?>-address-new"><?php echo $_SESSION['OBJ']['tr']->translate('text_address_new_checkout_checkout'); ?></label>
+</p></div>
+<div id="<?php echo $this->data[type]; ?>-new" style="display: none;">
+  <table class="form" id="<?php echo $this->data[type]; ?>-address">
+    <tr>
+      <td><span class="required">*</span> <?php echo $_SESSION['OBJ']['tr']->_('entry_firstname_checkout_checkout'); ?></td>
+      <td><input type="text" name="shipping_firstname" value="" class="large-field" /></td>
+    </tr>
+    <tr>
+      <td><span class="required">*</span> <?php echo $_SESSION['OBJ']['tr']->_('entry_lastname_checkout_checkout'); ?></td>
+      <td><input type="text" name="shipping_lastname" value="" class="large-field" /></td>
+    </tr>
+    <tr>
+      <td><?php echo $_SESSION['OBJ']['tr']->_('entry_company_checkout_checkout'); ?></td>
+      <td><input type="text" name="shipping_company" value="" class="large-field" /></td>
+    </tr>
+    <tr>
+      <td><span class="required">*</span> <?php echo $_SESSION['OBJ']['tr']->_('entry_address_1_checkout_checkout'); ?></td>
+      <td><input type="text" name="shipping_address_1" value="" class="large-field" /></td>
+    </tr>
+    <tr>
+      <td><?php echo $_SESSION['OBJ']['tr']->_('entry_address_2_checkout_checkout'); ?></td>
+      <td><input type="text" name="shipping_address_2" value="" class="large-field" /></td>
+    </tr>
+    <tr>
+      <td><span class="required">*</span> <?php echo $_SESSION['OBJ']['tr']->_('entry_city_checkout_checkout'); ?></td>
+      <td><input type="text" name="shipping_city" value="" class="large-field" /></td>
+    </tr>
+    <tr>
+      <td><span class="required">*</span> <?php echo $_SESSION['OBJ']['tr']->_('entry_postcode_checkout_checkout'); ?></td>
+      <td><input type="text" name="shipping_postcode" value="" class="large-field" /></td>
+    </tr>
+    <tr>
+      <td><span class="required">*</span> <?php echo $_SESSION['OBJ']['tr']->_('entry_country_checkout_checkout'); ?></td>
+       <td><select name="shipping_country_id" class="large-field" onchange="$('#<?php echo $this->data[type]; ?>-address select[name=\'shipping_zone_id\']').load('<?echo $this->view->url_to_site;?>ajax/zone/country_id/' + this.value);">
+          <option value=""><?php echo $text_select; ?></option>
+          <?php foreach ($this->data[countries] as $country) { ?>
+          <?php if ($country['countries_id'] == $this->data[country_id]) { ?>
+          <option value="<?php echo $country['countries_id']; ?>" selected="selected"><?php echo $country['countries_name']; ?></option>
+          <?php } else { ?>
+          <option value="<?php echo $country['countries_id']; ?>"><?php echo $country['countries_name']; ?></option>
+          <?php } ?>
+          <?php } ?>
+        </select></td>
+    </tr>
+    <tr>
+      <td><span class="required">*</span> <?php echo $_SESSION['OBJ']['tr']->_('entry_zone_checkout_checkout'); ?></td>
+      <td><select name="shipping_zone_id" class="large-field">
+        </select></td>
+    </tr>
+  </table>
+</div>
+<br />
+<div class="buttons">
+  <div class="right"><a id="button-address" class="button_btn"><span><?php echo $_SESSION['OBJ']['tr']->_('button_continue'); ?></span></a></div>
+</div>
+</div>
+ <script type="text/javascript"><!--
+$('#chkOutConient_block select[name=\'shipping_zone_id\']').load('<?echo $this->view->url_to_site;?>ajax/zone/country_id/<?php echo $this->data[country_id]; ?>');
+
+$('#chkOutConient_block input[name=\'<?php echo $this->data[type]; ?>_address\']').live('change', function() {
+	if (this.value == 'new') {
+		$('#<?php echo $this->data[type]; ?>-existing').hide();
+		$('#<?php echo $this->data[type]; ?>-new').show();
+	} else {
+
+		$('#<?php echo $this->data[type]; ?>-existing').show();
+		$('#<?php echo $this->data[type]; ?>-new').hide();
+	}
+});
+//--></script>
+                              <!--chkOutConient_block --></div>
+							  <!-- end-->
+							  
+                          <!--chkOutContent --></div>

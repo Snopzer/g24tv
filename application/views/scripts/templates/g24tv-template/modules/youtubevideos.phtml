@@ -1,0 +1,22 @@
+  <?
+  $width=$this->info[data][youtubevideos][width];
+  $height=$this->info[data][youtubevideos][height];
+  $title=$this->info[data][youtubevideos][title];
+  $value=$this->info[data][youtubevideos][value];
+  ?>
+  <div class="box" id="video-best">
+<?php if($title!=""){?>    <div class="box-heading"><p><span><?php echo $title?></span></p></div><?}?>
+    <div class="box-content">
+    <div class="box-product">
+ 
+    	<!-- start video here -->
+	<object width="<?php echo $width;?>" height="<?php echo $height;?>">
+	<param name="movie" value="http://www.youtube.com/v/<?php echo $value;?>" />
+	<param name="wmode" value="transparent" />
+	<embed src="http://www.youtube.com/v/<?php echo $value;?>"
+	type="application/x-shockwave-flash"
+	wmode="transparent" width="<?php echo $width;?>" height="<?php echo $height;?>" />
+	</object>
+	<!-- end video here -->		</div>
+		</div>
+	</div>

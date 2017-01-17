@@ -1,0 +1,194 @@
+<div class="main-column"><!--main-max-banner start-->
+<div id="container"><!--container start-->
+
+<!-- start direcpay  payment integration code -->
+<?php if(isset($_REQUEST['responseparams'])) {	?>
+<div style="text-align:center; color:#FFFFFF; font-weight:bold; background:#FF0000; padding:5px; font-size:13px;">
+DirecPay Transaction Failed..
+</div>
+<?php } ?>
+<!-- end direcpay  payment integration code -->
+
+
+<? if(count($this->pos[left])>0){?>
+<div id="column-left"><!--column-left start-->
+<?php echo $this->action('left','modules',null,array('mod' =>$this->pos[left]));?>
+<!--column-left End--></div>
+<?}?>
+
+<?if(count($this->pos[right])>0){?>
+<div id="column-right"><!--column-right start-->
+<?php echo $this->action('right','modules',null,array('mod' =>$this->pos[right]));?>
+<!--column-right End--></div>
+<?}?>
+		
+            <div id="content"><!--content start-->
+<?if(count($this->pos[top])>0){?>
+<div id="main-max-banner"><!--start main-max-banner-->
+<?php echo $this->action('top','modules',null,array('mod' =>$this->pos[top]));?>
+<!--End main-max-banner--></div>
+<?}?>
+
+
+<?
+/*echo "<pre>";
+print_r($this->data);
+echo "</pre>";*/
+//$this->render('cart-flash');?>
+
+<div id="notification">
+
+<?php if ($this->data[attention]) { ?>
+<div class="attention"><?php echo $this->data[attention]; ?></div>
+<?php } ?>
+
+<?php if ($this->data[success]) { ?>
+<div class="success"><?php echo $this->data[success]; ?></div>
+<?php } ?>
+
+<?php if ($this->data[error_warning]) { ?>
+<div class="warning"><?php echo $this->data[error_warning]; ?></div>
+<?php } ?>
+</div>
+
+    <form action="<?php echo $this->data[action]; ?>" method="post" enctype="multipart/form-data" id="basket">
+
+                	<div class="breadcrumb"><p>
+                    	<?php foreach ($this->data[breadcrumbs] as $breadcrumb) { ?>
+      <?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
+      <?php } ?></p>
+</div>
+
+
+<div class="page-title">
+          <h1><?php echo $this->trans->_('heading_title_checkout_cart');?></h1>
+        </div>
+<div class="view-check-out">
+<div class="main-check-out">
+<div class="cart-info">
+ <form action="<?php echo $this->data['action']; ?>" method="post" enctype="multipart/form-data" id="basket">
+        <table width="100%" class="table-border-line" cellspacing="0" cellpadding="0" border="0">
+          <thead> <?php if ($this->data[weight]) { ?>
+	  <tr><td colspan="7">
+       <h1><?php echo $this->trans->_('text_weight_checkout_cart'); ?>
+      &nbsp;(<?php echo $this->data[weight]; ?>)
+     </h1>
+</td></tr>  <?php } ?>
+            <tr>
+              
+              <td class="image"><?php echo $this->trans->_('column_image_checkout_cart'); ?></td>
+              <td class="name"><?php echo $this->trans->_('column_name_checkout_cart'); ?></td>
+              <td class="model"><?php echo $this->trans->_('column_model_checkout_cart'); ?></td>
+              <td class="quantity"><?php echo $this->trans->_('column_quantity_checkout_cart'); ?> / <?php echo $this->trans->_('column_remove_checkout_cart'); ?></td>
+              <td class="price"><?php echo $this->trans->_('column_price_checkout_cart'); ?></td>
+              <td class="total"><?php echo $this->trans->_('column_total_checkout_cart'); ?></td>
+            </tr>
+          </thead>
+          <tbody>
+            <?php
+	    foreach ($this->data[products] as $product) { ?>
+            <tr  class="table-box">
+           
+              <td class="image"  align="center"><?php if ($product['thumb']) { ?>
+                <a href="<?php echo $product['href']; ?>"><img src="<?php echo $this->url_to_site."timthumb.php?src=".$product['thumb']; ?>" alt="<?php echo $product['name']; ?>" title="<?php echo $product['name']; ?>" /></a>
+                <?php } ?></td>
+              <td class="name"><a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a>
+                <?php if (!$product['stock']) { ?>
+                <span class="stock">***</span>
+                <?php } ?>
+                <div>
+                  <?php foreach ($product['option'] as $option) { ?>
+                  - <small><?php echo $option['name']; ?>: <?php echo $option['value']; ?></small><br />
+                  <?php } ?>
+                </div>
+                <?php if ($product['points']) { ?>
+                <small><?php echo $product['points']; ?></small>
+                <?php } ?></td>
+              <td class="model"><?php echo $product['model']; ?></td>
+              <td class="quantity"><input type="text" class="quantity-input" name="quantity[<?php echo $product['key']; ?>]" value="<?php echo $product['quantity']; ?>" size="3" onkeypress="return isNumberKey(event)" /> <!--<input type="checkbox" class="checkbox" name="remove[]" value="<?php echo $product['key']; ?>" /> --> <input type="button" class="btn-delo" name="remove[]" value="" /> </td>
+              <td class="price"><?php echo $product['price']; ?></td>
+              <td class="total"><?php echo $product['total']; ?></td>
+            </tr>
+            <?php } ?>
+            <?php foreach ($this->data[vouchers] as $voucher) { ?>
+            <tr>
+              <td class="remove"><input type="checkbox" name="voucher[]" value="<?php echo $voucher['key']; ?>" /></td>
+              <td class="image"></td>
+              <td class="name"><?php echo $voucher['description']; ?></td>
+              <td class="model"></td>
+              <td class="quantity">1</td>
+              <td class="price"><?php echo $voucher['amount']; ?></td>
+              <td class="total"><?php echo $voucher['amount']; ?></td>
+            </tr>
+            <?php } ?>
+          </tbody>
+        </table>
+      </div>
+    </form>
+	</div>
+    <div class="cart-module">
+      <?php
+      /*echo "<pre>";
+      print_r($modules);
+      echo "</pre>";*/
+      foreach ($this->data[modules] as $module) { ?>
+      <?php echo $module; ?>
+      <?php } ?>
+    </div>
+    <div class="cart-total">
+      <table>
+        <?php foreach ($this->data[totals] as $total) { ?>
+        <tr>
+          <td colspan="5"></td>
+          <td class="right"><b><?php echo $this->trans->_($total['title']); ?></b></td>
+          <td class="right"><?php echo $this->trans->_($total['text']); ?></td>
+        </tr>
+        <?php } ?>
+      </table>
+    </div>
+	<div class="buttons">
+      <div class="left"><a onclick="$('#basket').submit();" class="button_btn"><span><?php echo $this->trans->_('button_update'); ?></span></a></div>
+      <div class="right"><a href="<?php echo $this->data[checkout]; ?>" class="button_btn"><span><?php echo $this->trans->_('button_checkout'); ?></span></a></div>
+      <div class="center"><a href="<?php echo $this->data['continue']; ?>" class="button_btn"><span><?php echo $this->trans->_('button_shopping'); ?></span></a></div>
+    </div>
+	</div>
+</div>
+	</div>
+    
+    <?php echo $this->data[content_bottom]; ?></div>
+</div>
+
+<script type="text/javascript"><!--
+$('.cart-module .cart-heading').bind('click', function() {
+	if ($(this).hasClass('active')) {
+		$(this).removeClass('active');
+	} else {
+		$(this).addClass('active');
+	}
+
+	$(this).parent().find('.cart-content').slideToggle('slow');
+});
+//--></script>
+</div></div>
+
+
+							    <?if(count($this->pos[bottom])>0){?>
+<div class="container-top">
+<?php echo $this->action('bottom','modules',null,array('mod' =>$this->pos[bottom]));?></div>
+<?}?>
+                <!--rightContainer --></div>
+            <!--innerContent --></div>
+
+
+	       <SCRIPT language=Javascript>
+      <!--
+      function isNumberKey(evt)
+      {
+         var charCode = (evt.which) ? evt.which : event.keyCode
+         if (charCode > 31 && (charCode < 48 || charCode > 57))
+            return false;
+
+         return true;
+      }
+      //-->
+   </SCRIPT>

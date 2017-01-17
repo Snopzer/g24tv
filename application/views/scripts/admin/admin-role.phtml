@@ -1,0 +1,156 @@
+<?php
+	$act=new Model_Adminaction();
+ 	if($_REQUEST['type']==''){?>
+<div class="container_12">
+           <div style="clear:both;"></div>
+            <div class="grid_12">
+  				<?
+					if($_REQUEST['msg']!=""){?>
+				<span class="notification n-success"><?=base64_decode($_REQUEST['msg']);?></span>
+				<?}?>
+				
+                <div class="bottom-spacing">
+                    <!-- Button -->
+                    <div class="float-right"><?=$this->view_pagination;?>
+						
+                    </div>
+                    <!-- Table records filtering -->
+                    
+                    
+                </div>
+                
+                
+                <!-- Example table -->
+                <div class="module">
+                	<h2><span><?=$this->actionTitle." [".$this->total_count."]"?></span> <div class="add-btn-div"><?php $act->viewAddB(ADMIN_URL_CONTROLLER.$this->actionTitle);?> </div>  </h2>
+                    
+                    <div class="module-table-body">
+                    	<form name="frmMain" id="frmMain" method="post" action="<?php echo ADMIN_URL_CONTROLLER.$this->actionTitle?>"> 
+                        <table id="myTable" class="tablesorter">
+                   	  <thead>
+                                <tr>
+								  <th align="center" style="width:5%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#</th>
+                                  <th style="width:20%">Role</th>
+								  <th style="width:20%">Status</th>
+								  <th style="width:20%">Date added</th>
+								  <th style="width:20%">Last Modified</th>
+                                  <th style="width:15%"><input type="checkbox" name="checkall" id="checkall" onClick="Checkall()"/> <a href="#">Check All</a></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+						
+							<? 
+					$i=1;
+					if($this->page!=1)
+					{
+						$i+=($this->page-1)*$this->per_page;
+					}
+
+							foreach ($this->results as $result) 
+							{
+							 
+							$class=fmod($i,2)==0?'':'addcolorne';
+							?>
+                              <tr>
+                                <td align="center" class="<?=$class?>"><?=$i?></td>
+                                 <td class="<?=$class?>"><?php echo $result['role'];?></td>
+								 <td class="<?=$class?>"><?php echo $result['status']=='1'?'Enable':'Disable';?></td>
+								 <td class="<?=$class?>"><?php echo $result['date_added'];?></td>
+								 <td class="<?=$class?>"><?php echo $result['last_modified'];?></td>
+                                <td class="<?=$class?>">
+                                <input type="checkbox" name="rid[]" id="rid" value="<?php echo $result[$this->r_id];?>"  />
+								<?php 
+									$act->viewEditB(ADMIN_URL_CONTROLLER.$this->actionTitle,$result[$this->r_id],$_REQUEST['page']);
+									$act->viewDelB($this->actionTitle,$result[$this->r_id],$this->r_table,$this->r_id,$_REQUEST['page']);
+								?>	
+								
+                                </td>
+                              </tr>
+                              <?$i=$i+1;}?>
+                                 
+                            </tbody>
+                        </table>
+
+						<input type="hidden" name="page" id="page" value="<?php echo $this->page;?>">
+                        <div class="table-apply">
+                             <div>
+                            <span>Apply action to selected:</span> 
+							<?$arrmact=array('Del'=>'Delete');
+							  $act->viewMultipleAction($arrmact);?>
+     
+                            </div>
+                            </form>
+                        </div>
+                        <div style="clear: both"></div>
+                     </div>  
+                </div>  
+
+                <?=$this->view_pagination;?>
+			</div>  
+             <div class="grid_6">
+		  </div>  
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+        </div>  
+		<?php }elseif($_REQUEST['type']=='Add' || 'Edit'){ 
+ 	/*foreach ($this->data as $result) 
+	{} print_r($result);*/?>
+		<div class="container_12">
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+            <div class="grid_12">
+                <div class="module">
+                     <h2><span><?php echo $_REQUEST['type']." ".$this->actionTitle;?></span></h2>
+                     <div id="TabbedPanels1" class="TabbedPanels">
+                       <ul class="TabbedPanelsTabGroup">
+                         <li class="TabbedPanelsTab" tabindex="0">Details</li>
+                         <li class="iconsec">
+						 <?php echo $act->editCancelB($this->actionTitle,$_REQUEST['page']);?></li>
+                         <li class="iconsec">
+						 <?php 
+						 if($_REQUEST['type']=='Edit'){
+						 echo $act->editApplyB(ADMIN_URL_CONTROLLER.$this->actionTitle,$_REQUEST['rid'],$_REQUEST['type']);
+		}					?></li>
+                         <li class="iconsec">
+						 <?php echo $act->editSaveB(ADMIN_URL_CONTROLLER.$this->actionTitle,$_REQUEST['rid'],$_REQUEST['type'],$_REQUEST['page']);?></li>
+                       </ul> 
+                       <div class="TabbedPanelsContentGroup">
+                         <div class="TabbedPanelsContent"> <form name="frmEdit" method="post" enctype="multipart/form-data">
+                             <?if($this->msg!=""){ echo '<div><span class="notification n-success">'.base64_decode($this->msg).'</span></div> ';}
+						$role=$act->getEditdetails($this->r_table,$this->r_id,(int)$_REQUEST['rid']);?>
+							 <p><b>All fields indicated with * are mandatory</b></p>
+							 	      <div class="mode-box">
+		<h3><span>Role</span></h3>
+                            <?				echo $act->field(array('lable'=>'Role','input_title'=>'r_admin_roles[role]','desc'=>'','input_type'=>'input_text','val'=>$role[0]['role'],"req"=>'0'));?></div>
+			    	      <div class="mode-box">
+		<h3><span>Status</span></h3>
+							<?echo $act->field(array('lable'=>'status','input_title'=>'r_admin_roles[status]','desc'=>'enable or disable role','input_type'=>'select','val'=>$act->reviewstatusdropdown($this->data[0]['status']),"req"=>'0'));?>
+							</div>
+								      <div class="mode-box">
+		<h3><span>Permissions</span></h3>
+							<?
+							echo $this->permissions;
+							?>
+							</div>
+							
+						    
+						 </div>
+                        </form>
+                       </div>
+                  </div>
+                     <div class="module-body">
+                  </div> 
+
+                </div>  
+        		<div style="clear:both;"></div>
+            </div> 
+            <div style="clear:both;"></div>
+           <div style="clear:both;"></div>
+</div>
+		<?php }
+		/*echo "value of ".$_SESSION['role_id'];
+		echo "<pre>";
+		print_r($_SESSION);
+		echo "</pre>";*/
+		?>

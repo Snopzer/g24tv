@@ -1,0 +1,35 @@
+<!-- start site main content -->
+<section id="mainContent">
+	<div class="content_top">
+		<div class="row">
+			<?if(count($this->pos[top])>0){?>
+				<?php echo $this->action('top','modules',null,array('mod' =>$this->pos[top]));?>
+			<?}?>
+		</div>
+	</div>
+	<!-- start main content bottom -->
+	<div class="content_bottom">
+		<div class="col-lg-8 col-md-8">
+            <!-- start content bottom left -->
+			<div class="content_bottom_left">
+				<? if(count($this->pos[left])>0){?>
+					<?php echo $this->action('left','modules',null,array('mod' =>$this->pos[left]));?>
+				<?}?>
+			</div><!--End content_bottom_left-->                 
+		</div>
+		<!-- start content bottom right -->
+		<div class="col-lg-4 col-md-4">
+			<div class="content_bottom_right">
+				<?if(count($this->pos[right])>0){?>
+					<?php echo $this->action('right','modules',null,array('mod' =>$this->pos[right]));?>
+				<?}?>
+				
+			</div>
+		</div>
+	</div>  
+	<div class="content_middle">
+		<?if(count($this->pos[bottom])>0){?>
+			<?php echo $this->action('bottom','modules',null,array('mod' =>$this->pos[bottom]));?>
+		<?}?>
+	</div><!-- End main content middle -->
+</section><!-- End site main content -->

@@ -1,0 +1,264 @@
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<section id="mainContent">
+	<div class="content_top">
+		<div class="row">
+			<?if(count($this->pos[top])>0){?>
+				<?php echo $this->action('top','modules',null,array('mod' =>$this->pos[top]));?>
+			<?}?>
+		</div>
+	</div>
+	<div class="content_bottom">
+		<div class="col-lg-8 col-md-8">
+			<div class="content_bottom_left">
+				<div class="single_page_area">
+					<ol class="breadcrumb">
+						<?php foreach ($this->breadcrumbs as $breadcrumb) { ?>
+							<?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
+						<?php } ?>  
+					</ol>
+					<h2 class="post_titile"><?php echo str_replace('\"', '"',str_replace("\'", "'", $this->heading_title)); ?></h2> 
+					<div class="single_page_content">
+						<div class="post_commentbox">
+							<!--<a href="#"><i class="fa fa-user"></i>Wpfreeware</a>-->
+							<span><i class="fa fa-calendar"></i> PUBLISHED: <?php $timestamp = strtotime($this->products_date_added);
+							echo $date = date('D,F d, Y H:i A', $timestamp); ?>
+							<?php /*?><i class="fa fa-calendar"></i> Views: <?php echo $this->products_viewed;?><?php*/?> </span>
+							<!--<a href="#"><i class="fa fa-tags"></i>Technology</a>-->
+						</div>
+						<img class="img-center" src="<?php echo $this->url_to_site."timthumb.php?src=".$this->thumb; ?>" title="<?php echo $this->heading_title; ?>" alt="<?php echo $this->heading_title; ?>"/>
+						<?php echo str_replace('\"', '"',str_replace("\'", "'", $this->description)); ?>
+					</div>
+				</div>
+				<div class="single_page_area">
+									<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+					<!-- Post Page Ad -->
+					<ins class="adsbygoogle"
+					style="display:block"
+					data-ad-client="ca-pub-9505794457801858"
+					data-ad-slot="8875939523"
+					data-ad-format="auto"></ins>
+					<script>
+						(adsbygoogle = window.adsbygoogle || []).push({});
+					</script>
+					
+				</div>
+				<!-- share this section start -->
+				<br /><br /><br />
+				<div class="single_page_area"> SHARE ON WEB : 
+					<?/*?>
+						<span class='st_email_large' displayText='Email'></span>
+						<span class='st_sharethis_large' displayText='ShareThis'></span>
+					<?*/?>
+					<span class='st_facebook_large' displayText='Facebook'></span>
+					<span class='st_twitter_large' displayText='Tweet'></span>
+					<span class='st_linkedin_large' displayText='LinkedIn'></span>
+					<span class='st_pinterest_large' displayText='Pinterest'></span>
+				</div> 
+				<!-- share this section end -->
+				
+				
+				<!-- product tags start-->	
+				<?php if(!empty($this->tags)){?>
+					<br /><br /><br />
+					<div class="single_page_area"> TAGS : 
+						<?php 
+							foreach ($this->tags as $tag) { ?>
+							<a href="<?php echo $tag['href']; ?>"><button class="btn btn-warning"><?php echo $tag['tag']; ?></button></a>
+						<?	} ?>
+						<?/*?><button class="btn">Default</button>
+							<button class="btn btn-primary">Primary</button>
+							<button class="btn btn-success">Success</button>
+							<button class="btn btn-info">Info</button>
+							<button class="btn btn-warning">Warning</button>
+						<button class="btn btn-danger">Danger</button><?*/?>
+					</div> 
+				<?php } ?>
+				<?php if(!empty($this->userReviews[0])){ ?>
+					<div class="content_bottom_right">
+						<div class="single_bottom_rightbar">
+							<h2>Reader Review`s</h2>
+							<ul class="small_catg popular_catg wow fadeInDown">
+								<?php foreach ($this->userReviews[0] as $userReview) { ?>
+									<li>
+										<div class="media wow fadeInDown">
+											<?php/* if ($product['thumb']) { ?>
+												<a href="<?php echo $product['href']; ?>" class="media-left">
+												<img alt="img" src="<?php echo $this->url_to_site."timthumb.php?src=".$product['thumb']; ?>" alt="<?php echo $product['name']; ?>">
+												</a>
+											<?php }*/ ?>
+											<div class="media-body">
+												<h4 class="media-heading"><?=stripslashes($userReview['reviews_text'])?></h4> 
+												<div class="comments_box">
+													<span><strong><?php echo $userReview['customers_name']?></strong></span> 
+													<span class="meta_date"><?php echo $userReview['date_added']?></span>
+													<span class="meta_comment"><?php echo $userReview['reviews_rating']?> Stars</span> 
+												</div>
+											</div>
+										</div>
+									</li>
+								<? } ?>
+							</ul>
+						</div>
+					</div>
+				<? } ?>	
+				<!-- product tags end-->
+				<? if(count($this->pos[left])>0){?>
+					<?php echo $this->action('left','modules',null,array('mod' =>$this->pos[left]));?>
+				<?}?>
+			</div><!--End content_bottom_left-->                 
+		</div>
+		<!-- start content bottom right -->
+		<div class="col-lg-4 col-md-4">
+			<div class="content_bottom_right">
+				
+				<!-- rating -->
+				<div id="review-title"></div>
+				
+				<?php if (!empty($this->rating)) { ?>
+					<div class="rating" >
+						<?php for($i=0;$i<5;$i++){ 
+							if($i<=$this->rating){
+								echo '<i class="glyphicon glyphicon-star text-warning"></i>';	
+								}else{
+								echo '<i class="glyphicon glyphicon-star"></i>';
+							}?>
+							
+						<? }	?>
+					</div>
+				<?php  } ?>
+				
+				<!-- rating end -->
+				<!-- attibutes -->
+				<?php
+					if ($this->attribute_groups) { ?>
+					<table class="infobox table table-bordered">
+						<?php foreach ($this->attribute_groups as $attribute_group) { ?>
+							<thead>
+								<tr>
+									<td colspan="2" class="attribute-title"><?php echo $attribute_group['name']; ?></td>
+								</tr>
+							</thead>
+							<tbody>
+								<?php foreach ($attribute_group['attribute'] as $attribute) { ?>
+									<tr>
+										<th class="attribute-title-name" ><?php echo $attribute['name']; ?></th>
+										<td class="attribute-contct" ><?php echo $attribute['text']; ?></td>
+									</tr>
+								<?php } ?>
+							</tbody>
+						<?php } ?>
+					</table>
+				<?php } ?>
+				<!--<table class="infobox table table-bordered">
+					<tbody>
+					<tr>
+					<th> Lorem ipusm </th>
+					<td> sample text </td>
+					</tr> 
+					<tr>
+					<th> Lorem ipusm </th>
+					<td> sample text </td>
+					</tr>
+				</tbody></table>-->
+				<!-- attibutes end -->
+				
+				
+				<div class="text-center">
+					<form class="contact_form"> 
+						<input class="form-control" name="name" type="text" placeholder="Name">
+						
+						<div class="form-inline">
+							<div class="controls-row">
+								<label class="radio inline">
+									<input type="radio" name="rating" value="1" class="radio" />&nbsp1&nbsp
+								</label>
+								<label class="radio inline">
+									<input type="radio" name="rating" value="2" class="radio" />&nbsp2&nbsp
+								</label>
+								<label class="radio inline">
+									<input type="radio" name="rating" value="3" class="radio" />&nbsp3&nbsp
+								</label>
+								<label class="radio inline">
+									<input type="radio" name="rating" value="4" class="radio" />&nbsp4&nbsp
+								</label>
+								<label class="radio inline">
+									<input type="radio" name="rating" value="5" class="radio" />&nbsp5
+								</label>
+							</div>
+						</div>
+						<textarea name="text" class="form-control" cols="30" rows="10" placeholder="Message" ></textarea>
+						<div class="btn-group btn-group-justified" role="group">
+							<div class="btn-group" role="group">
+								<img src="<?php echo $this->url_to_site.'ajax/captcha';?>" id="captcha" />
+							</div>
+							<div class="btn-group" role="group">
+								<input class="form-control" name="captcha" type="text" placeholder="Enter Image Text">	 
+							</div>
+						</div>
+						<input class="btn btn-warning" id="button-review" type="button" value="Rate Now">	
+					</form> 
+				</div>
+				<!-- review form -->
+				<?if(count($this->pos[right])>0){?>
+					<?php echo $this->action('right','modules',null,array('mod' =>$this->pos[right]));?>
+				<?}?>
+				
+			</div>
+		</div>
+	</div>  
+	<div class="content_middle">
+		<?if(count($this->pos[bottom])>0){?>
+			<?php echo $this->action('bottom','modules',null,array('mod' =>$this->pos[bottom]));?>
+		<?}?>
+	</div><!-- End main content middle -->
+</section>
+
+
+<!-- share this js filed start -->
+<script type="text/javascript">var switchTo5x=true;</script>
+<script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
+<script type="text/javascript">stLight.options({publisher: "3c0f0f52-1b54-4cd7-b659-36aac1f81757", doNotHash: false, doNotCopy: false, hashAddressBar: false});</script>
+<!-- share this js filed end -->
+
+<script>
+	$('#button-review').bind('click', function() {
+		$('#review-title').html('');
+		$(".alert").hide(); /* hide notification on click*/
+		$.ajax({
+			
+			type: 'POST',
+			url: '<?php echo $this->url_to_site;?>ajax/productwrite/product_id/<?php echo $this->product_id; ?>',
+			dataType: 'json',
+			data: 'name=' + encodeURIComponent($('input[name=\'name\']').val()) + '&text=' + encodeURIComponent($('textarea[name=\'text\']').val()) + '&rating=' + encodeURIComponent($('input[name=\'rating\']:checked').val() ? $('input[name=\'rating\']:checked').val() : '') + '&captcha=' + encodeURIComponent($('input[name=\'captcha\']').val()),
+			/*beforeSend: function() {
+				$('.success, .warning').remove();
+				$('#button-review').attr('disabled', true);
+				$('#review-title').after('<div class="attention"><img src="<?echo $this->url_to_templates.SITE_DEFAULT_TEMPLATE;?>/includes/images/loading.gif" alt="" /> <?php echo $this->trans->_("text_wait"); ?></div>');
+			},*/
+			complete: function() {
+				$('#button-review').attr('disabled', false);
+				//$('.attention').remove();
+			},
+			success: function(data) {
+				if (data.error) {
+					$('#review-title').after('<div class="alert alert-danger">' + data.error + '</div>');
+					
+					setTimeout(function() {
+						$("#review-title").hide('blind', {}, 500)
+					}, 4000);
+				}
+				
+				if (data.success) {
+					$('#review-title').after('<div class="alert alert-success">' + data.success + '</div>');
+					$('input[name=\'name\']').val('');
+					$('textarea[name=\'text\']').val('');
+					$('input[name=\'rating\']:checked').attr('checked', '');
+					$('input[name=\'captcha\']').val('');
+					setTimeout(function() {
+						$("#review-title").hide('blind', {}, 500)
+					}, 2000);
+				}
+			}
+		});
+	});
+//--></script>		

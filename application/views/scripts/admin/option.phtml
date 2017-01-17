@@ -1,0 +1,320 @@
+<?if($_REQUEST['type']!=""){?>
+<script type='text/javascript' src='<?=PATH_TO_ADMIN_JS?>jquery.autocomplete.js'></script>
+<link rel="stylesheet" type="text/css" href="<?=PATH_TO_ADMIN_JS?>jquery.autocomplete.css" />
+<script type="text/javascript" src="<?php echo $this->url_to_commonfiles;?>js/javascript/jquery/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="<?php echo $this->url_to_commonfiles;?>js/javascript/jquery/ui/jquery-ui-1.8.9.custom.min.js"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo $this->url_to_commonfiles;?>js/javascript/jquery/ui/themes/ui-lightness/jquery-ui-1.8.9.custom.css" />
+<?}?>
+<?php
+	$act=new Model_Adminaction();
+	$act_ext=new Model_Adminextaction();
+ 	if($_REQUEST['type']==''){?>
+<div class="container_12">
+           <div style="clear:both;"></div>
+            <div class="grid_12">
+  				<?
+					if($_REQUEST['msg']!=""){?>
+				<span class='<?php echo $_REQUEST['m']==""?"notification n-success":"notification n-error"?>'><?=base64_decode($_REQUEST['msg']);?></span>
+				<?}?>
+
+                <div class="bottom-spacing">
+                    <!-- Button -->
+                    <div class="float-right"><?=$this->view_pagination;?>
+						
+                    </div>
+                    <!-- Table records filtering -->
+
+
+                </div>
+
+
+                <!-- Example table -->
+                <div class="module">
+                	<h2><span><?=$this->actionTitle." [".$this->total_count."]"?></span> <div class="add-btn-div"><?php $act->viewAddB(ADMIN_URL_CONTROLLER.$this->actionTitle);?></div> </h2>
+
+                    <div class="module-table-body">
+                    	<form name="frmMain" id="frmMain" method="post" action="<?php echo ADMIN_URL_CONTROLLER.$this->actionTitle?>">
+			<?if($this->total_count>0){?>
+                        <table id="myTable" class="tablesorter">
+                   	  <thead>
+                                <tr>
+								  <th align="center" style="width:5%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#</th>
+                                  <th style="width:20%"><?echo $act_ext->getSortLable(array("disType"=>$this->disType, "sortby"=>"name", "page"=>$_REQUEST['page'] ,"file"=>"option" ,"label"=>"Option"));?></th>
+				   <th style="width:20%"><?echo $act_ext->getSortLable(array("disType"=>$this->disType, "sortby"=>"sort_order", "page"=>$_REQUEST['page'] ,"file"=>"option" ,"label"=>"Sort Order"));?></th>
+                                  <th style="width:15%"><input type="checkbox" name="checkall" id="checkall" onClick="Checkall()"/> <a href="#">Action</a></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+							<?
+					$i=1;
+					if($this->page!=1)
+					{
+						$i+=($this->page-1)*$this->per_page;
+					}
+
+							foreach ($this->results as $result)
+							{
+
+							$class=fmod($i,2)==0?'':'addcolorne';
+							?>
+                              <tr>
+                                <td align="center" class="<?=$class?>"><?=$i?></td>
+                                 <td class="<?=$class?>"><?php echo $result['name'];?></td>
+				  <td class="<?=$class?>"><?php echo $result['sort_order'];?></td>
+                                <td class="<?=$class?>">
+
+								<input type="checkbox" name="rid[]" id="rid" value="<?php echo $result[$this->r_id];?>"  />
+								<?php
+									$act->viewEditB(ADMIN_URL_CONTROLLER.$this->actionTitle,$result[$this->r_id],$_REQUEST['page']);
+									$act->viewDelB($this->actionTitle,$result[$this->r_id],$this->r_table,$this->r_id,$_REQUEST['page']);
+								?>
+
+                                </td>
+                              </tr>
+                              <?$i=$i+1;}?>
+
+                            </tbody>
+                        </table><?}else{
+								echo "<table id='myTable' class='tablesorter' border='2'><tr><td align='center'>No records to display</td></tr></table>";}?>
+
+						<input type="hidden" name="page" id="page" value="<?php echo $this->page;?>">
+                        <div class="table-apply">
+                             <?$act->fnmultipleactdropdown(array('Del'=>'Delete'));?>
+                            </form>
+                        </div>
+                        <div style="clear: both"></div>
+                     </div>
+                </div>
+
+                <?=$this->view_pagination;?>
+			</div>
+             <div class="grid_6">
+		  </div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+        </div>
+		<?php }elseif($_REQUEST['type']=='Add' || 'Edit'){
+ 	/*foreach ($this->data as $result)
+	{} print_r($result);*/?>
+		<div class="container_12">
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+            <div class="grid_12">
+                <div class="module">
+                     <h2><span><?php echo $_REQUEST['type']." ".$this->actionTitle;?></span></h2>
+                     <div id="TabbedPanels1" class="TabbedPanels">
+                       <ul class="TabbedPanelsTabGroup">
+                         <li class="TabbedPanelsTab" tabindex="0">Details</li>
+                         <li class="iconsec">
+			  <?php echo $act->editCancelB($this->actionTitle,$_REQUEST['page']);?></li>
+                          <?php echo $act->editApplyB(ADMIN_URL_CONTROLLER.$this->actionTitle,(int)$_REQUEST['rid'],$_REQUEST['type']);
+				?>
+                         <li class="iconsec">
+						 <?php echo $act->editSaveB(ADMIN_URL_CONTROLLER.$this->actionTitle,(int)$_REQUEST['rid'],$_REQUEST['type'],$_REQUEST['page']);?></li>
+                       </ul>
+                       <div class="TabbedPanelsContentGroup">
+                         <div class="TabbedPanelsContent"> <form name="frmEdit" method="post" enctype="multipart/form-data">
+                        <?if($this->msg!=""){ echo '<div><span class="notification n-success">'.base64_decode($this->msg).'</span></div> ';}
+			
+						$ret=$act->getEditdetails('r_option_description','option_id',(int)$_REQUEST['rid']);
+						$rcat=$act->getEditdetails('r_option','option_id',(int)$_REQUEST['rid']);
+						$child=$act->getEditdetails('r_option_description','option_id',$rcat[0][child]);
+						/*echo "<pre>";
+						print_r($child);
+						echo "</pre>";*/
+						if(count($ret)>0)
+						{
+							foreach($ret as $res)
+							{
+							$lang[$res['language_id']]=array("name" =>$res['name']);
+							}
+						}?>
+							 <p><b>All fields indicated with * are mandatory</b></p>
+                            <div class="mode-box">
+<h3><span>Option Details</span></h3>
+			    <?
+							echo $act->lang_field(array('lable'=>'Option Name','input_title'=>'name','desc'=>'enter option name','input_type'=>'input_text','val'=>$lang,"req"=>'1'));
+						 ?>
+
+							<p><label>Type</label><select name="select_type" id="select_type" tooltipText="enter type" title="Type" onchange="fndisplay(this.value)">
+							<optgroup label="Choose">
+							<option value="select">Select</option>
+							<option value="radio" <?echo $rcat[0][type]=='radio'?'selected':'';?> >Radio</option>
+							<option   value="checkbox" <?echo $rcat[0][type]=='checkbox'?'selected':'';?> >Checkbox</option>
+							</optgroup>
+							<optgroup label="Input">
+							<option value="text" <?echo $rcat[0][type]=='text'?'selected':'';?> >Text</option>
+							<option value="textarea" <?echo $rcat[0][type]=='textarea'?'selected':'';?> >Textarea</option>
+							</optgroup>
+							<optgroup label="File">
+							<option value="file" <?echo $rcat[0][type]=='file'?'selected':'';?> >File</option>
+							</optgroup>
+							<optgroup label="Date">
+							<option value="date" <?echo $rcat[0][type]=='date'?'selected':'';?> >Date</option>
+							<option value="time" <?echo $rcat[0][type]=='time'?'selected':'';?> >Time</option>
+							<option value="datetime" <?echo $rcat[0][type]=='datetime'?'selected':'';?> >Date &amp; Time</option>
+							</optgroup>
+							</select></p>
+							
+							<p id="filter_id" ><label>Filter</label> <input type="checkbox" name="filter" id="filter"  value='1' <?echo $filter=$rcat[0][filter]=='1'?'checked':'';?> ></p>
+							
+							<?if(@constant('DEPENDENT_OPTIONS')=='1'){?>
+							<span id="div_dp">
+							<p><label>Dependent Options</label> <input type="checkbox" name="dp" id="dp"  value='1' <?echo $filter=$rcat[0][dependent_option]=='1'?'checked':'';?> onclick="fndp(this.checked)";></p>
+							<p id="dp_child"><label>Child</label><input type="text" name="child" id="child" value="<?php echo $child[0][option_id];?>"><span id="child_label"><?php echo $child[0][name];?></span></p>
+							</span>
+							<?}?>
+
+							<?
+							echo $act->field(array('lable'=>'Sort order','input_title'=>'sort_order','desc'=>'enter sort order','input_type'=>'input_text','val'=>$rcat[0]['sort_order'],"req"=>'0'));
+											?>
+ 
+											 <table id="discount" class="list" border="1">
+							<thead>
+							 
+							  <tr>
+								<td class="left">Option Value Name</td>
+								<td class="right">Sort Order</td>
+								<td>Remove</td>
+							  </tr>
+
+							</thead>
+
+							<?
+
+								if($_REQUEST['type']='Edit'){
+									///$ac=$act->db->fetchAll("select ovd.*,ov.sort_order from r_option_value_description ovd,r_option_value ov where ovd.option_value_id=ov.option_value_id  and ov.option_id='".$_REQUEST['rid']."' and ovd.language_id='1' order by ovd.name asc");
+
+								$ac=$act->db->fetchAll("select ovd.* from r_option_value_description ovd where  ovd.option_id='".(int)$_REQUEST['rid']."' and ovd.language_id='1' order by ovd.name asc");
+
+							if(count($ac)>0){
+								//for($i=0;$i<count($dc);$i++)
+								$j=0;
+								foreach($ac as $c){
+									?>
+							<tbody id="edit" ><tr>
+									<td class="right"><?$act->getlangoption($c['option_value_id'],(int)$_REQUEST['rid'],$j);?>
+									<?$act->getlangoptionhidden($c['option_value_id'],(int)$_REQUEST['rid'],$j);?></td>
+									<td class="right"><?echo $act->field(array('lable'=>'','input_title'=>'sort[]','desc'=>'enter sort order','input_type'=>'input_text','val'=>$c['sort_order'],"req"=>'0'));
+
+
+											?></td>
+									<td class="left"><input type="checkbox" name="attr_rem_<?=$j?>" id="attr_rem_<?=$j?>" value="1"></td>  </tr>
+							</tbody>
+
+							<?$j++;}}}?>
+
+							<?if($_REQUEST['type']=='Edit'){ $attr_hid_val=count($ac);}else{ $attr_hid_val='0';}?>
+							<input type="hidden" name="attr_hid_val" id="attr_hid_val" value="<?=$attr_hid_val?>">
+							  <?//$attr=$act->attributedropdown($none);?>
+							<?for($i=$attr_hid_val;$i<10;$i++){?>
+                                    <tbody id="attr-row<?=$i?>" style="display:none" ><tr>
+									<td class="right"><?echo $act->lang_field(array('lable'=>'','input_title'=>'attr_text_'.$i,'desc'=>'enter text','input_type'=>'input_text','val'=>$lang,"req"=>'0'));
+
+							echo $act->lang_field(array('lable'=>'','input_title'=>'attr_hid_'.$i,'desc'=>'enter name',		'input_type'=>'hidden','val'=>$lang,"req"=>'0')); ?>
+
+
+									<!-- <input name="attr_text[]" value="" type="text"> --></td>
+									<td class="right"><?echo $act->field(array('lable'=>'','input_title'=>'sort[]','desc'=>'enter sort order','input_type'=>'input_text','val'=>'',"req"=>'0'));?></td>
+									<td class="left"><input type="checkbox" name="attr_rem_<?=$i?>" id="attr_rem_<?=$i?>" value="1"></td>  </tr></tbody>
+								<?}?>
+								<tr>
+                <td ><a onclick="addOption();" class="button"><span>Add Option Value</span></a></td>
+                <td class="left"colspan="6"></td>
+              </tr>
+
+							</table>
+</div></div>
+ 
+                        </form>
+                       </div>
+                  </div>
+                     <div class="module-body">
+                  </div>
+
+                </div>
+        		<div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+           <div style="clear:both;"></div>
+</div>
+		<?php }?>
+ <script type="text/javascript">
+		function addOption()
+{
+	var val=document.getElementById('attr_hid_val').value;
+	document.getElementById('attr-row'+val).style.display="";
+	document.getElementById('attr_hid_val').value=parseInt(val)+1;
+}
+window.onload=fndisplay(document.getElementById('select_type').value);
+function fndisplay(val)
+{
+	if (val=="radio" || val=="select" || val=="checkbox")
+	{
+		document.getElementById("discount").style.display="";
+		document.getElementById("filter_id").style.display="";
+		if(val=='select')
+		{
+		//alert("hello in")
+			document.getElementById("div_dp").style.display="";
+			if(document.getElementById('dp').checked!=true)
+			{
+				document.getElementById("dp_child").style.display="none";
+			}else
+			{
+				document.getElementById("dp_child").style.display="";
+			}
+		}
+		if(val!='select')
+		{
+		//alert("hello out")
+			document.getElementById("div_dp").style.display="none";
+		}
+	}else
+	{
+		document.getElementById("discount").style.display="none";
+		document.getElementById("filter_id").style.display="none";
+		document.getElementById("div_dp").style.display="none";
+	}
+ }
+
+ function fndp(val)
+ {
+	if(val==true)
+	{
+	       document.getElementById("dp_child").style.display="";
+	}else
+	{
+	       document.getElementById("dp_child").style.display="none";
+	}
+ }
+
+ $('input[name=\'child\']').autocomplete({
+	delay: 0,
+	source: function(request, response) {
+		$.ajax({
+			url: 'optionautocomplete?token=<?echo rand(10,100);?>',
+			type: 'POST',
+			dataType: 'json',
+			data: 'filter_name=' +  encodeURIComponent(request.term),
+			success: function(data) {
+				response($.map(data, function(item) {
+					return {
+						label: item.name,
+						value: item.product_id
+					}
+				}));
+
+			}
+		});
+
+	},
+	select: function(event, ui) {
+		$('#child_label').html(ui.item.label);
+		$('#child').val(ui.item.value);
+		return false;
+	}
+});
+</script>

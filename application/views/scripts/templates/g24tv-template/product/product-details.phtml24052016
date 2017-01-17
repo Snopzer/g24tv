@@ -1,0 +1,115 @@
+<section id="mainContent">
+	<div class="content_top">
+		<div class="row">
+			<?if(count($this->pos[top])>0){?>
+				<?php echo $this->action('top','modules',null,array('mod' =>$this->pos[top]));?>
+			<?}?>
+		</div>
+	</div>
+	<div class="content_bottom">
+		<div class="col-lg-8 col-md-8">
+			<div class="content_bottom_left">
+				<div class="single_page_area">
+					<ol class="breadcrumb">
+						<?php foreach ($this->breadcrumbs as $breadcrumb) { ?>
+							<?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
+						<?php } ?></p>  
+				</ol>
+				<h2 class="post_titile"><?php echo $this->heading_title; ?></h2> 
+				<div class="single_page_content">
+                    <?/*?><div class="post_commentbox">
+						<a href="#"><i class="fa fa-user"></i>Wpfreeware</a>
+						<span><i class="fa fa-calendar"></i>6:49 AM</span>
+						<a href="#"><i class="fa fa-tags"></i>Technology</a>
+					</div><?*/?>
+                    <img class="img-center" src="<?php echo $this->url_to_site."timthumb.php?src=".$this->thumb; ?>" title="<?php echo $this->heading_title; ?>" alt="<?php echo $this->heading_title; ?>"/>
+                    <?php echo $this->description; ?><ul>
+						<?/*?><button class="btn">Default</button>
+							<button class="btn btn-primary">Primary</button>
+							<button class="btn btn-success">Success</button>
+							<button class="btn btn-info">Info</button>
+							<button class="btn btn-warning">Warning</button>
+						<button class="btn btn-danger">Danger</button><?*/?>
+					</div>                 
+				</div> 
+				<? if(count($this->pos[left])>0){?>
+					<?php echo $this->action('left','modules',null,array('mod' =>$this->pos[left]));?>
+				<?}?>
+			</div><!--End content_bottom_left-->                 
+		</div>
+		<!-- start content bottom right -->
+		<div class="col-lg-4 col-md-4">
+			<div class="content_bottom_right">
+			
+			<!-- rating -->
+			
+			<?php if ($this->review_status) { ?>
+			<?php //echo $this->rating; ?>
+			<div class="rating" >
+				<i class="glyphicon glyphicon-star text-warning"></i>	
+				<i class="glyphicon glyphicon-star text-warning"></i>
+				<i class="glyphicon glyphicon-star text-warning"></i>
+				<i class="glyphicon glyphicon-star text-warning"></i>
+				<i class="glyphicon glyphicon-star "></i>
+			</div>
+				<?php echo $this->reviews; ?>
+			<?php  } ?>
+			
+			<!-- rating end -->
+			<!-- attibutes -->
+			<?php
+				if ($this->attribute_groups) { ?>
+							<table class="infobox table table-bordered">
+									<?php foreach ($this->attribute_groups as $attribute_group) { ?>
+										<thead>
+											<tr>
+												<td colspan="2" class="attribute-title"><?php echo $attribute_group['name']; ?></td>
+											</tr>
+										</thead>
+										<tbody>
+											<?php foreach ($attribute_group['attribute'] as $attribute) { ?>
+												<tr>
+													<th class="attribute-title-name" ><?php echo $attribute['name']; ?></th>
+													<td class="attribute-contct" ><?php echo $attribute['text']; ?></td>
+												</tr>
+											<?php } ?>
+										</tbody>
+									<?php } ?>
+								</table>
+						<?php } ?>
+			<!--<table class="infobox table table-bordered">
+			<tbody>
+			<tr>
+				<th> Lorem ipusm </th>
+				<td> sample text </td>
+			</tr> 
+			<tr>
+				<th> Lorem ipusm </th>
+				<td> sample text </td>
+			</tr>
+			</tbody></table>-->
+			<!-- attibutes end -->
+			
+			
+			<!-- review form -->
+			<form class="contact_form"> 
+			   <input class="form-control" type="text" placeholder="Name(required)">
+			   <input class="form-control" type="email" placeholder="E-mail(required)">
+			   <input class="form-control" type="text" placeholder="Subject">
+			   <textarea class="form-control" cols="30" rows="10" placeholder="Message(required)" ></textarea>
+			   <input type="submit" value="Send">
+			</form>
+			<!-- review form -->
+				<?if(count($this->pos[right])>0){?>
+					<?php echo $this->action('right','modules',null,array('mod' =>$this->pos[right]));?>
+				<?}?>
+				
+			</div>
+		</div>
+	</div>  
+	<div class="content_middle">
+		<?if(count($this->pos[bottom])>0){?>
+			<?php echo $this->action('bottom','modules',null,array('mod' =>$this->pos[bottom]));?>
+		<?}?>
+	</div><!-- End main content middle -->
+</section>

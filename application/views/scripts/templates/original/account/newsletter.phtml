@@ -1,0 +1,73 @@
+<div class="main-column"><!--main-max-banner start-->
+<div id="container"><!--container start-->
+
+<? if(count($this->pos[left])>0){?>
+<div id="column-left"><!--column-left start-->
+<?php echo $this->action('left','modules',null,array('mod' =>$this->pos[left]));?>
+<!--column-left End--></div>
+<?}?>
+
+<?if(count($this->pos[right])>0){?>
+<div id="column-right"><!--column-right start-->
+<?php echo $this->action('right','modules',null,array('mod' =>$this->pos[right]));?>
+<!--column-right End-->
+<?}?>
+		
+<div id="content"><!--content start-->
+<?if(count($this->pos[top])>0){?>
+<div id="main-max-banner"><!--start main-max-banner-->
+<?php echo $this->action('top','modules',null,array('mod' =>$this->pos[top]));?>
+<!--End main-max-banner--></div>
+<?}?>
+
+          <div class="breadcrumb"><!--readcrumb start-->
+	<p>
+	<?php foreach ($this->data[breadcrumbs] as $breadcrumb) { ?>
+    <?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
+    <?php } ?></p>
+                  <!--readcrumb Start --></div>
+				    <div class="page-title">
+<h1> <span> <?php echo $this->trans->_('heading_title_account_newsletter'); ?></span> </h1></div>
+     
+						
+                    <div class="box">
+					<div class="box-account-newsletter">
+				
+<div class="box-content">
+
+    <form action="<?php echo $this->data[action]; ?>" method="post" enctype="multipart/form-data" id="newsletter">
+    <div class="content">
+      <table class="form">
+        <tr>
+          <td width="60%"><?php echo $this->trans->_('entry_newsletter_account_newsletter'); ?></td>
+          <td width="35%"><?php if ($this->data[newsletter]) { ?>
+            <input type="radio" class="checkbox" name="newsletter" value="1" checked="checked" />
+            <?php echo $this->data[text_yes]; ?>Yes&nbsp;
+            <input type="radio" class="checkbox" name="newsletter" value="0" />
+            <?php echo $this->data[text_no]; ?> No
+            <?php } else { ?>
+            <input type="radio" class="checkbox" name="newsletter" value="1" />
+            <?php echo $this->data[text_yes]; ?>Yes&nbsp; 
+            <input type="radio" class="checkbox" name="newsletter" value="0" checked="checked" />
+            <?php echo $this->data[text_no]; ?> No
+            <?php } ?></td>
+        </tr>
+      </table>
+    </div>
+ </div>
+
+						
+						</div>
+                    <!--innerpage_rightContent --></div>
+					 <div class="buttons">
+      <div class="left"><a href="<?php echo $this->data[back]; ?>" class="button_btn"><span><?php echo $this->trans->_('button_back'); ?></span></a></div>
+      <div class="right"><a onclick="$('#newsletter').submit();" class="button_btn"><span><?php echo $this->trans->_('button_submit_account_newsletter'); ?></span></a></div>
+    </div>  </form>
+				<?if(count($this->pos[bottom])>0){?>
+				<div class="container-top">
+				<?php echo $this->action('bottom','modules',null,array('mod' =>$this->pos[bottom]));?></div>
+				<?}?>	
+             <!--container End--></div>
+           <!--main-max-banner End--></div>
+	                <!--container End--></div>
+           <!--main-max-banner End--></div>

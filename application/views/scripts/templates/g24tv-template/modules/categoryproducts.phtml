@@ -1,0 +1,66 @@
+<?
+	
+	if(sizeof($this->info[data][category])>0) //check if a category has products and display only if category has products
+	{
+		/*echo '<pre>';
+		if($_SERVER['REMOTE_ADDR']=='182.72.145.2')
+		{
+			print_r($this->info[data][category]);
+		}
+		echo '</pre>';*/
+		
+		foreach($this->info[data][category] as $k=>$v){
+			$exp=explode("#",$k);
+			$cat_name=$exp[0];
+			$cat_id=$exp[1];
+		?>
+		
+		<div class="technology_catrarea">
+			<div class="single_category">
+				<h2>                  
+					<span class="bold_line"><span></span></span>
+					<span class="solid_line"></span>
+					<a href="<?php echo $this->url_to_site."product/category/path/".$cat_id;?>" class="title_text"><?php echo $cat_name;?></a>
+				</h2>
+				<?php /*?><div class="business_category_left">
+					<ul class="fashion_catgnav wow fadeInDown">
+						<li>
+							<div class="catgimg2_container">
+								<a href="#"><img alt="img" src="<?php echo $this->url_to_templates.SITE_DEFAULT_TEMPLATE;?>/includes/img/devhill/390x240x1.jpg"></a>
+							</div>
+							<h2 class="catg_titile"><a href="#"><?php echo $cat_name;?></a></h2>
+							<!--<div class="comments_box">
+								<span class="meta_date">14/12/2013</span>
+								<span class="meta_comment"><a href="#">No Comments</a></span>
+								<span class="meta_more"><a  href="#">Read More...</a></span>
+							</div>
+							<p>Nunc tincidunt, elit non cursus euismod, lacus augue ornare metus, egestas imperdiet nulla...</p>-->
+						</li>
+					</ul>
+				</div><?php */?>  
+				<div class="categoryproducts">
+					<ul class="small_catg wow fadeInDown">
+						<?php foreach ($v as $product) { ?>
+							<li>
+								<div class="media wow fadeInDown">
+								<?php if ($product['thumb']) { ?>
+									<a class="media-left" href="<?php echo $product['href']; ?>"><img src="<?php echo $this->url_to_site."timthumb.php?src=".$product['thumb']; ?>" alt="<?php echo $product['name']; ?>" /></a>
+								<? } ?>
+									<div class="media-body">
+										<h4 class="media-heading"><a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a></h4> 
+										<div class="comments_box">
+											<?php /*?><span class="meta_date"><?php echo $product['date_added']; ?></span> 
+											<span class="meta_comment"><?php echo sprintf($this->trans->_('text_reviews_product_product'), (int)$product['reviews']); ?></span><?php*/?>
+											<p><?php echo stripslashes($product['description']);?></p>
+										</div>
+									</div>
+								</div>
+							</li>
+						<? } ?>
+						
+					</ul>
+				</div>   
+			</div>
+		</div><!-- End technology category area -->
+	<?php }} ?>
+		

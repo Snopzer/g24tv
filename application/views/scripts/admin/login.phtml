@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>Snopzer Admin Login</title>
+		<link href="<?php echo PATH_TO_ADMIN_CSS;?>login.css" rel="stylesheet" type="text/css" />
+	</head>
+	
+	<body><div class="wrapper">
+		<div class="inner-wrapper">
+			
+			<div id="header">
+				<h1><a href="<?php echo HTTP_SERVER;?>console"><img src="<?php echo PATH_TO_ADMIN_IMAGES;?>logo-big.png" border="0" /></a></h1>
+			</div>
+			
+			<div class="dialog ">
+				
+				<div class="dialog-content">
+					<h2><img src="<?php echo PATH_TO_ADMIN_IMAGES;?>Signin-login.png" /></h2>
+					<form name="frmadminlogin" id="frmadminlogin" action="index" method="post">
+						<?if($_REQUEST['msg']=='ZW5kIG9mIHNlc3Npb24='){?>
+							<div class="notification-box" ><?=base64_decode($_GET['msg']);?> </div>
+							<?}else if($_REQUEST['msg']=='UGxlYXNlIGNoZWNrIHlvdSBlbWFpbCBpZCBmb3IgZGV0YWlscyEh'){?>
+							<div class="success-box" ><?=base64_decode($_GET['msg']);?> </div>
+							<?}else if($_REQUEST['msg']!=""){?>
+							<div class="errow-box" ><?=base64_decode($_GET['msg']);?> </div>
+						<?}?>
+						<div class="form-row">
+							<div class="form-row-left">
+								<label for="username">Username</label>
+								<div class="input-wrapper">
+									<input type="text" autofocus="" placeholder="" title="Email or Username" class="text " value="" id="uname" name="uname">
+									<script type="text/javascript" language="JavaScript">
+										if(document.getElementById) document.getElementById('uname').focus();
+									</script>
+								</div>
+							</div>
+							
+							<div class="form-row-left">
+								<label for="password">Password</label>
+								<div class="input-wrapper">
+									<input type="password" placeholder="" title="Password" class="password " value="" id="pwd" name="pwd">
+								</div>
+							</div>
+						</div>
+						
+						<div class="form-actions-row form-row">
+							<!--<div class="form-row-left">
+								<input type="checkbox" checked="" id="remember_me" class="checkbox" value="1" name="remember_me">
+								<label class="remember_me"> Remember me</label>
+							</div>-->
+							<div class="form-row-right">
+								
+								<input type="submit" value="Submit" class="button submit" onClick="document.getElementById('frmadminlogin').submit();">
+							</div>
+						</div>
+						
+						
+					</form>
+					
+				</div>
+				
+				<div class="dialog-footer">
+					
+					<div class="grid_12">
+                	<p>&copy; 2016 <a href="http://www.snopzer.com" title="Snopzer" target="_blank"> Snopzer Software Private Limited. </a></p>
+					</div>
+					<div class="dialog-footer-right">
+						<a href="<?php echo @constant('ADMIN_URL_CONTROLLER');?>forgot-password">Forgot password?</a>
+					</div>
+					
+				</div>
+				
+				
+				
+			</div>
+			
+			
+		</div>
+	</div>
+	</body>
+</html>

@@ -1,0 +1,55 @@
+<div class="single_bottom_rightbar wow fadeInDown">
+	<h2>Advertisements</h2>
+	<ul>
+		<li>
+			<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+			<!-- Techdefeat Ad -1 -->
+			<ins class="adsbygoogle"
+			style="display:block"
+			data-ad-client="ca-pub-9505794457801858"
+			data-ad-slot="2227413920"
+			data-ad-format="auto"></ins>
+			<script>
+				(adsbygoogle = window.adsbygoogle || []).push({});
+			</script>
+		</li>               
+	</ul>
+</div> 
+
+<?php //exit('in featured');?>
+<div class="content_bottom_right">
+	<div class="single_bottom_rightbar">
+		<?php if(@constant('featured_module_title')!=""){ ?><h2><?php echo @constant('featured_module_title'); ?></h2><? } ?>
+		<ul class="small_catg popular_catg wow fadeInDown">
+			<?php foreach ($this->info[data][products] as $product) { ?> 
+				<?php 
+					/*echo '<pre>;
+					if($_SERVER['REMOTE_ADDR']=='182.72.145.2')
+					{
+						print_r($product);
+					}
+					echo '</pre>';
+					*/
+					?>
+				
+				<li>
+					<div class="media wow fadeInDown">
+						<?php if ($product['thumb']) { ?>
+							<a href="<?php echo $product['href']; ?>" class="media-left">
+								<img alt="img" src="<?php echo $this->url_to_site."timthumb.php?src=".$product['thumb']; ?>" alt="<?php echo $product['name']; ?>">
+							</a>
+						<?php } ?>
+						<div class="media-body">
+							<h4 class="media-heading"><a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a></h4> 
+							<div class="comments_box">
+								<?php /*<span class="meta_date"><?php echo $product['date_added'];?></span>
+								<span class="meta_comment"><?php echo sprintf($this->trans->_('text_reviews_product_product'), (int)$product['reviews']); ?></span><?*/?> 
+								<p><?php echo $product['description'];?></p>
+							</div>
+						</div>
+					</div>
+				</li>
+			<? } ?>
+		</ul>
+	</div>
+</div>

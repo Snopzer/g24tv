@@ -1,0 +1,714 @@
+
+<div class="main-column"><!--main-max-banner start-->
+<div id="container"><!--container start-->
+<div id="notification"></div>
+<? if(count($this->pos[left])>0){?>
+<div id="column-left"><!--column-left start-->
+<?php echo $this->action('left','modules',null,array('mod' =>$this->pos[left]));?>
+<!--column-left End--></div>
+<?}?>
+
+<?if(count($this->pos[right])>0){?>
+<div id="column-right"><!--column-right start-->
+<?php echo $this->action('right','modules',null,array('mod' =>$this->pos[right]));?>
+<!--column-right End--></div>
+<?}?>
+		
+            <div id="content"><!--content start-->
+<?if(count($this->pos[top])>0){?>
+<div id="main-max-banner"><!--start main-max-banner-->
+<?php echo $this->action('top','modules',null,array('mod' =>$this->pos[top]));?>
+<!--End main-max-banner--></div>
+<?}?>
+
+          <div class="breadcrumb"><!--readcrumb start-->
+	<p>
+                <?php foreach ($this->breadcrumbs as $breadcrumb) { ?>
+    <?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
+    <?php } ?></p>    <!--readcrumb End--></div>
+	
+                     <div class="product-info">
+
+		     <?php if ($this->thumb || $this->images) { ?>
+                     	 <div class="left">
+			 <?php if ($this->thumb) { ?>
+                     <div class="image">
+			<a href="<?php echo $this->popup; ?>" title="<?php echo $this->heading_title; ?>"  onclick="return hs.expand(this)" class="highslide" ><img src="<?php echo $this->url_to_site."timthumb.php?src=".$this->thumb; ?>" title="<?php echo $this->heading_title; ?>" alt="<?php echo $this->heading_title; ?>"/></a>
+                       	 <!--big_Img --></div>
+			<?php }?>
+			<?php if ($this->images) { ?>
+                      <div class="image-additional">
+<div class="gallery gallery1">
+	<div class="holder">
+				<ul style="margin-left: 0px;">
+				 <?php
+				$video=0;
+				$video_array=array();
+				 foreach ($this->images as $image) {
+
+				 if($image['htmlcontent']!="")
+				 {
+				 $video=1;
+				 $video_array[]=$image['htmlcontent'];
+				 continue;
+				 }
+				 ?>
+                <li><a href='<?php echo $image['popup']; ?>' class="highslide" onclick="return hs.expand(this)">
+	<img src="<?php echo $this->url_to_site."timthumb.php?src=".$image['thumb']; ?>" alt=""
+		title="" /></a></li><?}?>
+                </ul>
+	</div>		<?if(sizeof($this->images)>2){?>
+				<div class="control">
+				<a href="#" class="prev">prev</a>
+				<a href="#" class="next">next</a>			
+            </div> <?}?>
+</div>
+
+                        <!--small_Img --></div><?php }?>
+                        <!--pro_detailImgs --></div>
+			<?}?>
+                   <div class="right" id="pro_detailContent">
+				   
+				   <div class="description"> <!--description Start -->
+				   
+				   <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                  <tr>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                    <td align="right"  valign="top">
+ 									  <a id="button_email" class="addthis_button_email at300b" title="Email" href="#" tabindex="0"><span class="at300bs at15nc at15t_email"></span></a>
+									  
+									  <a id="button_print" class="addthis_button_print at300b" title="Print" href="#"><span class="at300bs at15nc at15t_print"></span></a>
+
+									</td>
+                                  </tr>
+				    <?php if ($price) { ?>
+      <div class="price" ><?php echo $text_price; ?>
+        <?php if (!$special) { ?>
+        <?php echo $price; ?>
+        <?php } else { ?>
+        <span class="price-old"><?php echo $price; ?></span> <span class="price-new"><?php echo $special; ?></span>
+        <?php } ?>
+        <br />
+        <?php if ($this->tax) { ?>
+        <span class="price-tax"><?php echo $text_tax; ?> <?php echo $this->tax; ?></span><br />
+        <?php } ?>
+        <?php if ($points) { ?>
+        <span class="reward"><small><?php echo $text_points; ?> <?php echo $points; ?></small></span> <br />
+        <?php } ?>
+        <?php if ($discounts) { ?>
+        <br />
+        <div class="discount">
+          <?php foreach ($discounts as $discount) { ?>
+          <?php echo sprintf($text_discount, $discount['quantity'], $discount['price']); ?><br />
+          <?php } ?>
+        </div>
+        <?php } ?>
+      </div>
+      <?php } ?>
+				 <?php if ($this->manufacturer) { ?>
+                                  <tr>
+                                    <td width="38%"><strong><?php echo $this->trans->_('text_manufacturer_product_product'); ?></strong></td>
+                                    <td width="2%"><strong>:</strong></td>
+                                    <td width="60%"><strong><!-- <a href="<?php echo $this->manufacturers; ?>"> --><?php echo $this->manufacturer; ?><!-- </a> --></strong></td>
+                                  </tr>
+				  <?}?>
+                                  <tr>
+                                    <td><?php echo $this->trans->_('column_name_account_order');?><!-- Product Name --></td>
+                                    <td>:</td>
+                                    <td><?php echo $this->heading_title;?></td>
+                                  </tr>
+                                  <tr>
+                                    <td><?php echo $this->trans->_('text_reward_product_product'); ?></td>
+                                    <td>:</td>
+                                    <td><?php echo $this->reward; ?></td>
+                                  </tr>
+                                  <tr>
+                                    <td><?php echo $this->trans->_('text_stock_product_product'); ?></td>
+                                    <td>:</td>
+                                    <td><?php echo $this->stock; ?></td>
+                                  </tr>
+				  <?php if ($this->price) { ?>
+		                 <tr>
+                                    <td><?php echo $this->trans->_('text_price_product_product'); ?></td>
+                                    <td>:</td>
+                                    <td> <?php if (!$this->special) { ?>
+        <?php echo $this->price; ?>
+        <?php } else { ?>
+        <span class="price-old"><?php echo $this->price; ?></span> <span class="price-new"><?php echo $this->special; ?></span>
+        <?php } ?></td>
+                                  </tr>
+				  <?php }?>
+				  <?php if ($this->tax) { ?>
+        <tr><td><span class="price-tax"><?php echo $this->trans->_('text_tax_product_product'); ?></td>
+                                    <td>:</td><td> <?php echo $this->tax; ?></span></td></tr>
+        <?php } ?>
+        <?php if ($this->points) { ?>
+        <tr><td><span class="reward"><small> <?php echo $this->trans->_('text_points_product_product'); ?>  </td><td>:</td><td> <?php echo $this->points; ?></small></span> </td></tr>
+        <?php } ?>
+	        <?php
+		//print_r($this->discounts);
+		//echo $this->trans->_('text_discount');
+		if ($this->discounts) {  ?>
+         <?php foreach ($this->discounts as $discount) { ?>
+          <?php echo "<tr><td colspan='3' align='center'><span class='discount'>".sprintf($this->trans->_('text_discount_product_product'), $discount['quantity'], $discount['price']).'</span></td></tr>'; ?>
+          <?php } ?>
+        <?php } ?>
+                                </table>
+				   
+				 <!--description End -->  </div>
+				   
+				   
+				<div class="options"> <!--options start --> 
+				 <?php
+			/*echo "<pre>";
+			print_r($this->options);
+			echo "</pre>";*/
+ 			if ($this->options) { ?>  
+				   <table width="100%" class="rcart-t" border="0" cellspacing="0" cellpadding="0">
+			<tr>
+			<td colspan="3">
+			
+			<?php echo "<h2>".$this->trans->_('text_option_product_product')."</h2>"; ?></td></tr>
+			<?php foreach ($this->options as $option) { //echo $option['type'];?>
+			<!-- start select-->
+			<?php if ($option['type'] == 'select') { ?>
+			<tr id="option-<?php echo $option['product_option_id']; ?>" >
+				<td width="35%" align="right"><?php if ($option['required']) { ?><span class="required">*</span><?php } ?><b><?php echo $option['name']; ?></b></td>
+				<td width="5%" align="center">:</td>
+				<td width="55%" align="left">
+				<select name="option[<?php echo $option['product_option_id']; ?>]">
+				<option value=""><?php echo $this->trans->_('text_select'); ?></option>
+				<?php foreach ($option['option_value'] as $option_value) { ?>
+				<option value="<?php echo $option_value['product_option_value_id']; ?>"><?php echo $option_value['name']; ?><?php if ($option_value['price']) { ?>(<?php echo $option_value['price_prefix']; ?><?php echo $option_value['price']; ?>)<?php } ?>	</option>
+				<?php } ?>
+				</select>
+				</td>
+			</tr><?php }?>
+			<!-- end select-->
+
+			<?//echo $option['type'];?>
+			<!-- start radio-->
+			<?php
+
+			if ($option['type'] == 'radio') {?>
+			<tr id="option-<?php echo $option['product_option_id']; ?>" >
+				<td width="35%" align="right"><?php if ($option['required']) { ?><span class="required">*</span><?php } ?><b><?php echo $option['name']; ?></b></td>
+				<td width="5%" align="center">:</td>
+				<td width="55%" align="left">
+           <?php foreach ($option['option_value'] as $option_value) { ?>
+          <input type="radio" name="option[<?php echo $option['product_option_id']; ?>]" class="radio"  value="<?php echo $option_value['product_option_value_id']; ?>" id="option-value-<?php echo $option_value['product_option_value_id']; ?>" />
+          <label for="option-value-<?php echo $option_value['product_option_value_id']; ?>"><?php echo $option_value['name']; ?>
+            <?php if ($option_value['price']) { ?>
+            (<?php echo $option_value['price_prefix']; ?><?php echo $option_value['price']; ?>)
+            <?php } ?>
+          </label>
+          <br />
+          <?php } ?>
+				</td>
+			</tr><?php }?>
+			<!-- end radio-->
+
+			<!-- start checkbox-->
+			<?php
+
+			if ($option['type'] == 'checkbox') {?>
+			<tr id="option-<?php echo $option['product_option_id']; ?>" >
+				<td width="35%" align="right"><?php if ($option['required']) { ?><span class="required">*</span><?php } ?><b><?php echo $option['name']; ?></b></td>
+				<td width="5%" align="center">:</td>
+				<td width="55%" align="left">
+           <?php foreach ($option['option_value'] as $option_value) { ?>
+          <input type="checkbox" class="radio" name="option[<?php echo $option['product_option_id']; ?>][]" value="<?php echo $option_value['product_option_value_id']; ?>" id="option-value-<?php echo $option_value['product_option_value_id']; ?>" />
+          <label for="option-value-<?php echo $option_value['product_option_value_id']; ?>"> <?php echo $option_value['name']; ?>
+            <?php if ($option_value['price']) { ?>
+            (<?php echo $option_value['price_prefix']; ?><?php echo $option_value['price']; ?>)
+            <?php } ?>
+          </label>
+          <br />
+          <?php } ?>
+				</td>
+			</tr><?php }?>
+			<!-- end checkbox-->
+
+<!--start text -->
+       <?php if ($option['type'] == 'text') { ?>
+	   <tr id="option-<?php echo $option['product_option_id']; ?>" >
+				<td width="35%" align="right"><?php if ($option['required']) { ?><span class="required">*</span><?php } ?><b><?php echo $option['name']; ?></b></td>
+				<td width="5%" align="center">:</td>
+				<td width="55%" align="left"><input type="text" name="option[<?php echo $option['product_option_id']; ?>]" value="<?php echo $option['option_value']; ?>" />
+				</td>
+		</tr>        <?php } ?>
+<!--end text -->
+
+<!--start textarea -->
+       <?php if ($option['type'] == 'textarea') { ?>
+	   <tr id="option-<?php echo $option['product_option_id']; ?>" >
+				<td width="35%" align="right"><?php if ($option['required']) { ?><span class="required">*</span><?php } ?><b><?php echo $option['name']; ?>:</b></td>
+				<td width="5%" align="center">:</td>
+				<td width="55%" align="left"><textarea name="option[<?php echo $option['product_option_id']; ?>]" cols="40" rows="5"><?php echo $option['option_value']; ?></textarea>
+				</td>
+		</tr>        <?php } ?>
+<!--end textarea -->
+<!--start file -->
+       <?php if ($option['type'] == 'file') { ?>
+	   <tr id="option-<?php echo $option['product_option_id']; ?>" >
+				<td width="35%" align="right"><?php if ($option['required']) { ?><span class="required">*</span><?php } ?><b><?php echo $option['name']; ?>:</b></td>
+				<td width="5%" align="center">:</td>
+				<td width="55%" align="left"><a id="button-option-<?php echo $option['product_option_id']; ?>" class="button"><span><?php echo $this->trans->_('button_upload'); ?></span></a>
+          <input type="hidden" name="option[<?php echo $option['product_option_id']; ?>]" value="" />
+
+				</td>
+		</tr>        <?php } ?>
+<!--end file -->
+
+<!--start date -->
+       <?php if ($option['type'] == 'date') { ?>
+	   <tr id="option-<?php echo $option['product_option_id']; ?>" >
+				<td width="35%" align="right">
+				<div id="option-<?php echo $option['product_option_id']; ?>" class="option">
+				<?php if ($option['required']) { ?>
+				<span class="required">*</span>
+				<?php } ?>
+				<b><?php echo $option['name']; ?>:</b></td>
+				<td width="5%" align="center">:</td>
+				<td width="55%" align="left"><input type="text" name="option[<?php echo $option['product_option_id']; ?>]" value="<?php echo $option['option_value']; ?>" class="date" /></td>
+				</div>
+				</td>
+				<!--<td width="35%" align="right"><?php if ($option['required']) { ?><span class="required">*</span><?php } ?><b><?php echo $option['name']; ?>:</b></td>
+				<td width="5%" align="center">:</td>
+				<td width="55%" align="left"><input type="text" name="option[<?php echo $option['product_option_id']; ?>]" value="<?php echo $option['option_value']; ?>" class="date" />
+				</td>-->
+		</tr>        <?php } ?>
+<!--end date -->
+
+<!--start datetime -->
+       <?php if ($option['type'] == 'datetime') { ?>
+	   <tr id="option-<?php echo $option['product_option_id']; ?>" >
+				<td width="35%" align="right"><?php if ($option['required']) { ?><span class="required">*</span><?php } ?><b><?php echo $option['name']; ?>:</b></td>
+				<td width="5%" align="center">:</td>
+				<td width="55%" align="left"><input type="text" name="option[<?php echo $option['product_option_id']; ?>]" value="<?php echo $option['option_value']; ?>" class="datetime" />
+				</td>
+		</tr>        <?php } ?>
+<!--end datetime -->
+
+<!--start time -->
+       <?php if ($option['type'] == 'time') { ?>
+	   <tr id="option-<?php echo $option['product_option_id']; ?>" >
+				<td width="35%" align="right"><?php if ($option['required']) { ?><span class="required">*</span><?php } ?><b><?php echo $option['name']; ?>:</b></td>
+				<td width="5%" align="center">:</td>
+				<td width="55%" align="left"><input type="text" name="option[<?php echo $option['product_option_id']; ?>]" value="<?php echo $option['option_value']; ?>" class="time" />
+				</td>
+		</tr>        <?php } ?>
+<!--end time -->
+		<?}}?>
+                                </table>
+				  <!--options End -->   </div>
+				  
+				  
+				  <div class="cart">  <!--cart start -->
+				  
+				  <table border="0" width="100%" class="details-line" cellspacing="0" cellpadding="0">
+                                  <tr><td colspan="3">
+			<?php echo $this->trans->_('text_qty_product_product'); ?>  <input type="text" name="quantity" size="2" value="<?php echo $this->minimum; ?>" />
+          <input type="hidden" name="product_id" size="2" value="<?php echo $this->product_id; ?>" />
+          											<?php if ($this->minimum > 1) { ?>
+        <div class="minimum"><?php echo $this->text_minimum; ?></div>
+        <?php } ?>
+
+								  </td></tr>
+								  <tr>
+                                    <td width="10%" align="left" valign="middle">
+									
+									<div><a id="button-cart" href="#" class="button" title="add to cart"><span><?php echo $this->trans->_('button_cart');?> </span></a></div></td>
+                                    <td width="14%" align="center" valign="middle"><?echo $this->trans->_("text_or_product_product");?></td>
+                                    <td width="33%" align="left" valign="middle"><a href="javascript:addToWishList('<?php echo $this->product_id; ?>');" ><?echo $this->trans->_('button_wishlist');?></a><br />
+                                    <a href="javascript:addToCompare('<?php echo $this->product_id; ?>');" ><?echo $this->trans->_('button_compare');?></a>
+		</td>
+                                  </tr>
+                                </table>
+				  
+				  
+				  
+				   <!--cart End -->  </div>
+				  
+				  
+				  <div class="review">  <!--review End -->
+				        <?if ($this->review_status) { ?>
+				  
+				  <div>   <a onclick="$('a[href=\'#tab-review\']').trigger('click');" title="viwe"><img src="<?php echo $this->url_to_templates.SITE_DEFAULT_TEMPLATE?>/includes/images/rating-<?php echo $this->rating; ?>.jpg" width="85" height="16" alt="<?php echo $this->reviews; ?>" /></a>
+				  <a onclick="$('a[href=\'#tab-review\']').trigger('click');"><?php echo $this->reviews; ?></a> | <a onclick="$('a[href=\'#tab-review\']').trigger('click');"  ><?php echo $this->trans->_('text_write_product_product'); ?></a>
+				  </div>
+				  
+				    <div class="share">
+				  <div class="addthis_default_style"><a class="addthis_button_compact"><?php echo $this->trans->_('text_share_product_product'); ?></a> <a class="addthis_button_email"></a><a class="addthis_button_print"></a> <a class="addthis_button_facebook"></a> <a class="addthis_button_twitter"></a></div>
+				   <script type="text/javascript" src="https://s7.addthis.com/js/250/addthis_widget.js"></script>
+		
+				  
+				   <!--review End --></div>
+				  
+				  </div>
+				  <?}?>
+				  
+				
+				   
+			
+                       <!--pro_detailContent --></div>
+
+<div class="tabs-main">
+<div id="tabs" class="htabs" >
+<a href="#tab-description"><?php echo $this->trans->_('tab_description_product_product'); ?></a>
+    <?php if ($this->attribute_groups) { ?>
+    <a href="#tab-attribute"><?php echo $this->trans->_('tab_attribute_product_product'); ?></a>
+    <?php } ?>
+    <?php
+
+    if ($this->review_status) { ?>
+    <a href="#tab-review"><?php echo $this->tab_review; ?></a>
+    <?php } ?>
+    <?php if ($this->products) { ?>
+    <a href="#tab-related"><?php echo $this->trans->_('tab_related_product_product'); ?> (<?php echo count($this->products); ?>)</a>
+    <?php }
+    if($video=='1')
+	{?>
+   <a href="#tab-videos"><?php echo "Videos"; ?></a>
+	<?}?>
+  </div>
+  <?php
+    if($video=='1')
+	{?>
+  <div id="tab-videos" class="tab-content">
+
+  <?foreach($video_array as $k=>$v){ echo "<div id='video-left'>".$v."</div>";}?>
+
+  <!-- <table><?foreach($video_array as $k=>$v){ echo "<tr><td>".$v."</td></tr>";}?></table>
+ -->
+  </div>
+  <?}?>
+  <div id="tab-description" class="tab-content"><?php echo $this->description; ?></div>
+  <?php
+   if ($this->attribute_groups) { ?>
+  <div id="tab-attribute" class="tab-content">
+    <table class="attribute" cellpadding="0" cellspacing="0">
+      <?php foreach ($this->attribute_groups as $attribute_group) { ?>
+      <thead>
+        <tr>
+          <td colspan="2" class="attribute-title"><?php echo $attribute_group['name']; ?></td>
+        </tr>
+      </thead>
+      <tbody>
+        <?php foreach ($attribute_group['attribute'] as $attribute) { ?>
+        <tr>
+          <td class="attribute-title-name" ><?php echo $attribute['name']; ?></td>
+          <td class="attribute-contct" ><?php echo $attribute['text']; ?></td>
+        </tr>
+        <?php } ?>
+      </tbody>
+      <?php } ?>
+    </table>
+  </div>
+  <?php } ?>
+  <?php if ($this->review_status) { ?>
+  <div id="tab-review" class="tab-content">
+    <div id="review"></div>
+    <h2 id="review-title"><?php echo $this->trans->_('text_write_product_product'); ?></h2>
+    <b class="name-box"><?php echo $this->trans->_('entry_name_product_product'); ?></b>
+    <input type="text" name="name" value="" class="tXtfieldSearch" />
+    <br />
+    <br />
+      <b class="name-box"><?php echo $this->trans->_('entry_review_product_product'); ?></b>
+    <textarea name="text" cols="40" rows="8" style="width:86%;"></textarea>
+    <span style="font-size: 11px; margin-left:100px;"><?php echo $this->trans->_('text_note_product_product'); ?></span><br />
+    <br />
+  	<b class="name-box"><?php echo $this->trans->_('entry_rating_product_product'); ?></b> <span><?php echo $entry_bad; ?></span>&nbsp;
+    <input type="radio" name="rating" value="1" class="radio" />
+    &nbsp;
+    <input type="radio" name="rating" value="2" class="radio" />
+    &nbsp;
+    <input type="radio" name="rating" value="3" class="radio" />
+    &nbsp;
+    <input type="radio" name="rating" value="4" class="radio" />
+    &nbsp;
+    <input type="radio" name="rating" value="5" class="radio" />
+    &nbsp; <span><?php echo $this->trans->_('entry_good_product_product'); ?></span><br />
+    <br />
+    <b class="name-box-1"><?php echo $this->trans->_('entry_captcha_product_product'); ?></b>
+    <input type="text" name="captcha" value="" />
+    <br />
+    <!--<img src="index.php?route=product/product/captcha" alt="" id="captcha" /><br />-->
+	<img src="<?php echo $this->url_to_site.'product/captcha';?>" alt="" id="captcha" /><br />
+    <br />
+    <div class="buttons">
+      <div class="right"><a id="button-review" class="button_btn"><span><?php echo $this->trans->_(button_continue); ?></span></a></div>
+    </div>
+  </div>
+  <?php } ?>
+  <?php if ($this->products) { ?>
+  <div id="tab-related" class="tab-content">
+    <div class="box-product">
+      <?php
+	  /*echo "<pre>";
+	  print_r($this->products);
+	  echo "</pre>";*/
+	  foreach ($this->products as $product) { ?>
+      <div>
+        <?php if ($product['thumb']) { ?>
+        <div class="image"><a href="<?php echo $product['href']; ?>"><img src="<?php echo $this->url_to_site."timthumb.php?src=".$product['thumb']; ?>" alt="<?php echo $product['products_name']; ?>" /></a></div>
+        <?php } ?>
+        <div class="name"><a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a></div>
+        <?php if ($product['price']) { ?>
+        <div class="price">
+          <?php if (!$product['special']) { ?>
+          <?php echo $product['price']; ?>
+          <?php } else { ?>
+          <span class="price-old"><?php echo $product['price']; ?></span> <span class="price-new"><?php echo $product['special']; ?></span>
+          <?php } ?>
+        </div>
+        <?php } ?>
+        <?php if ($product['rating']) { ?>
+        <div class="rating"><img src="<?php echo $this->url_to_templates.SITE_DEFAULT_TEMPLATE?>/includes/images/rating-<?php echo $product['rating']; ?>.jpg" alt="<?php echo $product['reviews']; ?>" /></div>
+        <?php } ?>
+        <a onclick="addToCart('<?php echo $product['product_id']; ?>');" class="button"><span><?php echo $this->trans->_('button_cart'); ?></span></a></div>
+      <?php } ?>
+    </div>
+  </div>
+  <?php } ?>
+
+
+</div>
+</div>
+                <!--detailContiner --></div>
+				<?if(count($this->pos[bottom])>0){?>
+<div class="container-top">
+<?php echo $this->action('bottom','modules',null,array('mod' =>$this->pos[bottom]));?></div>
+<?}?>
+<!--innerContent --></div>
+<!--contentArea -->
+</div>
+<!--contentArea -->
+
+<?/*?>
+<?*/?>
+
+<?php if ($this->options) { ; ?>
+<!--<script type="text/javascript" src="<?php echo $this->url_to_templates?>javascript/jquery/ajaxupload.js"></script>-->
+<?php foreach ($this->options as $option) { ?>
+<?php
+if ($option['type'] == 'file') { ?>
+
+<?php } ?>
+<?php } ?>
+<?php } ?>
+
+
+<?/*?><script type="text/javascript"><!--
+$('.fancybox').fancybox({cyclic: true});
+//--></script><?*/?>
+<script type="text/javascript"><!--
+$('#button-cart').bind('click', function() {
+	$.ajax({
+
+
+		//url: '<?php echo $this->url_to_site;?>checkout/cartupdate',
+		url:'<?php echo $this->url_to_site;?>checkout/cartupdate',
+		type: 'post',
+
+
+		data: $('#pro_detailContent input[type=\'text\'], #pro_detailContent input[type=\'hidden\'], #pro_detailContent input[type=\'radio\']:checked, #pro_detailContent input[type=\'checkbox\']:checked, #pro_detailContent select, #pro_detailContent textarea'),
+
+                dataType: 'json',
+		success: function(json) {
+
+			$('.success, .warning, .attention, information, .error').remove();
+
+			if (json['error']) {
+				if (json['error']['warning']) {
+					$('#notification').html('<div class="warning" style="display: none;">' + json['error']['warning'] + '<img src="<?echo $this->url_to_templates.SITE_DEFAULT_TEMPLATE;?>/includes/images/close.png" alt="" class="close" /></div>');
+
+					$('.warning').fadeIn('slow');
+				}
+
+				for (i in json['error']) {
+					$('#option-' + i).after('<span class="error">' + json['error'][i] + '</span>');
+				}
+			}
+
+			if (json['success']) {
+				$('#notification').html('<div class="attention" style="display: none;">' + json['success'] + '<img src="<?echo $this->url_to_templates.SITE_DEFAULT_TEMPLATE;?>/includes/images/close.png" alt="" class="close" /></div>');
+
+				$('.attention').fadeIn('slow');
+
+				$('#cart_total').html(json['total']);
+
+				var image = $('#image').offset();
+				var cart  = $('#cart').offset();
+
+				$('#image').before('<img src="' + $('#image').attr('src') + '" id="temp" style="position: absolute; top: ' + image.top + 'px; left: ' + image.left + 'px;" />');
+
+				params = {
+					top : cart.top + 'px',
+					left : cart.left + 'px',
+					opacity : 0.0,
+					width : $('#cart').width(),
+					height : $('#cart').height()
+				};
+
+				$('#temp').animate(params, 'slow', false, function () {
+					$('#temp').remove();
+				});
+			}
+		}
+	});
+});
+//--></script>
+<?php if ($this->options) { ; ?>
+<script type="text/javascript" src="<?php echo $this->url_to_templates?>javascript/jquery/ajaxupload.js"></script>
+<?php foreach ($this->options as $option) { ?>
+<?php
+if ($option['type'] == 'file') {?>
+<script type="text/javascript"><!--
+new AjaxUpload('#button-option-<?php echo $option['product_option_id']; ?>', {
+	//action: 'index.php?route=product/product/upload',
+	action: '<?php echo $this->url_to_site;?>product/productupload',
+	name: 'file',
+	autoSubmit: true,
+	responseType: 'json',
+	onSubmit: function(file, extension) {
+		$('#button-option-<?php echo $option['product_option_id']; ?>').after('<img src="<?echo $this->url_to_templates.SITE_DEFAULT_TEMPLATE;?>/includes/images/loading.gif" id="loading" style="padding-left: 5px;" />');
+	},
+	onComplete: function(file, json) {
+		$('.error').remove();
+
+		if (json.success) {
+			alert(json.success);
+
+			$('input[name=\'option[<?php echo $option['product_option_id']; ?>]\']').attr('value', json.file);
+		}
+
+		if (json.error) {
+			$('#option-<?php echo $option['product_option_id']; ?>').after('<span class="error">' + json.error + '</span>');
+		}
+
+		$('#loading').remove();
+	}
+});
+//--></script>
+<?php } ?>
+<?php } ?>
+<?php } ?>
+<script type="text/javascript"><!--
+$('#review .pagination a').live('click', function() {
+	$('#review').slideUp('slow');
+
+	$('#review').load(this.href);
+
+	$('#review').slideDown('slow');
+
+	return false;
+});
+
+$('#review').load('<?php echo $this->url_to_site;?>ajax/productreview/product_id/<?php echo $this->product_id; ?>');
+
+$('#button-review').bind('click', function() {
+	$.ajax({
+		type: 'POST',
+		url: '<?php echo $this->url_to_site;?>ajax/productwrite/product_id/<?php echo $this->product_id; ?>',
+		dataType: 'json',
+		data: 'name=' + encodeURIComponent($('input[name=\'name\']').val()) + '&text=' + encodeURIComponent($('textarea[name=\'text\']').val()) + '&rating=' + encodeURIComponent($('input[name=\'rating\']:checked').val() ? $('input[name=\'rating\']:checked').val() : '') + '&captcha=' + encodeURIComponent($('input[name=\'captcha\']').val()),
+		beforeSend: function() {
+			$('.success, .warning').remove();
+			$('#button-review').attr('disabled', true);
+			$('#review-title').after('<div class="attention"><img src="<?echo $this->url_to_templates.SITE_DEFAULT_TEMPLATE;?>/includes/images/loading.gif" alt="" /> <?php echo $this->trans->_("text_wait"); ?></div>');
+		},
+		complete: function() {
+			$('#button-review').attr('disabled', false);
+			$('.attention').remove();
+		},
+		success: function(data) {
+			if (data.error) {
+				$('#review-title').after('<div class="warning">' + data.error + '</div>');
+			}
+
+			if (data.success) {
+				$('#review-title').after('<div class="success">' + data.success + '</div>');
+
+				$('input[name=\'name\']').val('');
+				$('textarea[name=\'text\']').val('');
+				$('input[name=\'rating\']:checked').attr('checked', '');
+				$('input[name=\'captcha\']').val('');
+			}
+		}
+	});
+});
+//--></script>
+<script type="text/javascript"><!--
+$('#tabs a').tabs();
+//--></script>
+
+<script type="text/javascript" src="<?php echo $this->url_to_templates?>javascript/jquery/ui/jquery-ui-timepicker-addon.js"></script>
+
+<script type="text/javascript"><!--
+if ($.browser.msie && $.browser.version == 6) {
+	$('.date, .datetime, .time').bgIframe();
+}
+$('.date').datepicker({dateFormat: 'yy-mm-dd'});
+$('.datetime').datetimepicker({
+	dateFormat: 'yy-mm-dd',
+	timeFormat: 'h:m'
+});
+$('.time').timepicker({timeFormat: 'h:m'});
+//--></script>
+ 
+ <!--popup js code-->
+<script type="text/javascript" src="<?php echo $this->url_to_templates.SITE_DEFAULT_TEMPLATE?>/includes/scripts/highslide-full.js"></script>
+
+<script type="text/javascript">
+	hs.graphicsDir = '<?php echo $this->url_to_templates.SITE_DEFAULT_TEMPLATE?>/includes/images/graphics/';
+	hs.align = 'center';
+	hs.transitions = ['expand', 'crossfade'];
+	hs.outlineType = 'rounded-white';
+	hs.fadeInOut = true;
+	hs.dimmingOpacity = 0.75;
+
+	// define the restraining box
+	hs.useBox = true;
+	hs.width = 640;
+	hs.height = 480;
+
+	// Add the controlbar
+	hs.addSlideshow({
+		//slideshowGroup: 'group1',
+		interval: 5000,
+		repeat: false,
+		useControls: true,
+		fixedControls: 'fit',
+		overlayOptions: {
+			opacity: 1,
+			position: 'bottom center',
+			hideOnMouseOut: true
+		}
+	});
+</script>
+
+
+<!--   /* slider js Code*/-->
+<script type="text/javascript" src="<?php echo $this->url_to_templates.SITE_DEFAULT_TEMPLATE?>/includes/scripts/slideGallery.js"></script>
+<script type="text/javascript">
+	window.addEvent("domready", function() {
+		/* Example 1 */
+		var gallery1 = new slideGallery($$(".gallery1"), {
+			steps: 2,
+			mode: "circle",
+			random: true,
+			autoplay: true,
+			stop: ".stop",
+			start: ".start",
+			duration: 4000,
+			speed: 800
+		});
+	});
+</script>
+<!--[if lt IE 7]><link rel="stylesheet" type="text/css" href="../Assets/css/lt7.css" media="screen"/><![endif]-->
+
+<!--   /* slider js Code*/-->
+
+ 

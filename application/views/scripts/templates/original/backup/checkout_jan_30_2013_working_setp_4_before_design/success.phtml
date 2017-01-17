@@ -1,0 +1,52 @@
+<div class="main-column"><!--main-max-banner start-->
+<div id="container"><!--container start-->
+
+<? if(count($this->pos[left])>0){?>
+<div id="column-left"><!--column-left start-->
+<?php echo $this->action('left','modules',null,array('mod' =>$this->pos[left]));?>
+<!--column-left End--></div>
+<?}?>
+
+<?if(count($this->pos[right])>0){?>
+<div id="column-right"><!--column-right start-->
+<?php echo $this->action('right','modules',null,array('mod' =>$this->pos[right]));?>
+<!--column-right End-->
+<?}?>
+
+                	<div id="content"><!--content start-->
+					
+					<?if(count($this->pos[top])>0){?>
+<div id="main-max-banner"><!--start main-max-banner-->
+<?php echo $this->action('top','modules',null,array('mod' =>$this->pos[top]));?>
+<!--End main-max-banner--></div>
+<?}?>
+					
+<div class="breadcrumb"><!--readcrumb start-->
+                    	<p><?php    foreach ($this->data[breadcrumbs] as $breadcrumb) { ?>
+<?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a> <?php } ?>                   </p> <!--readcrumb End --></div>
+
+
+                    <div class="page-title"><h1> <? echo $_SESSION['OBJ']['tr']->translate('heading_title_checkout_success');?></h1></div>
+					
+						<div class="box">
+						<div class="box-content">
+						<div class="box-success">
+		 <?php echo sprintf($_SESSION['OBJ']['tr']->translate('text_guest_checkout_success'), HTTP_SERVER.'information/contact'); ?>
+		 </div>
+		 </div>
+		 </div>
+		  <div class="buttons">
+    <div class="right"><a href="<?php echo HTTP_SERVER.'index/index'; ?>" class="button_btn"><span><?php echo $_SESSION['OBJ']['tr']->translate('button_continue'); ?></span></a></div>
+  </div>
+		    </div>
+
+
+
+                <!--rightContainer -->
+<?if(count($this->pos[bottom])>0){?>
+<div class="container-top">
+<?php echo $this->action('bottom','modules',null,array('mod' =>$this->pos[bottom]));?></div>
+<?}
+?>				</div>
+            <!--innerContent --></div>
+    	<!--contentArea -->

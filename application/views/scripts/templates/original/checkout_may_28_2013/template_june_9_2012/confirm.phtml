@@ -1,0 +1,216 @@
+<div id="caption"><p> Order Confirmation </p><!--caption --></div>
+							<div style="clear:both;"></div>
+                          <div id="chkOutContent">
+                            	<div id="chkOutConient_block">
+							<?php
+							//echo $_SESSION[payment][id];
+							//echo "<pre>";
+							//print_r($_SESSION[$_SESSION[payment][id]]);
+							//echo "</pre>";
+							if (isset($_SESSION[$_SESSION[payment][id]]->form_action_url)) {
+							$form_action_url = $_SESSION[$_SESSION[payment][id]]->form_action_url;
+							} else {
+							//$form_action_url = tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL');
+							//$form_action_url="http://localhost/payment/checkout_process.php";
+							//$form_action_url="checkout_process.php";
+							$form_action_url=Model_url::getLink(array("controller"=>"checkout","action"=>"checkout-process"),'',SERVER_SSL);
+							}
+
+							//echo tep_draw_form('checkout_confirmation', $form_action_url, 'post');
+							?><form method="post" action="<?php echo $form_action_url;?>" name="checkout_confirmation"><table width="100%" border="0" class="order" cellspacing="0" cellpadding="0">
+                                              <tr class="dashBar">
+                                                <td width="35%" height="35" align="left" valign="middle"><?php echo $this->data[column_name]; ?></td>
+                                                <td width="35%" align="left" valign="middle"><?php echo $this->data[column_model]; ?></td>
+                                                <td width="10%" align="left" valign="middle"><?php echo $this->data[column_quantity]; ?></td>
+                                                <td width="10%" align="left" valign="middle"><?php echo $this->data[column_price]; ?></td>
+                                                <td width="10%" align="left" valign="middle"><?php echo $this->data[column_total]; ?></td>
+                                              </tr>
+											   <?php foreach ($this->data[products] as $product) { ?>
+                                              <tr class="dashgrid">
+                                                <td height="25" align="left" valign="middle"><a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a>
+          <?php foreach ($product['option'] as $option) { ?>
+          <br />
+          &nbsp;<small> - <?php echo $option['name']; ?>: <?php echo $option['value']; ?></small>
+          <?php } ?></td>
+                                                <td align="left" valign="middle" height="35"><?php echo $product['model']; ?></td>
+                                                <td align="left" valign="middle"><?php echo $product['quantity']; ?></td>
+                                                <td align="left" valign="middle"><?php echo $product['price']; ?></td>
+                                                <td align="left" valign="middle"><?php echo $product['total']; ?></td>
+                                              </tr>
+                                             <?php } ?>
+      <?php foreach ($this->data[vouchers] as $voucher) { ?>
+                                              <tr class="dashgrid">
+                                                <td height="25" align="left" valign="middle"><?php echo $voucher['description']; ?></td>
+                                                <td align="left" valign="middle" height="35">&nbsp;</td>
+                                                <td align="left" valign="middle">1&nbsp;</td>
+                                                <td align="left" valign="middle"><?php echo $voucher['amount']; ?></td>
+                                                <td align="left" valign="middle"><?php echo $voucher['amount']; ?></td>
+                                              </tr>
+											  <?}?>
+                                              <?php foreach ($this->data[totals] as $total) { ?>
+											  <tr class="dashgrid1">
+                                                <td height="25" align="left" valign="middle" height="35">&nbsp;</td>
+                                                <td align="left" valign="middle">&nbsp;</td>
+                                                <td align="left" valign="middle">&nbsp;</td>
+                                                <td align="left" valign="middle"><b><?php echo $this->data[tr]->_($total['title']); ?></b></td>
+                                                <td align="left" valign="middle"><?php echo $total['text']; ?></td>
+                                              </tr>
+											  <?}?>
+                                              <tr>
+                                                <td height="25" align="left" valign="middle" height="35">&nbsp;</td>
+                                                <td align="left" valign="middle">&nbsp;</td>
+                                                <td align="left" valign="middle">&nbsp;</td>
+                                                <td colspan="2" align="left" valign="middle">
+												<input type="submit" name="button_btn" class="btn" id="button" value="Confirm Order" /></td>
+                                              </tr>
+                                            </table>
+											<?
+	/*echo "<pre>";
+	print_r($this->data[payment_modules]);
+	print_r($this->data[payment_modules]->modules);
+	print_r($this->data[payment_modules]->confirmation());
+echo "</pre>";*/
+//exit;
+if (is_array($this->data[payment_modules]->modules))
+{
+	if ($confirmation = $this->data[payment_modules]->confirmation())
+	{?>
+		<h2><?php echo HEADING_PAYMENT_INFORMATION; ?></h2>
+		<div class="contentText">
+			<table border="0" cellspacing="0" cellpadding="2">
+			<tr>
+				<td colspan="4"><?php echo $confirmation['title']; ?></td>
+			</tr>
+		<?php
+		for ($i=0, $n=sizeof($confirmation['fields']); $i<$n; $i++)
+		{
+		?>
+		<tr>
+			<td><?php echo tep_draw_separator('pixel_trans.gif', '10', '1'); ?></td>
+			<td class="main"><?php echo $confirmation['fields'][$i]['title']; ?></td>
+			<td><?php echo tep_draw_separator('pixel_trans.gif', '10', '1'); ?></td>
+			<td class="main"><?php echo $confirmation['fields'][$i]['field']; ?></td>
+		</tr>
+		<?php
+		}
+		?>
+		</table>
+		</div>
+<?php
+    }
+}
+
+if (is_array($this->data[payment_modules]->modules))
+{
+    echo $this->data[payment_modules]->process_button();
+}
+?>
+</form>
+								<!-- <table width="700" border="0" cellspacing="0" cellpadding="0">
+                                          <tr>
+                                            <td valign="top">
+					    <table>
+    <thead>
+      <tr>
+        <td class="name"><?php echo $this->data[column_name]; ?></td>
+        <td class="model"><?php echo $this->data[column_model]; ?></td>
+        <td class="quantity"><?php echo $this->data[column_quantity]; ?></td>
+        <td class="price"><?php echo $this->data[column_price]; ?></td>
+        <td class="total"><?php echo $this->data[column_total]; ?></td>
+      </tr>
+    </thead>
+    <tbody>
+      <?php foreach ($this->data[products] as $product) { ?>
+      <tr>
+        <td class="name"><a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a>
+          <?php foreach ($product['option'] as $option) { ?>
+          <br />
+          &nbsp;<small> - <?php echo $option['name']; ?>: <?php echo $option['value']; ?></small>
+          <?php } ?></td>
+        <td class="model"><?php echo $product['model']; ?></td>
+        <td class="quantity"><?php echo $product['quantity']; ?></td>
+        <td class="price"><?php echo $product['price']; ?></td>
+        <td class="total"><?php echo $product['total']; ?></td>
+      </tr>
+      <?php } ?>
+      <?php foreach ($this->data[vouchers] as $voucher) { ?>
+      <tr>
+        <td class="name"><?php echo $voucher['description']; ?></td>
+        <td class="model"></td>
+        <td class="quantity">1</td>
+        <td class="price"><?php echo $voucher['amount']; ?></td>
+        <td class="total"><?php echo $voucher['amount']; ?></td>
+      </tr>
+      <?php } ?>
+    </tbody>
+    <tfoot>
+      <?php foreach ($this->data[totals] as $total) { ?>
+      <tr>
+        <td colspan="4" class="price"><b><?php echo $this->data[tr]->_($total['title']); ?></b></td>
+        <td class="total"><?php echo $total['text']; ?></td>
+      </tr>
+      <?php } ?>
+    </tfoot>
+  </table>
+
+					    </td>
+                                          </tr>
+										  <tr><td>
+  <?php
+  /*echo "<pre>";
+  print_r($this->data[payment_modules]->modules);
+echo "</pre>";
+echo "confirmation".$this->data[payment_modules]->modules;
+exit;*/
+  if (is_array($this->data[payment_modules]->modules)) {
+
+	  //echo "here".$confirmation ."=". $payment_modules->confirmation();
+    //print_r($payment_modules->modules);
+	//print_r($payment_modules->confirmation());
+	if ($confirmation = $this->data[payment_modules]->confirmation()) {
+
+?>
+
+  <h2><?php echo HEADING_PAYMENT_INFORMATION; ?></h2>
+
+  <div class="contentText">
+    <table border="0" cellspacing="0" cellpadding="2">
+      <tr>
+        <td colspan="4"><?php echo $confirmation['title']; ?></td>
+      </tr>
+
+<?php
+      for ($i=0, $n=sizeof($confirmation['fields']); $i<$n; $i++) {
+?>
+
+      <tr>
+        <td><?php echo tep_draw_separator('pixel_trans.gif', '10', '1'); ?></td>
+        <td class="main"><?php echo $confirmation['fields'][$i]['title']; ?></td>
+        <td><?php echo tep_draw_separator('pixel_trans.gif', '10', '1'); ?></td>
+        <td class="main"><?php echo $confirmation['fields'][$i]['field']; ?></td>
+      </tr>
+
+<?php
+      }
+?>
+
+    </table>
+  </div>
+
+<?php
+    }
+  }
+	echo "here<pre>";
+	print_r($this->data[payment_modules]);
+	echo "<pre>";
+   if (is_array($this->data[payment_modules]->modules)) {
+    echo $this->data[payment_modules]->process_button();
+  }
+   ?>
+
+</form>
+  </td></tr>
+                                        </table> -->
+                            </div>
+                          </div>
+                        </div>

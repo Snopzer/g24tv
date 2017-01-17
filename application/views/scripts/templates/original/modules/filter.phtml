@@ -1,0 +1,48 @@
+
+		    <?
+		 //   echo "in filter";
+		  //  print_r($this->global_filters);?>
+		  <?
+/*echo "<pre>";
+print_r($this->global_filters);
+echo "</pre>";*/
+
+ 		  if(sizeof($this->global_filters)>0){?>
+<div class="box">
+<!--/*<div class="box-heading"><?php echo $this->trans->_("heading_title_module_browseby");?></div>*/-->
+<div class="box-filter-by">
+<div class="modules-box-div">
+			<div class="box-content1">
+<div class="box-category">
+				<?
+ 				foreach ($this->global_filters as $k=>$v){
+				
+				if(is_array($v)){
+				?>
+                                <div id="price">
+				   				<h2><label><?echo $k;?></label></h2>
+
+				<div class="price">
+				  <select class="pricefield" onchange="location = this.value;"   multiple> 
+				<?php
+	
+				
+				foreach ($v as $price_filter) { ?>
+				<?php //if ($price_filter['value'] == $this->$k) { ?>
+				<?php if (is_array($this->filter_option_selected) && in_array($price_filter['value'],$this->filter_option_selected) ) { ?>
+				<option value="<?php echo $price_filter['href']; ?>" selected="selected"><?php echo $price_filter['text']; ?></option>
+				<?php } else { ?>
+				<option value="<?php echo $price_filter['href']; ?>"><?php echo $price_filter['text']; ?></option>
+				<?php } ?>
+				<?php } ?>
+			  </select> 
+				</div>
+                              </div>
+
+				<?}}?>
+			    </div></div>
+  		</div>  </div>
+                </div>
+		        <div id="clear"></div>
+		<?}?>
+		

@@ -1,0 +1,191 @@
+<?$act_ext=new Model_Adminextaction();
+$currency=new Model_currencies();?>
+<!-- start tab css -->
+<script type="text/javascript">
+function getSalesChart(val)
+{
+alert(val)
+ 
+        $.ajax({
+            url: '<?php echo @constant("ADMIN_URL_CONTROLLER");?>ajaxdashboard?format=json',
+            dataType:'json',
+            success: function(data){
+                $('#graph').html(data.test);
+            }
+        });
+}
+</script>
+<script src="<?=PATH_TO_ADMIN_JS?>option_tab.js"></script>
+<!-- end tab css -->
+ 
+	<div class="container_12" >
+            <!-- Dashboard icons -->
+            <div class="grid_7" >
+			<table border="3">
+		
+			<tr><td>
+			<div class="revenue-div"><span></span><b> Revenue</b></div>
+				<div id="tabsjq">
+				<ul>
+					<li><a href="#tab-1">Today</a></li>
+					<li><a href="#tab-2">Week</a></li>
+					<li><a href="#tab-3">Month</a></li>
+					<li><a href="#tab-4">Year</a></li>
+				</ul>
+				<div id="tab-1"><?$act_ext->dashboardrevenue('today',$currency);?></div>
+				<div id="tab-2"><?$act_ext->dashboardrevenue('week',$currency);?></div>
+				<div id="tab-3"><?$act_ext->dashboardrevenue('month',$currency);?></div>
+				<div id="tab-4"><?$act_ext->dashboardrevenue('year',$currency);?></div>
+				</div></td></tr></table>
+            </div> <!-- End .grid_7 -->
+            <div class="grid_5" >
+			<table border="3">
+		
+			<tr><td>
+			<div class="inventory-div"><span></span> <b>Inventory</b></div>
+				<div id="tabsjq1">
+				<ul>
+					<li><a href="#tab-11">Products</a></li>
+					<li><a href="#tab-12">Top Categories</a></li>
+					<li><a href="#tab-13">Manufacturers</a></li>
+				</ul>
+				<div id="tab-11"><?$act_ext->dashboardinventory('products');?></div>
+				<div id="tab-12"><?$act_ext->dashboardinventory('categories');?></div>
+				<div id="tab-13"><?$act_ext->dashboardinventory('manufacturers');?></div>
+				</div>
+				
+				</td>
+				</tr>
+				</table>
+            </div>
+            <!-- Account overview -->
+<div class="grid_7">
+<table border="3">
+		
+			<tr><td>
+			<div class="orders-div"><span></span><b>Orders</b></div>
+				<div id="tabsjq2">
+				<ul>
+					<li><a href="#tab-21">Last 5 orders</a></li>
+					<li><a href="#tab-22">Today</a></li>
+					<!--<li><a href="#tab-23">Month</a></li>
+					<li><a href="#tab-24">Year</a></li>-->
+				</ul>
+				<div id="tab-21"><?$act_ext->dashboardorders('last5',$currency);?></div>
+				<div id="tab-22"><?$act_ext->dashboardorders('today',$currency);?></div>
+				<!--<div id="tab-23"><?$act_ext->dashboardorders('month',$currency);?></div>
+				<div id="tab-24"><?$act_ext->dashboardorders('year',$currency);?></div>-->
+				</div></td></tr></table>
+</div>
+<div class="grid_5">
+<table border="3">
+		
+			<tr><td>
+			<div class="users-div"><b>Users & Products</b></div>
+				<div id="tabsjq3">
+				<ul>
+					<li><a href="#tab-31">Best Sellers</a></li>
+					<li><a href="#tab-32">Most Viewed Products</a></li>
+					<li><a href="#tab-33">New Customers</a></li>
+
+				</ul>
+				<div id="tab-31"><?$act_ext->dashboardu_p('best_seller')?></div>
+				<div id="tab-32"><?$act_ext->dashboardu_p('most_viewed_products')?></div>
+				<div id="tab-33"><?$act_ext->dashboardu_p('new_customers')?></div>
+				</div></td></tr></table>
+</div>
+<!--start graph -->
+<div class="grid_7">
+<table class="list" width="100%" height="300" >
+<thead>
+<tr>
+<td class="left orders-customer"><span></span><b>orders/customer registrations statistics</b></td>
+<td class="left"></td>
+</tr>
+</thead>
+<tbody id="graph">
+<tr>
+<td class="left" colspan="2" > <iframe src="<?php echo @constant('ADMIN_URL_CONTROLLER');?>dashboard-graph" width="100%" height="300"   frameborder="0" allowtransparency="true" style="padding:0px; margin:0px; float:left; border:0px; margin-top:-8px;" scrolling="no" >
+
+</iframe>
+<?php //echo $this->action('dashboard-graph','admin',null,array());?>
+</td>
+</tr>
+
+</tbody>
+</table>
+</div>
+<div class="grid_5">
+<table class="list">
+<thead>
+<tr>
+<td class="left"><b>Overview</b></td>
+<td class="left"><b>Calculations</b></td>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left">OverAll Sales</td>
+<td class="left"><?=$act_ext->dashboardoverview('over_all_sales',$currency);?></td>
+</tr>
+<tr>
+<td class="left">Total Sales this year</td>
+<td class="left"><?=$act_ext->dashboardoverview('total_sales_this_year',$currency);?></td>
+</tr>
+<tr>
+<td class="left">Total No of Orders</td>
+<td class="left"><?=$act_ext->dashboardoverview('total_orders','');?></td>
+</tr>
+<tr>
+<td class="left">No of customers</td>
+<td class="left"><?=$act_ext->dashboardoverview('no_of_customers','');?></td>
+</tr>
+<tr>
+<td class="left">Customers Awaiting approval</td>
+<td class="left"><?=$act_ext->dashboardoverview('customers_approval','');?></td>
+</tr>
+<tr>
+<td class="left">Reviews Awaiting approval</td>
+<td class="left"><?=$act_ext->dashboardoverview('reviews_approval','');?></td>
+</tr>
+<tr>
+<td class="left">No of affiliates</td>
+<td class="left"><?=$act_ext->dashboardoverview('no_of_affiliates','');?></td>
+</tr>
+<tr>
+<td class="left">affiliates Awaiting approval</td>
+<td class="left"><?=$act_ext->dashboardoverview('affiliate_approval','');?></td>
+</tr>
+</tbody>
+</table>
+</div>
+<!--end graph -->
+ 
+
+
+                <div style="clear:both;"></div>
+            </div> <!-- End .grid_5 -->
+
+            <div style="clear:both;"></div>
+
+
+
+            <!-- End .grid_12 -->
+
+            <!-- Categories list --><!-- End .grid_6 -->
+
+            <!-- To-do list --><!-- End .grid_6 -->
+            <div style="clear:both;"></div>
+
+            <!-- Form elements --><!-- End .grid_12 -->
+
+            <!-- Settings--><!-- End .grid_6 -->
+
+            <!-- Password --><!-- End .grid_6 -->
+            <div style="clear:both;"></div>
+
+			 <!-- End .grid_3 --><!-- End .grid_3 --><!-- End .grid_6 -->
+
+
+            <div style="clear:both;"></div>
+        </div> <!-- End .container_12 -->

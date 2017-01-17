@@ -1,0 +1,10 @@
+<div class="single_bottom_rightbar wow fadeInDown">
+	<?php if(@constant('information_module_title')!=""){ ?><h2><?php echo @constant('information_module_title'); ?></h2><?}?>
+	<ul>
+		<?php foreach ($this->info[data][informations] as $information) { ?>
+			<li><a href="<?php echo $information['href']; ?>"><?php echo $information['title']; ?></a></li>
+		<?php  } ?>
+		<li><a href="<?php echo $this->info[data][contact]; ?>"><?php echo $this->trans->_('text_contact_module_information'); ?></a></li>
+		<li><a href="<?php echo $this->info[data][sitemap] ?>"><?php echo $this->trans->_('text_sitemap_module_information'); ?></a></li>               
+	</ul>
+</div> 

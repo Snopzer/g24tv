@@ -1,0 +1,174 @@
+<div id="notification"><!-- <a href=" " id="compare_total"> </a> --></div>
+<div class="main-column"><!--main-max-banner start-->
+<div id="container"><!--container start-->
+
+<? if(count($this->pos[left])>0){?>
+<div id="column-left"><!--column-left start-->
+<?php echo $this->action('left','modules',null,array('mod' =>$this->pos[left]));?>
+<!--column-left End--></div>
+<?}?>
+
+<?if(count($this->pos[right])>0){?>
+<div id="column-right"><!--column-right start-->
+<?php echo $this->action('right','modules',null,array('mod' =>$this->pos[right]));?>
+<!--column-right End-->
+<?}?>
+
+                	<div id="content"><!--content start-->
+					
+					<?if(count($this->pos[top])>0){?>
+<div id="main-max-banner"><!--start main-max-banner-->
+<?php echo $this->action('top','modules',null,array('mod' =>$this->pos[top]));?>
+<!--End main-max-banner--></div>
+<?}?>
+					
+<div class="breadcrumb"><!--readcrumb start-->
+                    	<p><?php foreach ($this->breadcrumbs as $breadcrumb) { ?>
+    <?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
+    <?php } ?> </p> <!--readcrumb End --></div>
+	
+                       <div class="box"> <!--   Shopping cart html code start-->
+
+      	<div class="box-content">
+       	      <?php
+	      /*echo "<pre>";
+	      print_r($this->data[products]);
+	      echo "</pre>";*/
+	      if ($this->data[products]) { ?>
+  <table class="compare-info"  cellspacing="0" border="0" cellpadding="0" >
+    <thead>
+      <tr>
+        <td colspan="<?php echo count($this->data[products]) + 1; ?>" class="dashBar"></td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="dashgrid" width="30$"><?php echo "<strong>".$this->trans->_('text_name_product_compare')."</strong>"; ?></td>
+        <?php foreach ($this->data['products'] as $product) { ?>
+        <td class="dashgrid"><a href="<?php echo $this->data[products][$product['product_id']]['href']; ?>"><?php echo $this->data[products][$product['product_id']]['name']; ?></a></td>
+        <?php } ?>
+      </tr>
+
+      <tr>
+        <td class="dashgrid1"><?php echo "<strong>".$this->trans->_('text_image_product_compare')."</strong>"; ?></td>
+        <?php foreach ($this->data[products] as $product) { ?>
+        <td class="dashgrid1"><?php if ($this->data[products][$product['product_id']]['thumb']) { ?>
+          <img src="<?php echo $this->url_to_site."timthumb.php?src=".$this->data[products][$product['product_id']]['thumb']; ?>" alt="<?php echo $this->data[products][$product['product_id']]['name']; ?>" />
+          <?php } ?></td>
+        <?php } ?>
+      </tr>
+      <tr>
+        <td class="dashgrid"><?php echo "<strong>".$this->trans->_('text_price_product_compare')."</strong>"; ?></td>
+        <?php foreach ($this->data[products] as $product) { ?>
+        <td class="dashgrid"><?php if (!$this->data[products][$product['product_id']]['special']) { ?>
+          <?php echo $this->data[products][$product['product_id']]['price']; ?>
+          <?php } else { ?>
+          <span class="price-old"><?php echo $this->data[products][$product['product_id']]['price']; ?></span> <span class="price-new"><?php echo $this->data[products][$product['product_id']]['special']; ?></span>
+          <?php } ?></td>
+        <?php } ?>
+      </tr>
+      <tr>
+        <td class="dashgrid1"><?php echo "<strong>".$this->trans->_('text_model_product_compare')."</strong>"; ?></td>
+        <?php foreach ($this->data[products] as $product) { ?>
+        <td class="dashgrid1"><?php echo $this->data[products][$product['product_id']]['model']; ?></td>
+        <?php } ?>
+      </tr>
+      <tr>
+        <td class="dashgrid"><?php echo "<strong>".$this->trans->_('text_manufacturer_product_compare')."</strong>"; ?></td>
+        <?php foreach ($this->data[products] as $product) { ?>
+        <td class="dashgrid"><?php echo $this->data[products][$product['product_id']]['manufacturer']; ?></td>
+        <?php } ?>
+      </tr>
+      <tr>
+        <td class="dashgrid1"><?php echo "<strong>".$this->trans->_('text_availability_product_compare')."</strong>"; ?></td>
+        <?php foreach ($this->data[products] as $product) { ?>
+        <td class="dashgrid1"><?php echo $this->data[products][$product['product_id']]['availability']; ?></td>
+        <?php } ?>
+      </tr>
+      <tr>
+        <td class="dashgrid"><?php echo "<strong>".$this->trans->_('text_rating_product_compare')."</strong>"; ?></td>
+        <?php foreach ($this->data[products] as $product) { ?>
+        <td class="dashgrid"><img src="<?php echo $this->url_to_templates.SITE_DEFAULT_TEMPLATE;?>/includes/images/rating-<?php echo $this->data[products][$product['product_id']]['rating']; ?>.jpg" alt="<?php echo $products[$product['product_id']]['reviews']; ?>" /><br />
+          <?php echo $products[$product['product_id']]['reviews']; ?></td>
+        <?php } ?>
+      </tr>
+      <tr>
+        <td class="dashgrid1"><?php echo "<strong>".$this->trans->_('text_summary_product_compare')."</strong>"; ?></td>
+     <?php foreach ($this->data[products] as $product) { ?>
+        <td class="dashgrid1"><span><?php echo $this->data[products][$product['product_id']]['description']; ?></span></td>
+        <?php } ?>
+      </tr>
+      <tr>
+        <td class="dashgrid"><?php echo "<strong>".$text_weight ."</strong>"; ?></td>
+        <?php foreach ($this->data[products] as $product) { ?>
+        <td class="dashgrid"<?php echo $this->data[products][$product['product_id']]['weight']; ?></td>
+        <?php } ?>
+      </tr>
+      <tr>
+        <td class="dashgrid1"><?php echo "<strong>". $text_dimension ."</strong>"; ?></td>
+        <?php foreach ($this->data[products] as $product) { ?>
+        <td class="dashgrid1"<?php echo $this->data[products][$product['product_id']]['length']; ?> x <?php echo $products[$product['product_id']]['width']; ?> x <?php echo $this->data[products][$product['product_id']]['height']; ?></td>
+        <?php } ?>
+      </tr>
+    </tbody>
+    <?php foreach ($this->data[attribute_groups] as $attribute_group) { ?>
+    <thead>
+      <tr>
+        <td colspan="<?php echo "<strong>".count($this->data[products]) + 1 ."</strong>"; ?>" class="dashgrid"><?php echo $attribute_group['name']; ?></td>
+      </tr>
+    </thead>
+    <?php foreach ($attribute_group['attribute'] as $key => $attribute) { ?>
+    <tbody>
+      <tr>
+        <td class="dashgrid1"><?php echo "<strong>".$attribute['name']."<strong>"; ?></td>
+        <?php foreach ($this->data[products] as $product) { ?>
+        <?php if (isset($this->data[products][$product['product_id']]['attribute'][$key])) { ?>
+        <td class="dashgrid1"><?php echo $this->data[products][$product['product_id']]['attribute'][$key]; ?></td>
+        <?php } else { ?>
+        <td></td>
+        <?php } ?>
+        <?php } ?>
+      </tr>
+    </tbody>
+    <?php } ?>
+    <?php } ?>
+    <tr>
+      <td class="dashgrid"></td>
+      <?php foreach ($this->data[products] as $product) { ?>
+      <td class="dashgrid" width="155px"><a href="javascript:addToCart('<?php echo $product['product_id'];?>');" class="button_btn"><span><?php echo $this->trans->_('button_cart'); ?></span></a></td>
+      <?php } ?>
+    </tr>
+    <tr>
+      <td class="dashgrid1"></td>
+      <?php foreach ($this->data[products] as $product) { ?>
+      <td class="dashgrid1" height="45" align="center"><form action="<?php echo $this->data[action]; ?>" method="post" enctype="multipart/form-data">
+          <input type="hidden" name="remove" value="<?php echo $product['product_id']; ?>" />
+          <a class="button_btn" onclick="$(this).parent().submit();"><span><?php echo $this->trans->_('text_remove_product_compare'); ?></span></a>
+        </form></td>
+      <?php } ?>
+    </tr>
+  </table>
+
+  
+
+
+                            <div id="clear"></div>
+                   	      <!--   Shopping cart html code End-->  </div>
+
+
+
+                    <!--innerpage_rightContent --></div>
+					 
+  <?php } else { ?>
+  <div class="content"><?php echo $this->trans->_('text_empty_product_compare'); ?></div>
+ <!-- <div class="buttons">
+    <div class="right"><a href="<?php echo $this->data['continue']; ?>" class="button"><span><?php echo $this->trans->_('button_continue'); ?></span></a></div>
+  </div>-->
+  <?php } ?>
+            </div>
+		    <?if(count($this->pos[bottom])>0){?>
+<div class="container-top">
+<?php echo $this->action('bottom','modules',null,array('mod' =>$this->pos[bottom]));?></div>
+<?}?>
+                <!--rightContainer --></div>
+            <!--innerContent --></div>

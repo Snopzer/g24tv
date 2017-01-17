@@ -1,0 +1,1696 @@
+<style>
+	.scrollbox {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #CCCCCC;
+    height: 100px;
+    overflow-y: scroll;
+    width: 350px;
+	}
+	
+	.product-color td{ background:#fec8c8 !important; }
+	
+</style>
+
+<script src="<?=PATH_TO_ADMIN_JS?>option_tab.js"></script>
+<!-- end option tab css -->
+
+
+<?php
+	$act=new Model_Adminaction();
+	$act_ext=new Model_Adminextaction();
+$tax_class_array=$act->moduletaxclass();?>
+
+<script type="text/javascript"><!--
+	var tax_rates = new Array();
+	<?php
+		
+		for ($i=0, $n=sizeof($tax_class_array); $i<$n; $i++) {
+			if ($tax_class_array[$i]['id'] > 0) {
+				echo 'tax_rates["' . $tax_class_array[$i]['id'] . '"] = ' . $act->tep_get_tax_rate_value($tax_class_array[$i]['id']) . ';' . "\n";
+			}
+		}
+		
+	?>
+	
+	function doRound(x, places) {
+		return Math.round(x * Math.pow(10, places)) / Math.pow(10, places);
+	}
+	
+	
+	
+	function getTaxRate() {
+		var selected_value = document.forms["frmEdit"].products_tax_class_id.selectedIndex;
+		var parameterVal = document.forms["frmEdit"].products_tax_class_id[selected_value].value;
+		
+		if ( (parameterVal > 0) && (tax_rates[parameterVal] > 0) ) {
+			return tax_rates[parameterVal];
+			} else {
+			return 0;
+		}
+	}
+	
+	function updateGross() {
+		var taxRate = getTaxRate();
+		var grossValue = document.forms["frmEdit"].products_price.value;
+		
+		if (taxRate > 0) {
+			grossValue = grossValue * ((taxRate / 100) + 1);
+		}
+		
+		document.forms["frmEdit"].products_price_gross.value = doRound(grossValue, 4);
+	}
+	
+	function updateNet() {
+		var taxRate = getTaxRate();
+		var netValue = document.forms["frmEdit"].products_price_gross.value;
+		
+		if (taxRate > 0) {
+			netValue = netValue / ((taxRate / 100) + 1);
+		}
+		
+		document.forms["frmEdit"].products_price.value = doRound(netValue, 4);
+	}
+//--></script>
+
+
+<?
+	if($_REQUEST['type']==''){?>
+	<div class="container_12">
+		<div style="clear:both;"></div>
+		<div class="grid_12">
+			
+			<?
+				if($_REQUEST['msg']!=""){?>
+				<!-- <span class="notification n-success"><?=base64_decode($_REQUEST['msg']);?></span> -->
+				<span class='<?php echo $_REQUEST['m']==""?"notification n-success":"notification n-error"?>'><?=base64_decode($_REQUEST['msg']);?></span>
+			<?}?>
+			
+			<div class="bottom-spacing">
+				<!-- Button -->
+				<div class="float-right"> <?=$this->view_pagination;?>
+					
+				</div>
+				<!-- Table records filtering -->
+				<form  name="frmfilter" id="frmfilter" method="post" action="">
+                    <!-- Product Name :<input type="text" name="prodname" id="prodname" value="<?=$_REQUEST['prodname']?>"> | Model :<input type="text" name="prodmodel" id="prodmodel" value="<?=$_REQUEST['prodmodel']?>"> | Quantity :<select name="qty_sym" id="qty_sym">
+					<option value=">" <?echo $_REQUEST['qty_sym']==">"?"selected":"";?> >></option><option value="<" <?echo $_REQUEST['qty_sym']=="<"?"selected":"";?> ><</option><option value="=" <?echo $_REQUEST['qty_sym']=="="?"selected":"";?>>=</option></select><input type="text" name="prodqty" id="prodqty" value="<?=$_REQUEST['prodqty']?>">  <select name="prodstatus"><option value="">Select Status</option><option value="1" <?echo $_REQUEST['prodstatus']=="1"?"selected":"";?> >Enable</option><option value="0" <?echo $_REQUEST['prodstatus']=="0"?"selected":"";?>>Disable</option> </select> -->
+					
+					<?php /*?>
+					<input type="text" name="prodname" id="prodname"  onkeydown="if(this.value=='Product Name') this.value=''"  value="<?php echo $_REQUEST['prodname']!=""?$_REQUEST['prodname']:'Product Name';?>"> <input type="text" name="cat" id="cat"  onkeydown="if(this.value=='Category') this.value=''"  value="<?php echo $_REQUEST['cat']!=""?$_REQUEST['cat']:'Category';?>"> 
+					
+					
+					<input type="text" name="brand" id="brand"  onkeydown="if(this.value=='Manufacturer') this.value=''"  value="<?php echo $_REQUEST['brand']!=""?$_REQUEST['brand']:'Manufacturer';?>">  
+						
+						<input type="text" name="prodmodel" id="prodmodel" onkeydown="if(this.value=='Model') this.value=''"  value="<?php echo $_REQUEST['prodmodel']!=""?$_REQUEST['prodmodel']:'Model';?>"> 
+						
+						<select name="qty_sym" id="qty_sym"><option  value="">Qty</option>
+						<option value=">" <?echo $_REQUEST['qty_sym']==">"?"selected":"";?> >></option><option value="<" <?echo $_REQUEST['qty_sym']=="<"?"selected":"";?> ><</option><option value="=" <?echo $_REQUEST['qty_sym']=="="?"selected":"";?>>=</option></select>
+						
+						<input type="text" name="prodqty" id="prodqty" onkeydown="if(this.value=='Number') this.value=''"  value="<?php echo $_REQUEST['prodqty']!=""?$_REQUEST['prodqty']:'Number';?>">  
+					<?php*/?>
+					
+					<select name="prodstatus"><option value="">Status</option><option value="1" <?echo $_REQUEST['prodstatus']=="1"?"selected":"";?> >Enable</option><option value="0" <?echo $_REQUEST['prodstatus']=="0"?"selected":"";?>>Disable</option> </select>
+					
+					<input type="submit" name="filter" id="filter" value="filter">
+					
+				</form>
+				
+			</div>
+			
+			
+			<!-- Example table -->
+			<div class="module">
+				<h2><span><?=$this->actionTitle." [".$this->total_count."]"?><!--<p style="float:right;padding-right:10px;"> [ <a href="javascript:updateProductSearch();">Update Product Search</a> | [ <a href="javascript:clearCache();">Clear Complete Cache</a> ]</p>--></span> <div class="add-btn-div"> <?php 
+					if($this->spl=="1")
+					{
+					echo '<a class="button" href="http://www.sporanzo.com" target="_blank"><span>Upgrade Plan</span></a>';	
+				}else
+				{
+					$act->viewAddB(ADMIN_URL_CONTROLLER.$this->actionTitle);
+				}?> </div> </h2>
+				
+				<div class="module-table-body">
+					<form name="frmMain" id="frmMain" method="post" action="<?php echo ADMIN_URL_CONTROLLER.$this->actionTitle?>">
+						<?if($this->total_count>0){?>
+							<table id="myTable" class="tablesorter">
+								<thead>
+									<tr>
+										<th align="center" style="width:5%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#</th>
+										<th align="center" style="width:3%">Pid</th>
+										<th style="width:20%">Article Title</th>
+										<?php /*?><th style="width:20%">Model</th>
+											<th style="width:10%">Quantity</th>
+										<th style="width:13%">Price</th><?php */?>
+										<th style="width:13%">Status</th>
+										<th style="width:15%"><input type="checkbox" name="checkall" id="checkall" onClick="Checkall()"/> <a href="#">Check All</a></th>
+									</tr>
+								</thead>
+								<tbody>
+									
+									<?
+										$i=1;
+										if($this->page!=1)
+										{
+											$i+=($this->page-1)*$this->per_page;
+										}
+										
+										foreach ($this->results as $result)
+										{
+											
+											$class=fmod($i,2)==0?'':'addcolorne';
+										?>
+										<tr <?if($result['products_quantity']<=0){ echo 'class="product-color"'; }?>>
+											<td align="center" class="<?=$class?>"><?=$i?></td>
+											<td class="<?=$class?>"><?php echo $result['products_id'];?></td>
+											<td class="<?=$class?>"><?php echo $result['products_name'];?></td>
+											<?php /*<td class="<?=$class?>"><?php echo $result['products_model'];?></td>
+												<td class="<?=$class?>" ><?php echo $result['products_quantity'];?></td>
+											<td class="<?=$class?>"><?php echo number_format($result['products_price'],2);?></td><?php */?>
+											<td class="<?=$class?>"><?php echo $result['products_status']=="1"?"Enable":"Disable";?></td>
+											<td class="<?=$class?>">
+												
+												<input type="checkbox" name="rid[]" id="rid" value="<?php echo $result['products_id'];?>"  />
+												<?php
+													$act->viewEditB(ADMIN_URL_CONTROLLER.$this->actionTitle,$result['products_id'],$_REQUEST['page']);
+													$act->viewDelB($this->actionTitle,$result['products_id'],'r_products','products_id',$_REQUEST['page']);
+												?>
+												
+											</td>
+										</tr>
+									<?$i=$i+1;}?>
+									
+								</tbody>
+								</table><?}else{
+								echo "<table id='myTable' class='tablesorter' border='2'><tr><td align='center'>No records to display</td></tr></table>";
+							}?>
+							
+							<input type="hidden" name="page" id="page" value="<?php echo $this->page;?>">
+							<?php 
+								/*if($this->spl!="1")
+									{ ?>
+									<div><div class="left-table-bottm"><span style="padding-left:15px;"><a href="<?php echo ADMIN_URL_CONTROLLER.$this->actionTitle."?type=undo"?>" class="button">Undo Recenlty Deleted</a></span></div>
+									<?}?>
+									<div class="table-apply">
+									<div>
+									<span>Apply action to selected:</span>
+									<?$arrmact=array('Del'=>'Delete',"Copy"=>"Copy");
+									$act->viewMultipleAction($arrmact);?>
+									
+									</div></div>
+									</form>
+									</div>
+								<? */?>
+								<div style="clear: both"></div>
+					</div>
+				</div>
+				
+				<?=$this->view_pagination;?>
+				</div>
+				<div class="grid_6">
+				</div>
+				<div style="clear:both;"></div>
+				<div style="clear:both;"></div>
+				<div style="clear:both;"></div>
+				</div>
+				<?php }elseif($_REQUEST['type']=='Add' || 'Edit'){
+					
+					/*foreach ($this->data as $result)
+					{} print_r($result);*/
+					
+					
+					$rprod=$act->getEditdetails('r_products','products_id',(int)$_REQUEST['rid']);
+					$rspec=$act->getEditdetails('r_products_specials','products_id',(int)$_REQUEST['rid']);
+					if($_REQUEST['type']=='Edit')
+					{
+						$ret=$act->getEditdetails('r_products_description','products_id',(int)$_REQUEST['rid']);
+						$rprodcat=$act->getEditdetails('r_products_to_categories','products_id',(int)$_REQUEST['rid']);
+						foreach($rprodcat as $v){ $cat[]=$v['categories_id'];}
+						
+						foreach($ret as $res)
+						{
+							$lang[$res['language_id']]=array(
+							"products_name" =>str_replace('\"', '"',str_replace("\'", "'", $res['products_name'])),
+							"meta_keywords" =>str_replace('\"', '"',str_replace("\'", "'", $res['meta_keywords'])),
+							"meta_description" =>str_replace('\"', '"',str_replace("\'", "'", $res['meta_description'])),
+							"meta_title" =>str_replace('\"', '"',str_replace("\'", "'", $res['meta_title'])),
+							"products_description" =>str_replace('\"', '"',str_replace("\'", "'", $res['products_description'])),
+							"products_url" =>$res['products_url']
+							);
+						}
+					}
+				?>
+				<div class="container_12">
+					<div style="clear:both;"></div>
+					<div style="clear:both;"></div>
+					<div class="grid_12">
+						<div class="module">
+							<h2><span><?php echo $_REQUEST['type']." ".$this->actionTitle;?></span></h2>
+							<div id="TabbedPanels1" class="TabbedPanels">
+								<ul class="TabbedPanelsTabGroup">
+									<li class="TabbedPanelsTab" tabindex="0">General</li>
+									<li class="TabbedPanelsTab" tabindex="1">Data</li>
+									<li class="TabbedPanelsTab" tabindex="2">Attributes</li>
+									<li class="TabbedPanelsTab" tabindex="3">Discount</li>
+									<li class="TabbedPanelsTab" tabindex="4">Special</li>
+									<li class="TabbedPanelsTab" tabindex="5">Image</li>
+									<li class="TabbedPanelsTab" tabindex="6">Options</li>
+									<li class="TabbedPanelsTab" tabindex="6">Reward Points</li>
+									<li class="iconsec">
+									<?php echo $act->editCancelB($this->actionTitle,$_REQUEST['page']);?></li>
+									<!-- <li class="iconsec">
+									<?php // echo $act->editApplyB(ADMIN_URL_CONTROLLER.$this->actionTitle,$_REQUEST['rid'],$_REQUEST['type']);?></li>-->
+									<li class="iconsec"> 
+									<?php echo $act->editSaveB(ADMIN_URL_CONTROLLER.$this->actionTitle,$_REQUEST['rid'],$_REQUEST['type'],$_REQUEST['page']);?></li>
+								</ul>
+								<div class="TabbedPanelsContentGroup">
+									<div class="TabbedPanelsContent">
+										
+										<form name="frmEdit" id="frmEdit" method="post" enctype="multipart/form-data">
+											
+											
+											
+											<?if($this->msg!=""){ echo '<div><span class="notification n-success">'.base64_decode($this->msg).'</span></div> ';}?>
+											
+											
+											<p><b>All fields indicated with * are mandatory</b></p>
+											
+											
+											<div class="mode-box">
+												<h3><span>Category</span></h3>
+												<p>
+													<label>Category</label>
+													<?echo $act->tep_draw_pull_down_menu('categories_id[]', $act->tep_get_category_tree_cache(),$cat,'multiple', '');
+														
+													?>
+													
+												</p></div>
+												
+												<div class="mode-box">
+													<h3><span>Product Info</span></h3>
+													<?  echo $act->lang_field(array('lable'=>'Product Name','input_title'=>'products_name','desc'=>'enter name of the product','input_type'=>'input_text','val'=>$lang,"req"=>'1'));
+														echo $act->lang_field(array('lable'=>'Product Description','input_title'=>'products_description','desc'=>'enter products name','input_type'=>'textarea','val'=>$lang,"req"=>'0'));
+													?></div>
+													<div class="mode-box">
+														<h3><span>Meta Details</span></h3>
+														<?
+															echo $act->lang_field(array('lable'=>'Meta keywords','input_title'=>'meta_keywords','desc'=>'enter meta meta keywords','input_type'=>'textarea','val'=>$lang,"req"=>'0'));
+															
+															echo $act->lang_field(array('lable'=>'Meta description','input_title'=>'meta_description','desc'=>'enter meta description','input_type'=>'textarea','val'=>$lang,"req"=>'0'));
+														?></div>
+														
+														<div class="mode-box">	
+															<h3><span>Artcile Details</span></h3>
+															<p>
+																<label>Upload Main Image</label>
+																<input name="products_image" id="products_image"  type="file" class="input-medium" value="<?=$this->data[0]['products_image'];?>" tooltipText="upload main image"/>
+																<a href="#" style="color:black;cursor:pointer;text-decoration:underline;" class="tt"><?=$this->data[0]['products_image'];?><span class="tooltip"><img src="<?=PATH_TO_UPLOADS."products/".$this->data[0]['products_image'];?>"  /></span></a>
+																<input name="prev_image" id="prev_image" type="hidden" value="<?=$this->data[0]['products_image'];?>" height="200" width="200"/>
+															</p>
+															<?php 
+																echo $act->field(array('lable'=>'Model','input_title'=>'products_model','desc'=>'Based on Model User Search for Article','input_type'=>'input_text','val'=>$rprod[0]['products_model'],"req"=>'1'));
+																
+																echo $act->field(array('lable'=>'Date Available','input_title'=>'products_date_available','desc'=>'enter date available','input_type'=>'input_text','val'=>$rprod[0]['products_date_available'],"req"=>'1'));	
+																
+																echo $act->field(array('lable'=>'Seo Keyword','input_title'=>'keyword','desc'=>'keyword must be globally unique and should not contain special characters like !@#$%^&*(){}[]~`.,/\|?+=','input_type'=>'input_text','val'=>$this->seo_keyword,"req"=>'0'));
+																
+																
+															?>
+															
+															
+														</div>
+														
+										</div>
+										<div class="TabbedPanelsContent">
+											
+											<div class="mode-box">
+												<h3><span>Tax</span></h3>
+												<p>
+													<label>Tax class</label><?echo
+													$act->tep_draw_pull_down_menu('products_tax_class_id', $tax_class_array, $rprod[0]['products_tax_class_id'], 'onchange="updateGross()"'); ?>
+												</p>
+											</div>
+											<div class="mode-box">
+												<h3><span>Product Details</span></h3>
+												<?php 
+													//echo $act->field(array('lable'=>'Model','input_title'=>'products_model','desc'=>'enter model','input_type'=>'input_text','val'=>$rprod[0]['products_model'],"req"=>'1'));
+												?>
+												<?/*?><p>
+													<label>Upload Main Image</label>
+													<input name="products_image" id="products_image"  type="file" class="input-medium" value="<?=$this->data[0]['products_image'];?>" tooltipText="upload main image"/>
+													<a href="#" style="color:black;cursor:pointer;text-decoration:underline;" class="tt"><?=$this->data[0]['products_image'];?><span class="tooltip"><img src="<?=PATH_TO_UPLOADS."products/".$this->data[0]['products_image'];?>"  /></span></a>
+													<input name="prev_image" id="prev_image" type="hidden" value="<?=$this->data[0]['products_image'];?>" />
+												</p><?*/?>
+												
+												<? echo $act->field(array('lable'=>'Products Price[net]','input_title'=>'products_price','desc'=>'enter net price for the product                                                                        ','input_type'=>'input_text','val'=>$rprod[0]['products_price'],"req"=>'0'));?>
+												
+												
+												
+												<script type="text/javascript">
+													$(document).ready(function() {
+														updateGross();
+													});</script>
+													<? echo $act->field(array('lable'=>'Products Price[gross]','input_title'=>'products_price_gross','desc'=>'enter gross price for the product                                                                        ','input_type'=>'input_text','val'=>"","req"=>'0'));?>
+													
+													
+													<?							 //\''.$d.'\'
+														
+														
+														echo $act->field(array('lable'=>'Manufacturer','input_title'=>'manufacturers_id','desc'=>'enter date available','input_type'=>'select','val'=>$act->getmanufacturerdropdown($rprod[0]['manufacturers_id']),"req"=>'0'));
+														
+														
+														
+														
+														// echo $act->field(array('lable'=>'SKU','input_title'=>'sku','desc'=>'Stock For Unique	Identification','input_type'=>'input_text','val'=>$rprod[0]['sku'],"req"=>'0'));
+													?>
+													
+													<p class="span-design">
+														
+														<input type="hidden" name="pid" id="pid" value="<?php echo $_REQUEST['rid']?>">
+													<label>SKU</label><input type="text" tooltiptext="Stock For Unique	Identification" value="<?php echo $rprod[0]['sku'];?>" class="input-medium" id="sku" name="sku">&nbsp;&nbsp;<a href="javascript:skuavailability();">Check Availability</a></p>
+													<?
+														
+														echo $act->field(array('lable'=>'UPC','input_title'=>'upc','desc'=>'Universal Product Code','input_type'=>'input_text','val'=>$rprod[0]['upc'],"req"=>'0'));
+														
+														/*echo $act->field(array('lable'=>'Quantity','input_title'=>'products_quantity','desc'=>'enter quantity','input_type'=>'input_text','val'=>$rprod[0]['products_quantity'],"req"=>'1'));*/
+														
+														echo $act->field(array('lable'=>'Quantity','input_title'=>'products_quantity','desc'=>'enter quantity','input_type'=>'input_text','val'=>1,"req"=>'0'));
+														
+														
+														$prod_min_qty=$rprod[0]['products_minimum_quantity']==""?"1":$rprod[0]['products_minimum_quantity'];	
+													echo $act->field(array('lable'=>'Products Minimum Quantity','input_title'=>'products_minimum_quantity','desc'=>'enter products_minimum_quantity','input_type'=>'input_text','val'=>$prod_min_qty,"req"=>'1'));?>
+													
+													<p>
+														<label>Out of stock status</label>
+														<select id="stock_status_id" name="stock_status_id" tooltiptext="status shown when a product is out of stock">
+															<?
+																$stock_status_id=$this->data[0]['stock_status_id']=='0'?DEFAULT_OUT_STOCK_STATUS_ID:$this->data[0]['stock_status_id'];
+															ECHO $act_ext->getstockstatusdropdown($stock_status_id);?>
+														</select>
+													</p>
+													
+													<p>
+														<label>Subtract Stock</label>
+														<select id="substract_stock" name="substract_stock" tooltiptext="Subtract product in stock by product orders">
+															<option value="1"<? echo $this->data[0]['substract_stock']=='1'?'selected':'';?>>Yes</option>
+															<option value="0" <? echo $this->data[0]['substract_stock']=='0'?'selected':'';?> >No</option>
+														</select>
+													</p>
+													<?
+														$tags=$act_ext->getTags((int)$_REQUEST[rid]);
+														echo $act->field(array('lable'=>'Tags','input_title'=>'tags','desc'=>'enter tags in comma separated format ex:computer,laptop,desktop','input_type'=>'textarea','val'=>$tags,"req"=>'0'));
+														
+														echo $act->field(array('lable'=>'Status','input_title'=>'products_status','desc'=>'select status','input_type'=>'select','val'=>$act->reviewstatusdropdown($rprod[0]['products_status']),"req"=>'0'));
+														
+														echo $act->field(array('lable'=>'Sort order','input_title'=>'product_sort_order','desc'=>'enter sort order','input_type'=>'input_text','val'=>$rprod[0]['sort_order'],"req"=>'0'));
+													?>
+											</div>
+											<div class="mode-box">
+												<h3><span>Shipping Details</span></h3>
+												
+												<p>
+													<label>Shipping Required</label>
+													Yes <input type="radio" name="ship_req" id="ship_req" value="1" <?echo $rprod[0]['shipping']=='1'?'checked':''; ?>
+													<?ECHO $_REQUEST['type']=='Add'?'checked':'';?> >
+													No <input type="radio" name="ship_req" id="ship_req" value="0" <?echo $rprod[0]['shipping']=='0'?'checked':''; ?> >
+												</p>
+												<?
+													
+													echo '<p><label>Dimensions(L*W*H)</label><input type="text" name="length" id="length" tooltiptext="enter length" value="'.$rprod[0]['length'].'" >*<input type="text" name="width" id="width" tooltiptext="enter width" value="'.$rprod[0]['width'].'" >*<input type="text" name="height" id="height" tooltiptext="enter height" value="'.$rprod[0]['height'].'" ></p>';
+													$wclass=$this->data[0]['weight_class_id']=='0'?DEFAULT_WEIGHT_CLASS:$this->data[0]['weight_class_id'];
+													$lclass=$this->data[0]['length_class_id']=='0'?DEFAULT_LENGTH_CLASS:$this->data[0]['length_class_id'];
+													
+													
+													//echo "value of ".DEFAULT_WEIGHT_CLASS." ".DEFAULT_LENGTH_CLASS." ".$wclass." ".$lclass;
+												?>
+												
+												
+												
+												<p>
+													<label>Weight Class</label>
+													<select id="weight_class_id" name="weight_class_id" tooltiptext="select weight class">
+														<?ECHO $act_ext->getWclassdropdown($wclass);?>
+													</select>
+												</p>
+												<p>
+													<label>Length Class</label>
+													<select id="length_class_id" name="length_class_id" tooltiptext="select length class">
+														<?ECHO $act_ext->getLclassdropdown($lclass);?>
+													</select>
+												</p>
+												<?
+													echo $act->field(array('lable'=>'Weight','input_title'=>'products_weight','desc'=>'enter weight','input_type'=>'input_text','val'=>$rprod[0]['products_weight'],"req"=>'0'));
+												?></div>
+												<div class="mode-box">
+													<h3><span>Downloads</span></h3>
+													
+													
+													<?$download=$act->db->fetchCol("select download_id from r_product_to_download where product_id='".(int)$_REQUEST['rid']."'");
+													//$act->p($download,'0');?>
+													<p><label>Downloads</label><select name="downloads[]" id="downloads[]" multiple tooltiptext="select downloads" ><?$act_ext->getdownloaddropdown($download)?></select></p>
+													
+													
+												</div>
+												
+												<div class="mode-box">
+													<h3><span>Related Product</span></h3>
+													<!--start related product  -->   
+													<table class="form" border="2" id="table-top">
+														<tr>
+															<td>Related Product</td>
+															<td><input type="text" name="product" value="" /></td>
+														</tr>
+														
+														
+														<tr>
+															<td>&nbsp;</td>
+															<td><div class="scrollbox" id="featured-product">
+																<?php $class = 'odd'; ?>
+																<?php
+																	$products=$act->db->fetchAssoc("select r.related_id,d.products_name from r_product_related r,r_products_description d where r.product_id='".(int)$_REQUEST['rid']."' and r.related_id=d.products_id");
+																	if(sizeof($products)>0){
+																		foreach ($products as $product) { ?>
+																		<?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+																		<div id="featured-product<?php echo $product['related_id']; ?>" class="<?php echo $class; ?>"><?php echo $product['products_name']; ?> <img src="<?php echo PATH_TO_ADMIN_IMAGES;?>cross-small.gif" />
+																			<input type="hidden"  value="<?php echo $product['related_id']; ?>" />
+																		</div>
+																	<?php }} ?>
+															</div>
+															<input type="hidden" name="related_product" value="" /></td>
+														</tr>
+													</table>
+													<!--end related product  -->
+													
+												</div>
+												
+										</div>
+										
+										<div class="TabbedPanelsContent">
+											<div class="mode-box">
+												<h3><span>Product Attributes</span></h3>
+												<h5 >Note:Duplicate Entries will be Ignored!!</h5>
+												<table id="discount" class="list">
+													<thead>
+														<tr>
+															<td ><a onclick="addAttribute();" class="button"><span>Add Attributes</span></a></td>
+															<td class="left"colspan="6"></td>
+														</tr>
+														<tr>
+															<td class="left">Attribute:</td>
+															<td class="right">Text:</td>
+															<td>Remove</td>
+														</tr>
+														
+													</thead>
+													
+													<?
+														
+														if($_REQUEST['type']=='Edit'){
+															$ac=$act->db->fetchAll("select * from r_product_attribute_group where product_id='".(int)$_REQUEST['rid']."' and language_id='1' order by attribute_id asc");
+															
+															if(count($ac)>0){
+																//for($i=0;$i<count($dc);$i++)
+																$j=0;
+																foreach($ac as $c){
+																?>
+																<tbody id="edit" >
+																	<tr>
+																		<td class="right"><?echo $act->attributedropdown($c['attribute_id']); ?></td> <td class="right">
+																			<?$act->getlangattri($c['attribute_id'],(int)$_REQUEST['rid'],$j);?>
+																		<!-- <input name="attr_text[]" value="<?=$c['text']?>" type="text"> --></td>
+																	<td class="left"><input type="checkbox" name="attr_rem_<?=$j?>" id="attr_rem_<?=$j?>" value="1"></td>  </tr>
+																</tbody>
+																
+															<?$j++;}}}?>
+															
+															<?if($_REQUEST['type']=='Edit'){ $attr_hid_val=count($ac);}else{ $attr_hid_val='0';}?>
+															<input type="hidden" name="attr_hid_val" id="attr_hid_val" value="<?=$attr_hid_val?>">
+															<?$attr=$act->attributedropdown($none);?>
+															<?for($i=$attr_hid_val;$i<20;$i++){?>
+																<tbody id="attr-row<?=$i?>" style="display:none" ><tr>
+																	<td class="right"><?=$attr?></td>
+																	<td class="right"><?echo $act->lang_field(array('lable'=>'','input_title'=>'attr_text_'.$i,'desc'=>'enter text','input_type'=>'textarea','val'=>$lang,"req"=>'0'));?><!-- <input name="attr_text[]" value="" type="text"> --></td>
+																<td class="left"><input type="checkbox" name="attr_rem_<?=$i?>" id="attr_rem_<?=$i?>" value="1"></td>  </tr></tbody>
+																
+																
+															<?}?>
+															
+															<tr>
+																<td ><a onclick="addAttribute();" class="button"><span>Add Attributes</span></a></td>
+																<td class="left"colspan="6"></td>
+															</tr>
+															
+												</table>
+											</div>
+										</div>
+										<div class="TabbedPanelsContent">
+											<div class="mode-box">
+												<h3><span>Product Discounts</span></h3>
+												
+												<table id="discount" class="list">
+													<thead>
+														<tr>
+															<td ><a onclick="addDiscount();" class="button"><span>Add Discount</span></a></td>
+															<td class="left"colspan="6"></td>
+														</tr>
+														<tr>
+															<td class="left">Customer Group:</td>
+															<td class="right">Quantity:</td>
+															<td class="right">Priority:</td>
+															<td class="right">Price:</td>
+															<td class="left">Date Start:</td>
+															<td class="left">Date End:</td>
+															<td>Remove</td>
+														</tr>
+														
+													</thead>
+													
+													<?
+														
+														if($_REQUEST['type']=='Edit'){
+															$dc=$act->db->fetchAll("select * from r_product_discount where product_id='".(int)$_REQUEST['rid']."' order by priority asc");
+															
+															if(count($dc)>0){
+																//for($i=0;$i<count($dc);$i++)
+																$j=0;
+																foreach($dc as $v){
+																?>
+																<tbody id="edit" ><tr>
+																	<td class="left"><select name="disc_cg[]"><?=$act->getcustomergroupdropdown($v['customer_group_id'])?></select></td>
+																	<td class="right"><input name="disc_qty[]" value="<?=$v['quantity']?>" size="2" type="text"></td>
+																	<td class="right"><input name="disc_priority[]" value="<?=$v['priority']?>" size="2" type="text"></td>
+																	<td class="right"><input name="disc_price[]" value="<?php echo number_format($v['price'],2)?>" type="text"></td>
+																	<td class="left"><input  name="disc_sdate_<?=$j?>"  id="disc_sdate_<?=$j?>" value="<?=$v['date_start']?>"   type="text"></td>
+																	<td class="left"><input  name="disc_edate_<?=$j?>" id="disc_edate_<?=$j?>" value="<?=$v['date_end']?>"  type="text"></td>
+																<td class="left"><input type="checkbox" name="rem_<?=$j?>" id="rem_<?=$j?>" value="1"></td>  </tr>
+																</tbody>
+																
+															<?$j++;}}}?>
+															
+															<?if($_REQUEST['type']=='Edit'){ $disc_hid_val=count($dc);}else{ $disc_hid_val='0';}?>
+															<input type="hidden" name="disc_hid_val" id="disc_hid_val" value="<?=$disc_hid_val?>">
+															
+															<?
+																$cgroup_select=$act->getcustomergroupdropdown($cgid);
+																for($i=$disc_hid_val;$i<10;$i++){?>
+																<tbody id="discount-row<?=$i?>" style="display:none" ><tr>
+																	<td class="left"><select name="disc_cg[]"><?=$cgroup_select;?>  </select></td>
+																	<td class="right"><input name="disc_qty[]" value="" size="2" type="text"></td>
+																	<td class="right"><input name="disc_priority[]" value="" size="2" type="text"></td>
+																	<td class="right"><input name="disc_price[]" value="" type="text"></td>
+																	<td class="left"><input  name="disc_sdate_<?=$i?>"  id="disc_sdate_<?=$i?>" value=""   type="text"></td>
+																	<td class="left"><input  name="disc_edate_<?=$i?>" id="disc_edate_<?=$i?>" value=""  type="text"></td>
+																<td class="left"><input type="checkbox" name="rem_<?=$i?>" id="rem_<?=$i?>" value="1"></td>  </tr></tbody>
+																
+																
+															<?}?>
+															
+															<?for($m=0;$m<10;$m++){?> 	<script type="text/javascript">
+																date_pick('#disc_sdate_<?=$m?>');
+																date_pick('#disc_edate_<?=$m?>');
+															</script><?}?>
+															<tr>
+																<td ><a onclick="addDiscount();" class="button"><span>Add Discount</span></a></td>
+																<td class="left"colspan="6"></td>
+															</tr>
+															
+												</table>
+											</div>
+										</div>
+										
+										<div class="TabbedPanelsContent">
+											<div class="mode-box">
+												<h3><span>Special Products</span></h3>
+												<table id="discount" class="list">
+													<thead>
+														<tr>
+															<td ><a onclick="addSpecial();" class="button"><span>Add Special</span></a></td>
+															<td class="left"colspan="6"></td>
+														</tr>
+														<tr>
+															<td class="left">Customer Group:</td>
+															<td class="right">Priority:</td>
+															<td class="right">Price:</td>
+															<td class="left">Date Start:</td>
+															<td class="left">Date End:</td>
+															<td>Remove</td>
+														</tr>
+														
+													</thead>
+													
+													<?
+														
+														if($_REQUEST['type']=='Edit'){
+															$sc=$act->db->fetchAll("select * from r_products_specials where products_id='".(int)$_REQUEST['rid']."' order by priority asc");
+															
+															if(count($sc)>0){
+																//for($i=0;$i<count($dc);$i++)
+																$j=0;
+																foreach($sc as $k){
+																?>
+																<tbody id="edit" ><tr>
+																	<td class="left"><select name="spec_cg[]"><?=$act->getcustomergroupdropdown($k['customer_group_id'])?></select></td>
+																	<td class="right"><input name="spec_priority[]" value="<?=$k['priority']?>" size="2" type="text"></td>
+																	<td class="right"><input name="spec_price[]" value="<?php echo number_format($k['specials_new_products_price'],2);?>" type="text"></td>
+																	<td class="left"><input  name="spec_sdate_<?=$j?>"  id="spec_sdate_<?=$j?>" value="<?=$k['start_date']?>"   type="text"></td>
+																	<td class="left"><input  name="spec_edate_<?=$j?>" id="spec_edate_<?=$j?>" value="<?=$k['expires_date']?>"  type="text"></td>
+																<td class="left"><input type="checkbox" name="spec_rem_<?=$j?>" id="spec_rem_<?=$j?>" value="1"></td>  </tr>
+																</tbody>
+																
+															<?$j++;}}}?>
+															
+															<?if($_REQUEST['type']=='Edit'){ $spec_hid_val=count($sc);}else{ $spec_hid_val='0';}?>
+															<input type="hidden" name="spec_hid_val" id="spec_hid_val" value="<?=$spec_hid_val?>">
+															
+															<?for($i=$spec_hid_val;$i<10;$i++){?>
+																<tbody id="spec-row<?=$i?>" style="display:none" ><tr>
+																	<td class="left"><select name="spec_cg[]"><?=$cgroup_select;?> </select></td>
+																	<td class="right"><input name="spec_priority[]" value="" size="2" type="text"></td>
+																	<td class="right"><input name="spec_price[]" value="" type="text"></td>
+																	<td class="left"><input  name="spec_sdate_<?=$i?>"  id="spec_sdate_<?=$i?>" value=""   type="text"></td>
+																	<td class="left"><input  name="spec_edate_<?=$i?>" id="spec_edate_<?=$i?>" value=""  type="text"></td>
+																<td class="left"><input type="checkbox" name="spec_rem_<?=$i?>" id="spec_rem_<?=$i?>" value="1"></td>  </tr></tbody>
+																
+																
+															<?}?>
+															
+															<?for($m=0;$m<10;$m++){?> 	<script type="text/javascript">
+																
+																date_pick('#spec_sdate_<?=$m?>');
+																date_pick('#spec_edate_<?=$m?>');
+															</script><?}?>
+															<tr>
+																<td ><a onclick="addSpecial();" class="button"><span>Add Special</span></a></td>
+																<td class="left"colspan="6"></td>
+															</tr>
+												</table>
+											</div>
+											
+										</div>
+										<div class="TabbedPanelsContent" >
+											<div class="mode-box">
+												<h3><span>Multiple Image Upload</span></h3>
+												<input type="hidden" name="multi_image_hidden" id="multi_image_hidden" >
+												<input type="hidden" name="multi_image_count" id="multi_image_count" value="0">
+												<table id="img_vid" name="img_vid"  class="list">
+													<thead>
+														<tr>
+															<td colspan="7"><input type="button" name="button" id="button" class="button" value="Add Image" onclick="fnAddImage()">
+															</td>
+															<td class="left">&nbsp;</td>
+														</tr>
+														<tr>
+															<td class="left" width="15%">Image</td>
+															<td width="35%" class="left">Html Script</td>
+															<?if(@constant('DEPENDENT_OPTIONS')=='1'){?>
+																<td width="30%" class="left">Select</td>
+															<?}?>
+															
+															<td width="20%" class="right">Sort Order</td>
+															<td width="20%" class="right">Delete</td>
+														</tr>
+														<thead>
+															<tbody>
+																<?$mult_img=$act_ext->getUploadedImages((int)$_REQUEST['rid']);
+																	//print_r($mult_img);
+																	
+																	
+																	foreach ($mult_img as $img){?>
+																	<tr id="<?=$img['id']?>">
+																		<td class="left" ><a href="#" style="color:black;cursor:pointer;text-decoration:underline;" class="tt"><?=$img['image'];?><span class="tooltip"><img style="z-index:-1;"  src="<?=PATH_TO_UPLOADS."products/".$img['image']?>"  /></span></a></td>
+																		<td class="left" height="100px" width="100px;"><p><?=$img['htmlcontent']?></p></td>
+																		<?if(@constant('DEPENDENT_OPTIONS')=='1'){?>
+																			<td class="left" height="100px" width="100px;"><p><?php echo $this->base_result_array[$img['product_option_value_id']];?></p></td>
+																		<?}?>
+																		<td class="left" height="100px" width="100px;"><p><?php echo $img['sort_order'];?></p></td>
+																		<td class="left" ><input type="checkbox" name="multi_image_text" id="multi_image_text" onclick="fnimgclose('<?=$img['id']?>');" /></td>
+																	</tr>
+																<?}?>
+																<?for($mi=0;$mi<=50;$mi++){?>
+																	<tr id="add<?=$mi?>"  style="display:none"><td class="left"><input type="file" name="multi_image[]" id="multi_image[]"></td><td class="left"><textarea name="multi_image_text[]" id="multi_image_text[]" rows="8" cols="50"></textarea></td>
+																		<?if(@constant('DEPENDENT_OPTIONS')=='1'){?>
+																			<td class="left" height="100px" width="100px;"><p>
+																				<select name="product_option_value_id[]" id="product_option_value_id[]"><?php echo $this->base?></select>
+																			</p></td>
+																		<?}?>
+																		<td class="left" height="100px" width="100px;"><p><input type="text" name="sort_order[]" id="sort_order[]" value=""></p></td>
+																		
+																	<td class="left"><input type="checkbox" name="multi_image_text" id="multi_image_text" onclick="fnimgclose('add<?=$mi?>')"/></td></tr>
+																<?}?>
+															</tbody>
+															<tfoot>
+																<tr>
+																	<td colspan="7"><input type="button" name="button" id="button" class="button" value="Add Image" onclick="fnAddImage()">
+																	</td>
+																	<td class="left">&nbsp;</td>
+																</tr>
+															</table>
+															
+														</div>
+													</div>
+													
+													<div class="TabbedPanelsContent">
+														<div class="mode-box">
+															<h3><span>Product Options</span></h3>
+															
+															<div id="tabsjq">
+																<ul>
+																	<li><a href="#tab-1">Text</a></li>
+																	<li><a href="#tab-6">TextArea</a></li>
+																	<li><a href="#tab-5">File</a></li>
+																	<li><a href="#tab-7">Date</a></li>
+																	<li><a href="#tab-8">Time</a></li>
+																	<li><a href="#tab-9">DateTime</a></li>
+																	<li><a href="#tab-2">Select</a></li>
+																	<li><a href="#tab-3">Radio</a></li>
+																	<li><a href="#tab-4">CheckBox</a></li>
+																</ul>
+																<div id="tab-1">
+																	<table id="textoption" class="list">
+																		<thead>
+																			
+																			<tr>
+																				<td class="left">Field</td>
+																				<td class="right">Required</td>
+																				<td class="right">Input Value</td>
+																				<td>Remove</td>
+																			</tr>
+																			
+																		</thead>
+																		
+																		<?
+																			
+																			if($_REQUEST['type']=='Edit'){
+																				$sc=$act->db->fetchAll("select product_option_id,option_id,option_value,required from r_products_option where product_id='".(int)$_REQUEST['rid']."' and option_id in (select option_id from r_option where type='text')");
+																				
+																				if(count($sc)>0){
+																					//for($i=0;$i<count($dc);$i++)
+																					$j=0;
+																					foreach($sc as $k){
+																					?>
+																					<tbody id="edit" ><tr>
+																						<td class="left"><?=$act->textdropdown($k['option_id'],'text');?>
+																						<input type="hidden" name="text_poid[<?php echo $k[option_id];?>]"  id="text_poid[<?php echo $k[option_id];?>]" value="<?php echo $k[product_option_id];?>"></td>
+																						
+																						<td class="left"><?=$act->requiredropdown($k['required'],'text');?></td>
+																						<td class="right"><input name="text_value[]" value="<?=$k['option_value']?>" type="text"></td>
+																					<td class="left"><input type="checkbox" name="text_rem_<?=$j?>" id="text_rem_<?=$j?>" value="1"></td>  </tr>
+																					</tbody>
+																					
+																				<?$j++;}}}?>
+																				
+																				<?if($_REQUEST['type']=='Edit'){ $text_hid_val=count($sc);}else{ $text_hid_val='0';}?>
+																				<input type="hidden" name="text_hid_val" id="text_hid_val" value="<?=$text_hid_val?>">
+																				
+																				<?for($i=$text_hid_val;$i<10;$i++){?>
+																					<tbody id="text-row<?=$i?>" style="display:none" ><tr>
+																						<td class="left"><?=$act->textdropdown('','text');?></td>
+																						<td class="right"><?=$act->requiredropdown('','text');?></td>
+																						<td class="right"><input name="text_value[]" value="" type="text"></td>
+																					<td class="left"><input type="checkbox" name="text_rem_<?=$i?>" id="text_rem_<?=$i?>" value="1"></td>  </tr></tbody>
+																				<?}?>
+																				<tr>
+																					<td ><a onclick="addText();" class="button"><span>Add Text Field</span></a></td>
+																					<td class="left"colspan="6"></td>
+																				</tr>
+																	</table>
+																</div>
+																<div id="tab-6">
+																	<table id="textoption" class="list">
+																		<thead>
+																			
+																			<tr>
+																				<td class="left">Field</td>
+																				<td class="right">Required</td>
+																				<td class="right">Input Value</td>
+																				<td>Remove</td>
+																			</tr>
+																			
+																		</thead>
+																		
+																		<?
+																			
+																			if($_REQUEST['type']=='Edit'){
+																				$sc=$act->db->fetchAll("select product_option_id,option_id,option_value,required from r_products_option where product_id='".(int)$_REQUEST['rid']."' and option_id in (select option_id from r_option where type='textarea')");
+																				
+																				if(count($sc)>0){
+																					//for($i=0;$i<count($dc);$i++)
+																					$j=0;
+																					foreach($sc as $k){
+																					?>
+																					<tbody id="edit" ><tr>
+																						<td class="left"><?=$act->textdropdown($k['option_id'],'textarea');?>
+																							<input type="hidden" name="textarea_poid[<?php echo $k[option_id];?>]"  id="textarea_poid[<?php echo $k[option_id];?>]" value="<?php echo $k[product_option_id];?>">
+																						</td>
+																						<td class="left"><?=$act->requiredropdown($k['required'],'textarea');?></td>
+																						<td class="right"><textarea name="textarea_value[]" id="textarea_value[]" class="input-medium"><?=$k['option_value']?></textarea></td>
+																					<td class="left"><input type="checkbox" name="textarea_rem_<?=$j?>" id="textarea_rem_<?=$j?>" value="1"></td>  </tr>
+																					</tbody>
+																					
+																				<?$j++;}}}?>
+																				
+																				<?if($_REQUEST['type']=='Edit'){ $textarea_hid_val=count($sc);}else{ $textarea_hid_val='0';}?>
+																				<input type="hidden" name="textarea_hid_val" id="textarea_hid_val" value="<?=$textarea_hid_val?>">
+																				
+																				<?for($i=$textarea_hid_val;$i<10;$i++){?>
+																					<tbody id="textarea-row<?=$i?>" style="display:none" ><tr>
+																						<td class="left"><?=$act->textdropdown('','textarea');?></td>
+																						<td class="right"><?=$act->requiredropdown('','textarea');?></td>
+																						<td class="right"><textarea name="textarea_value[]" id="textarea_value[]" class="input-medium"></textarea></td>
+																					<td class="left"><input type="checkbox" name="textarea_rem_<?=$i?>" id="textarea_rem_<?=$i?>" value="1"></td>  </tr></tbody>
+																				<?}?>
+																				<tr>
+																					<td ><a onclick="addTextArea();" class="button"><span>Add TextArea</span></a></td>
+																					<td class="left"colspan="6"></td>
+																				</tr>
+																	</table>
+																</div>
+																<!--start file -->
+																<div id="tab-5">
+																	<table id="textoption" class="list">
+																		<thead>
+																			
+																			<tr>
+																				<td class="left">Field</td>
+																				<td class="right">Required</td>
+																				
+																				<td>Remove</td><td class="right"></td>
+																			</tr>
+																			
+																		</thead>
+																		
+																		<?
+																			
+																			if($_REQUEST['type']=='Edit'){
+																				$sc=$act->db->fetchAll("select product_option_id,option_id,option_value,required from r_products_option where product_id='".(int)$_REQUEST['rid']."' and option_id in (select option_id from r_option where type='file')");
+																				
+																				if(count($sc)>0){
+																					//for($i=0;$i<count($dc);$i++)
+																					$j=0;
+																					foreach($sc as $k){
+																					?>
+																					<tbody id="edit" ><tr>
+																						<td class="left"><?=$act->textdropdown($k['option_id'],'file');?>
+																							<input type="hidden" name="file_poid[<?php echo $k[option_id];?>]"  id="file_poid[<?php echo $k[option_id];?>]" value="<?php echo $k[product_option_id];?>">
+																						</td>
+																						<td class="left"><?=$act->requiredropdown($k['required'],'file');?></td>
+																						<td class="left"><input type="checkbox" name="file_rem_<?=$j?>" id="file_rem_<?=$j?>" value="1"></td>
+																						<td class="left"><input type="hidden" name="file_value[]" id="file_value[]" value="file"></td>
+																					</tr>
+																					</tbody>
+																					
+																				<?$j++;}}}?>
+																				
+																				<?if($_REQUEST['type']=='Edit'){ $file_hid_val=count($sc);}else{ $file_hid_val='0';}?>
+																				<input type="hidden" name="file_hid_val" id="file_hid_val" value="<?=$file_hid_val?>">
+																				
+																				<?for($i=$file_hid_val;$i<10;$i++){?>
+																					<tbody id="file-row<?=$i?>" style="display:none" ><tr>
+																						<td class="left"><?=$act->textdropdown('','file');?></td>
+																						<td class="right"><?=$act->requiredropdown('','file');?></td>
+																						<td class="left"><input type="checkbox" name="file_rem_<?=$i?>" id="file_rem_<?=$i?>" value="1"></td>
+																					<td class="left"><input type="hidden" name="file_value[]" id="file_value[]" value="file"></td></tr></tbody>
+																				<?}?>
+																				<tr>
+																					<td ><a onclick="addFile();" class="button"><span>Add File</span></a></td>
+																					<td class="left"colspan="6"></td>
+																				</tr>
+																	</table>
+																</div>
+																<!--end file -->
+																<!--start date -->
+																<div id="tab-7">
+																	<table id="dateoption" class="list">
+																		<thead>
+																			
+																			<tr>
+																				<td class="left">Field</td>
+																				<td class="right">Required</td>
+																				<td class="right">Input Value</td>
+																				<td>Remove</td><td class="right"></td>
+																			</tr>
+																			
+																		</thead>
+																		
+																		<?
+																			
+																			if($_REQUEST['type']=='Edit'){
+																				$sc=$act->db->fetchAll("select product_option_id,option_id,option_value,required from r_products_option where product_id='".(int)$_REQUEST['rid']."' and option_id in (select option_id from r_option where type='date')");
+																				
+																				if(count($sc)>0){
+																					//for($i=0;$i<count($dc);$i++)
+																					$j=0;
+																					foreach($sc as $k){
+																					?>
+																					<tbody id="edit" ><tr>
+																						<td class="left"><?=$act->textdropdown($k['option_id'],'date');?>
+																							<input type="hidden" name="date_poid[<?php echo $k[option_id];?>]"  id="date_poid[<?php echo $k[option_id];?>]" value="<?php echo $k[product_option_id];?>">
+																						</td>
+																						<td class="left"><?=$act->requiredropdown($k['required'],'date');?></td>
+																						<td class="right"><input name="date_value[]" value="<?=$k['option_value']?>" type="text" class="date" ></td>
+																						<td class="left"><input type="checkbox" name="date_rem_<?=$j?>" id="date_rem_<?=$j?>" value="1"></td>
+																						<td class="left"><input type="hidden" name="date_value[]" id="date_value[]" value="date"></td>
+																					</tr>
+																					</tbody>
+																					
+																				<?$j++;}}}?>
+																				
+																				<?if($_REQUEST['type']=='Edit'){ $date_hid_val=count($sc);}else{ $date_hid_val='0';}?>
+																				<input type="hidden" name="date_hid_val" id="date_hid_val" value="<?=$date_hid_val?>">
+																				
+																				<?for($i=$date_hid_val;$i<10;$i++){?>
+																					<tbody id="date-row<?=$i?>" style="display:none" ><tr>
+																						<td class="left"><?=$act->textdropdown('','date');?></td>
+																						<td class="right"><?=$act->requiredropdown('','date');?></td>
+																						<td class="right"><input name="date_value[]" value="" type="text" class="date" ></td>
+																						<td class="left"><input type="checkbox" name="date_rem_<?=$i?>" id="date_rem_<?=$i?>" value="1"></td>
+																					<td class="left"><input type="hidden" name="date_value[]" id="date_value[]" value="date"></td></tr></tbody>
+																				<?}?>
+																				<tr>
+																					<td ><a onclick="addDate();" class="button"><span>Add Date</span></a></td>
+																					<td class="left"colspan="6"></td>
+																				</tr>
+																	</table>
+																</div>
+																<!--end date -->
+																<!--start time -->
+																<div id="tab-8">
+																	<table id="timeoption" class="list">
+																		<thead>
+																			
+																			<tr>
+																				<td class="left">Field</td>
+																				<td class="right">Required</td>
+																				<td class="right">Input Value</td>
+																				<td>Remove</td><td class="right"></td>
+																			</tr>
+																			
+																		</thead>
+																		
+																		<?
+																			
+																			if($_REQUEST['type']=='Edit'){
+																				$sc=$act->db->fetchAll("select product_option_id,option_id,option_value,required from r_products_option where product_id='".(int)$_REQUEST['rid']."' and option_id in (select option_id from r_option where type='time')");
+																				
+																				if(count($sc)>0){
+																					//for($i=0;$i<count($dc);$i++)
+																					$j=0;
+																					foreach($sc as $k){
+																					?>
+																					<tbody id="edit" ><tr>
+																						<td class="left"><?=$act->textdropdown($k['option_id'],'time');?>
+																							<input type="hidden" name="time_poid[<?php echo $k[option_id];?>]"  id="time_poid[<?php echo $k[option_id];?>]" value="<?php echo $k[product_option_id];?>">
+																						</td>
+																						<td class="left"><?=$act->requiredropdown($k['required'],'time');?></td>
+																						<td class="right"><input name="time_value[]" value="<?=$k['option_value']?>" type="text" class="time" ></td>
+																						<td class="left"><input type="checkbox" name="time_rem_<?=$j?>" id="time_rem_<?=$j?>" value="1"  ></td>
+																						<td class="left"><input type="hidden" name="time_value[]" id="time_value[]" value="time"></td>
+																					</tr>
+																					</tbody>
+																					
+																				<?$j++;}}}?>
+																				
+																				<?if($_REQUEST['type']=='Edit'){ $time_hid_val=count($sc);}else{ $time_hid_val='0';}?>
+																				<input type="hidden" name="time_hid_val" id="time_hid_val" value="<?=$time_hid_val?>">
+																				
+																				<?for($i=$time_hid_val;$i<10;$i++){?>
+																					<tbody id="time-row<?=$i?>" style="display:none" ><tr>
+																						<td class="left"><?=$act->textdropdown('','time');?></td>
+																						<td class="right"><?=$act->requiredropdown('','time');?></td>
+																						<td class="right"><input name="time_value[]" value="" type="text" class="time" ></td>
+																						<td class="left"><input type="checkbox" name="time_rem_<?=$i?>" id="time_rem_<?=$i?>" value="1"></td>
+																					<td class="left"><input type="hidden" name="time_value[]" id="time_value[]" value="time"></td></tr></tbody>
+																				<?}?>
+																				<tr>
+																					<td ><a onclick="addTime();" class="button"><span>Add Time</span></a></td>
+																					<td class="left"colspan="6"></td>
+																				</tr>
+																	</table>
+																</div>
+																<!--end time -->
+																<!--start datetime -->
+																<div id="tab-9">
+																	<table id="datetimeoption" class="list">
+																		<thead>
+																			
+																			<tr>
+																				<td class="left">Field</td>
+																				<td class="right">Required</td>
+																				<td class="right">Input Value</td>
+																				<td>Remove</td><td class="right"></td>
+																			</tr>
+																			
+																		</thead>
+																		
+																		<?
+																			
+																			if($_REQUEST['type']=='Edit'){
+																				$sc=$act->db->fetchAll("select product_option_id,option_id,option_value,required from r_products_option where product_id='".(int)$_REQUEST['rid']."' and option_id in (select option_id from r_option where type='datetime')");
+																				
+																				if(count($sc)>0){
+																					//for($i=0;$i<count($dc);$i++)
+																					$j=0;
+																					foreach($sc as $k){
+																					?>
+																					<tbody id="edit" ><tr>
+																						<td class="left"><?=$act->textdropdown($k['option_id'],'datetime');?>
+																							<input type="hidden" name="datetime_poid[<?php echo $k[option_id];?>]"  id="datetime_poid[<?php echo $k[option_id];?>]" value="<?php echo $k[product_option_id];?>">
+																						</td>
+																						<td class="left"><?=$act->requiredropdown($k['required'],'datetime');?></td>
+																						<td class="right"><input name="datetime_value[]" value="<?=$k['option_value']?>" type="text" class="datetime" ></td>
+																						<td class="left"><input type="checkbox" name="datetime_rem_<?=$j?>" id="datetime_rem_<?=$j?>" value="1"></td>
+																						<td class="left"><input type="hidden" name="datetime_value[]" id="datetime_value[]" value="datetime"></td>
+																					</tr>
+																					</tbody>
+																					
+																				<?$j++;}}}?>
+																				
+																				<?if($_REQUEST['type']=='Edit'){ $datetime_hid_val=count($sc);}else{ $datetime_hid_val='0';}?>
+																				<input type="hidden" name="datetime_hid_val" id="datetime_hid_val" value="<?=$datetime_hid_val?>">
+																				
+																				<?for($i=$datetime_hid_val;$i<10;$i++){?>
+																					<tbody id="datetime-row<?=$i?>" style="display:none" ><tr>
+																						<td class="left"><?=$act->textdropdown('','datetime');?></td>
+																						<td class="right"><?=$act->requiredropdown('','datetime');?></td>
+																						<td class="right"><input name="datetime_value[]" value="" type="text" class="datetime" ></td>
+																						<td class="left"><input type="checkbox" name="datetime_rem_<?=$i?>" id="datetime_rem_<?=$i?>" value="1"></td>
+																					<td class="left"><input type="hidden" name="datetime_value[]" id="datetime_value[]" value="datetime"></td></tr></tbody>
+																				<?}?>
+																				<tr>
+																					<td ><a onclick="addDateTime();" class="button"><span>Add Date & Time</span></a></td>
+																					<td class="left"colspan="6"></td>
+																				</tr>
+																	</table>
+																</div>
+																<!--end datetime -->
+																<div id="tab-2">
+																	
+																	<table id="textoption" class="list">
+																		<thead>
+																			
+																			<tr>
+																				<td class="left">Option Value</td>
+																				<td class="right">Quantity</td>
+																				<td class="right">Subtract Stock</td>
+																				<td class="right">Price</td>
+																				<td class="right">Points</td>
+																				<td class="right">Weight</td>
+																				<?if(@constant('DEPENDENT_OPTIONS')=='1'){?>
+																					<td class="right">Parent</td>
+																				<?}?>
+																				<td class="right">Required</td>
+																				<td>Remove</td>
+																			</tr>
+																			
+																		</thead>
+																		
+																		<?
+																			
+																			if($_REQUEST['type']=='Edit'){
+																				$sc=$act->db->fetchAll("select * from r_products_option_value where product_id='".(int)$_REQUEST['rid']."' and option_id in (select option_id from r_option where type='select')");
+																				
+																				$arr_req=$act->getRequiredArray('select',(int)$_REQUEST['rid']);
+																				
+																				
+																				
+																				if(count($sc)>0){
+																					
+																					$j=0;
+																					foreach($sc as $k){
+																					?>
+																					<tbody id="edit" ><tr>
+																						<td class="left"><?=$act->multipledropdown($k[option_value_id]."_".$k[option_id],'select');?></td>
+																						<td class="right"><input type="text" name="select_qty[]" id="select_qty[]" value="<?=$k['quantity']?>" size="5" >
+																							<input type="hidden" name="select_povid[]" id="select_povid[]" value="<?php echo $k[product_option_value_id];?>">
+																							<input type="hidden" name="select_poid[<?php echo $k[option_id];?>]"  id="select_poid[<?php echo $k[option_id];?>]" value="<?php echo $k[product_option_id];?>">
+																						</td>
+																						<td class="right"><?=$act->requiredropdown($k['subtract'],'select_sub');?></td>
+																						<td class="right"><?=$act->symboldropdown($k['price_prefix'],'select','prsym')?>
+																						<input type="text" name="select_price[]" id="select_price[]" value="<?php echo number_format($k['price'],2)?>" size="10"></td>
+																						<td class="right"><?=$act->symboldropdown($k['points_prefix'],'select','psym')?>
+																						<input type="text" name="select_points[]" id="select_points[]" value="<?=$k['points']?>" size="10" ></td>
+																						<td class="right"><?=$act->symboldropdown($k['weight_prefix'],'select','wsym')?>
+																						<input type="text" name="select_weight[]" id="select_weight[]" value="<?=$k['weight']?>" size="10" ></td>
+																						<?if(@constant('DEPENDENT_OPTIONS')=='1'){?>
+																							<td class="right"><input type="text" name="select_parent[]" id="select_parent[]" value="<?=$k['base_option_value_id']?>" size="10" ></td>
+																						<?}?>
+																						<td class="left"><?=$act->requiredropdown($arr_req[$k[option_id]],'select');?></td>
+																						<td class="left"><input type="checkbox" name="select_rem_<?=$j?>" id="select_rem_<?=$j?>" value="1"></td>
+																					</tr>
+																					</tbody>
+																					
+																				<?$j++;}}}?>
+																				
+																				<?if($_REQUEST['type']=='Edit'){ $select_hid_val=count($sc);}else{ $select_hid_val='0';}?>
+																				<input type="hidden" name="select_hid_val" id="select_hid_val" value="<?=$select_hid_val?>">
+																				
+																				<?for($i=$select_hid_val;$i<30;$i++){?>
+																					<tbody id="select-row<?=$i?>" style="display:none" ><tr>
+																						<td class="left"><?=$act->multipledropdown('','select');?></td>
+																						<td class="right"><input type="text" name="select_qty[]" id="select_qty[]" value="" size="10" ><input type="hidden" name="select_povid[]" value=""></td>
+																						<td class="right"><?=$act->requiredropdown('','select_sub');?></td>
+																						<td class="right"><?=$act->symboldropdown($k['price_prefix'],'select','prsym')?>
+																						<input type="text" name="select_price[]" id="select_price[]" value="" size="10" ></td>
+																						<td class="right"><?=$act->symboldropdown($k['points_prefix'],'select','psym')?>
+																						<input type="text" name="select_points[]" id="select_points[]" value="" size="10" ></td>
+																						<td class="right"><?=$act->symboldropdown($k['weight_prefix'],'select','wsym')?>
+																						<input type="text" name="select_weight[]" id="select_weight[]" value="" size="10" ></td>
+																						<?if(@constant('DEPENDENT_OPTIONS')=='1'){?>
+																							<td class="right"><input type="text" name="select_parent[]" id="select_parent[]" value="" size="10" ></td>
+																						<?}?>
+																						<td class="left"><?=$act->requiredropdown('','select');?></td>
+																						<td class="left"><input type="checkbox" name="select_rem_<?=$i?>" id="select_rem_<?=$i?>" value="1" ></td>
+																					</tr></tbody>
+																				<?}?>
+																				<tr>
+																					<td  colspan="8" ><a onclick="addSelect();" class="button"><span>Add Select Field</span></a></td>
+																					<?if(@constant('DEPENDENT_OPTIONS')=='1'){?>
+																						<td class="left"colspan="8"></td>
+																						<?}else{?>
+																						<td class="left"colspan="8"></td>
+																					<?}?>
+																					
+																				</tr>
+																	</table>
+																	
+																</div>
+																<div id="tab-3">
+																	<table id="textoption" class="list">
+																		<thead>
+																			
+																			<tr>
+																				<td class="left">Option Value</td>
+																				<td class="right">Quantity</td>
+																				<td class="right">Subtract Stock</td>
+																				<td class="right">Price</td>
+																				<td class="right">Points</td>
+																				<td class="right">Weight</td>
+																				<td class="right">Required</td>
+																				<td>Remove</td>
+																			</tr>
+																			
+																		</thead>
+																		
+																		<?
+																			
+																			if($_REQUEST['type']=='Edit'){
+																				$sc=$act->db->fetchAll("select * from r_products_option_value where product_id='".(int)$_REQUEST['rid']."' and option_id in (select option_id from r_option where type='radio')");
+																				
+																				$arr_req=$act->getRequiredArray('radio',(int)$_REQUEST['rid']);
+																				
+																				
+																				
+																				if(count($sc)>0){
+																					$j=0;
+																					foreach($sc as $k){	?>
+																					<tbody id="edit" ><tr>
+																						<td class="left"><?=$act->multipledropdown($k[option_value_id]."_".$k[option_id],'radio');?>
+																							<input type="hidden" name="radio_povid[]" id="radio_povid[]" value="<?php echo $k[product_option_value_id];?>">		<input type="hidden" name="radio_poid[<?php echo $k[option_id];?>]"  id="radio_poid[<?php echo $k[option_id];?>]" value="<?php echo $k[product_option_id];?>">
+																						</td>
+																						<td class="right"><input type="text" name="radio_qty[]" id="radio_qty[]" value="<?=$k['quantity']?>" size="10" ></td>
+																						<td class="right"><?=$act->requiredropdown($k['subtract'],'radio_sub');?></td>
+																						<td class="right"><?=$act->symboldropdown($k['price_prefix'],'radio','prsym')?>
+																						<input type="text" name="radio_price[]" id="radio_price[]" value="<?php echo number_format($k['price'],2)?>" size="10"></td>
+																						<td class="right"><?=$act->symboldropdown($k['points_prefix'],'radio','psym')?>
+																						<input type="text" name="radio_points[]" id="radio_points[]" value="<?=$k['points']?>" size="10" ></td>
+																						<td class="right"><?=$act->symboldropdown($k['weight_prefix'],'radio','wsym')?>
+																						<input type="text" name="radio_weight[]" id="radio_weight[]" value="<?=$k['weight']?>" size="10" ></td>
+																						<td class="left"><?=$act->requiredropdown($arr_req[$k[option_id]],'radio');?></td>
+																						<td class="left"><input type="checkbox" name="radio_rem_<?=$j?>" id="radio_rem_<?=$j?>" value="1"></td>
+																					</tr>
+																					</tbody>
+																					
+																				<?$j++;}}}?>
+																				
+																				<?if($_REQUEST['type']=='Edit'){ $radio_hid_val=count($sc);}else{ $radio_hid_val='0';}?>
+																				<input type="hidden" name="radio_hid_val" id="radio_hid_val" value="<?=$radio_hid_val?>">
+																				
+																				<?for($i=$radio_hid_val;$i<30;$i++){?>
+																					<tbody id="radio-row<?=$i?>" style="display:none" ><tr>
+																						<td class="left"><?=$act->multipledropdown('','radio');?></td>
+																						<td class="right"><input type="text" name="radio_qty[]" id="radio_qty[]" value="" size="10" >
+																							<input type="hidden" name="radio_povid[]" value="">
+																						</td>
+																						<td class="right"><?=$act->requiredropdown('','radio_sub');?></td>
+																						<td class="right"><?=$act->symboldropdown($k['price_prefix'],'radio','prsym')?>
+																						<input type="text" name="radio_price[]" id="radio_price[]" value="" size="10" ></td>
+																						<td class="right"><?=$act->symboldropdown($k['points_prefix'],'radio','psym')?>
+																						<input type="text" name="radio_points[]" id="radio_points[]" value="" size="10" ></td>
+																						<td class="right"><?=$act->symboldropdown($k['weight_prefix'],'radio','wsym')?>
+																						<input type="text" name="radio_weight[]" id="radio_weight[]" value="" size="10" ></td>
+																						<td class="left"><?=$act->requiredropdown('','radio');?></td>
+																						<td class="left"><input type="checkbox" name="radio_rem_<?=$i?>" id="radio_rem_<?=$i?>" value="1" ></td>
+																					</tr></tbody>
+																				<?}?>
+																				<tr>
+																					<td colspan="8"><a onclick="addRadio();" class="button"><span>Add Radio Field</span></a></td>
+																					
+																				</tr>
+																	</table>
+																</div>
+																<div id="tab-4">
+																	<table id="textoption" class="list">
+																		<thead>
+																			
+																			<tr>
+																				<td class="left">Option Value</td>
+																				<td class="right">Quantity</td>
+																				<td class="right">Subtract Stock</td>
+																				<td class="right">Price</td>
+																				<td class="right">Points</td>
+																				<td class="right">Weight</td>
+																				<td class="right">Required</td>
+																				<td>Remove</td>
+																			</tr>
+																			
+																		</thead>
+																		
+																		<?
+																			
+																			if($_REQUEST['type']=='Edit'){
+																				$sc=$act->db->fetchAll("select * from r_products_option_value where product_id='".(int)$_REQUEST['rid']."' and option_id in (select option_id from r_option where type='checkbox')");
+																				
+																				$arr_req=$act->getRequiredArray('checkbox',(int)$_REQUEST['rid']);
+																				
+																				
+																				
+																				if(count($sc)>0){
+																					$j=0;
+																					foreach($sc as $k){	?>
+																					<tbody id="edit" ><tr>
+																						<td class="left"><?=$act->multipledropdown($k[option_value_id]."_".$k[option_id],'checkbox');?>
+																						<input type="hidden" name="checkbox_povid[]" id="checkbox_povid[]" value="<?php echo $k[product_option_value_id];?>">		<input type="hidden" name="checkbox_poid[<?php echo $k[option_id];?>]"  id="checkbox_poid[<?php echo $k[option_id];?>]" value="<?php echo $k[product_option_id];?>"></td>
+																						<td class="right"><input type="text" name="checkbox_qty[]" id="checkbox_qty[]" value="<?=$k['quantity']?>" size="10" ></td>
+																						<td class="right"><?=$act->requiredropdown($k['subtract'],'checkbox_sub');?></td>
+																						<td class="right"><?=$act->symboldropdown($k['price_prefix'],'checkbox','prsym')?>
+																						<input type="text" name="checkbox_price[]" id="checkbox_price[]" value="<?php echo number_format($k['price'],2);?>" size="10"></td>
+																						<td class="right"><?=$act->symboldropdown($k['points_prefix'],'checkbox','psym')?>
+																						<input type="text" name="checkbox_points[]" id="checkbox_points[]" value="<?=$k['points']?>" size="10" ></td>
+																						<td class="right"><?=$act->symboldropdown($k['weight_prefix'],'checkbox','wsym')?>
+																						<input type="text" name="checkbox_weight[]" id="checkbox_weight[]" value="<?=$k['weight']?>" size="10" ></td>
+																						<td class="left"><?=$act->requiredropdown($arr_req[$k[option_id]],'checkbox');?></td>
+																						<td class="left"><input type="checkbox" name="checkbox_rem_<?=$j?>" id="checkbox_rem_<?=$j?>" value="1"></td>
+																					</tr>
+																					</tbody>
+																					
+																				<?$j++;}}}?>
+																				
+																				<?if($_REQUEST['type']=='Edit'){ $checkbox_hid_val=count($sc);}else{ $checkbox_hid_val='0';}?>
+																				<input type="hidden" name="checkbox_hid_val" id="checkbox_hid_val" value="<?=$checkbox_hid_val?>">
+																				
+																				<?for($i=$checkbox_hid_val;$i<30;$i++){?>
+																					<tbody id="checkbox-row<?=$i?>" style="display:none" ><tr>
+																						<td class="left"><?=$act->multipledropdown('','checkbox');?></td>
+																						<td class="right"><input type="text" name="checkbox_qty[]" id="checkbox_qty[]" value="" size="10" ><input type="hidden" name="checkbox_povid[]" value=""></td>
+																						<td class="right"><?=$act->requiredropdown('','checkbox_sub');?></td>
+																						<td class="right"><?=$act->symboldropdown($k['price_prefix'],'checkbox','prsym')?>
+																						<input type="text" name="checkbox_price[]" id="checkbox_price[]" value="" size="10" ></td>
+																						<td class="right"><?=$act->symboldropdown($k['points_prefix'],'checkbox','psym')?>
+																						<input type="text" name="checkbox_points[]" id="checkbox_points[]" value="" size="10" ></td>
+																						<td class="right"><?=$act->symboldropdown($k['weight_prefix'],'checkbox','wsym')?>
+																						<input type="text" name="checkbox_weight[]" id="checkbox_weight[]" value="" size="10" ></td>
+																						<td class="left"><?=$act->requiredropdown('','checkbox');?></td>
+																						<td class="left"><input type="checkbox" name="checkbox_rem_<?=$i?>" id="checkbox_rem_<?=$i?>" value="1" ></td>
+																					</tr></tbody>
+																				<?}?>
+																				<tr>
+																					<td colspan="8" ><a onclick="addCheckBox();" class="button"><span>Add CheckBox Field</span></a></td>
+																					
+																				</tr>
+																	</table>
+																</div>
+															</div>
+														</div></div>
+														<div class="TabbedPanelsContent">
+															<div class="mode-box">
+																<h3><span>Product Reward Points</span></h3>
+																<?	echo $act->field(array('lable'=>'Points','input_title'=>'reward_points','desc'=>'Number of points needed to buy this item. If you don\'t want this product to be purchased with points leave as 0.','input_type'=>'input_text','val'=>$this->data[0]['products_points'],"req"=>'0'));?>
+																<table class="list">
+																	<thead>
+																		<tr>
+																			<td class="left">Customer Group:</td>
+																			<td class="right">Reward Points:</td>
+																		</tr>
+																	</thead>
+																	<tbody>
+																		<?//$cg=$act->getEditdetails('r_customer_group','customer_group_id',(int)$_REQUEST['rid']);
+																			if($_REQUEST['type']=='Edit'){
+																				$cg=$act->db->fetchAll('select cg.customer_group_id,cg.name,r.points from r_customer_group cg left join r_product_reward r on r.customer_group_id=cg.customer_group_id and r.product_id="'.(int)$_REQUEST['rid'].'"');
+																			}else
+																			{
+																				$cg=$act->db->fetchAll('select name,customer_group_id from r_customer_group');
+																			}
+																			foreach($cg as $p)
+																			{
+																				echo '<tr>
+																				<td class="left">'.$p['name'].'</td>
+																				<td class="right"><input name="r_product_reward[points][]" value="'.$p['points'].'" type="text"></td>
+																				<input name="r_product_reward[customer_group_id][]" value="'.$p['customer_group_id'].'" type="hidden">
+																				</tr>
+																				';
+																			}?>
+																			<!--
+																				<tr>
+																				<td class="left">Default</td>
+																				<td class="right"><input name="product_reward[8][points]" value="100" type="text"></td>
+																			</tr> -->
+																	</tbody>
+																</table>
+															</div>
+														</div>
+												</div>
+											</div>
+											<div class="module-body">
+											</div>
+											
+										</div>
+										<div style="clear:both;"></div>
+									</div>
+									
+									<div style="clear:both;"></div>
+									<div style="clear:both;"></div>
+								</div></form>
+								<!--start fck editor-->
+								<script type="text/javascript" >
+									window.onload = function()
+									{
+										<?$select = $act->db->fetchAll("select * from r_languages order by sort_order");
+											foreach($select as $row){?>
+											
+											if(document.getElementById('products_description_<?=$row[languages_id]?>'))
+											{
+												var oFCKeditor = new FCKeditor('products_description_<?=$row[languages_id]?>') ;
+											}
+										<?}?>		oFCKeditor.BasePath = "<?=PUBLIC_PATH?>js/fckeditor/" ;
+										oFCKeditor.Height = 300;
+										oFCKeditor.Width = '96%';
+										oFCKeditor.ReplaceTextarea() ;
+										
+									}
+								</script>
+								<!--end fck editor -->
+						<?php }?>
+						<!--
+						<link href="<?php echo URL_TO_TEMPLATES?>javascript/jquery/ui/themes/ui-lightness/jquery-ui-1.8.9.custom.css" rel="stylesheet" type="text/css" />//commented on april 24 2012 as date available field css issue -->
+						<script type="text/javascript">
+							
+							function fnclose(id)
+							{
+								var hrp=document.getElementById('hidden_related_product').value;
+								var arr=hrp.split(",");
+								var res="";
+								var pre="";
+								for(i=0;i<arr.length;i++)
+								{
+									//alert(arr[i]+" "+id)
+									if(id!=arr[i])
+									{
+										res=res+pre+arr[i];
+										pre=",";
+									}
+								}
+								document.getElementById('hidden_related_product').value=res;
+								//alert("last"+res)
+								$("#"+id).remove();
+							}
+							
+							function addDiscount()
+							{
+								var val=document.getElementById('disc_hid_val').value;
+								document.getElementById('discount-row'+val).style.display="";
+								document.getElementById('disc_hid_val').value=parseInt(val)+1;
+							}
+							
+							function addSpecial()
+							{
+								var val=document.getElementById('spec_hid_val').value;
+								document.getElementById('spec-row'+val).style.display="";
+								document.getElementById('spec_hid_val').value=parseInt(val)+1;
+							}
+							
+							function addAttribute()
+							{
+								var val=document.getElementById('attr_hid_val').value;
+								document.getElementById('attr-row'+val).style.display="";
+								document.getElementById('attr_hid_val').value=parseInt(val)+1;
+							}
+							
+							function addText()
+							{
+								var val=document.getElementById('text_hid_val').value;
+								document.getElementById('text-row'+val).style.display="";
+								document.getElementById('text_hid_val').value=parseInt(val)+1;
+							}
+							
+							function addTextArea()
+							{
+								var val=document.getElementById('textarea_hid_val').value;
+								document.getElementById('textarea-row'+val).style.display="";
+								document.getElementById('textarea_hid_val').value=parseInt(val)+1;
+							}
+							
+							function addFile()
+							{
+								var val=document.getElementById('file_hid_val').value;
+								document.getElementById('file-row'+val).style.display="";
+								document.getElementById('file_hid_val').value=parseInt(val)+1;
+							}
+							
+							function addDate()
+							{
+								var val=document.getElementById('date_hid_val').value;
+								//alert("in date"+val)
+								document.getElementById('date-row'+val).style.display="";
+								document.getElementById('date_hid_val').value=parseInt(val)+1;
+							}
+							
+							function addTime()
+							{
+								var val=document.getElementById('time_hid_val').value;
+								//alert("time"+val)
+								document.getElementById('time-row'+val).style.display="";
+								document.getElementById('time_hid_val').value=parseInt(val)+1;
+							}
+							
+							function addDateTime()
+							{
+								var val=document.getElementById('datetime_hid_val').value;
+								document.getElementById('datetime-row'+val).style.display="";
+								document.getElementById('datetime_hid_val').value=parseInt(val)+1;
+							}
+							
+							function addSelect()
+							{
+								var val=document.getElementById('select_hid_val').value;
+								document.getElementById('select-row'+val).style.display="";
+								document.getElementById('select_hid_val').value=parseInt(val)+1;
+							}
+							
+							function addRadio()
+							{
+								var val=document.getElementById('radio_hid_val').value;
+								document.getElementById('radio-row'+val).style.display="";
+								document.getElementById('radio_hid_val').value=parseInt(val)+1;
+							}
+							
+							function addCheckBox()
+							{
+								var val=document.getElementById('checkbox_hid_val').value;
+								document.getElementById('checkbox-row'+val).style.display="";
+								document.getElementById('checkbox_hid_val').value=parseInt(val)+1;
+							}
+							
+						</script>
+						
+						<!--<script type='text/javascript' src='<?=PATH_TO_ADMIN_JS?>jquery.autocomplete.js'></script>
+						<link rel="stylesheet" type="text/css" href="<?=PATH_TO_ADMIN_JS?>jquery.autocomplete.css" />-->
+						<script type="text/javascript">
+							$().ready(function() {
+								$("#prodname").autocomplete("<?php echo @constant('ADMIN_URL_CONTROLLER');?>ajaxpnameauto?format=json", {
+									width: 260,
+									matchContains: true,
+									selectFirst: false
+								});
+								
+								$("#brand").autocomplete("<?php echo @constant('ADMIN_URL_CONTROLLER');?>ajaxbrandauto?format=json", {
+									width: 260,
+									matchContains: true,
+									selectFirst: false
+								});
+								
+								$("#prodmodel").autocomplete("<?=HTTP_SERVER?>admin/ajaxpmodelauto?format=json", {
+									width: 260,
+									matchContains: true,
+									selectFirst: false
+								});
+								
+								$("#cat").autocomplete("<?=HTTP_SERVER?>admin/ajaxcatauto?format=json", {
+									width: 260,
+									matchContains: true,
+									selectFirst: false
+								});
+							});
+							
+							
+							
+							
+							
+							function fnAddImage()
+							{
+								var count=document.getElementById('multi_image_count').value;
+								document.getElementById('add'+count).style.display="";
+								document.getElementById('multi_image_count').value=parseInt(count)+1;
+							}
+							
+							function fnimgclose(id)
+							{
+								if(id.charAt(0)=='a')
+								{
+									//$('#'+id).remove();
+									document.getElementById(id).style.display="none"
+									document.getElementById('multi_image_count').value=parseInt(document.getElementById('multi_image_count').value)-1;
+								}else
+								{
+									
+									$('#'+id).remove();
+									$('#multi_image_hidden').val(document.getElementById('multi_image_hidden').value+","+id);
+								}
+							}
+							
+							date_pick('#products_date_available');
+							
+						</script>
+						
+						<!--start related products  -->
+						<?if($_REQUEST['type']!=""){?>
+							<script type="text/javascript" src="<?php echo $this->url_to_commonfiles;?>js/javascript/jquery/jquery-1.6.1.min.js"></script>
+							<script type="text/javascript" src="<?php echo $this->url_to_commonfiles;?>js/javascript/jquery/ui/jquery-ui-1.8.9.custom.min.js"></script>
+							<link rel="stylesheet" type="text/css" href="<?php echo $this->url_to_commonfiles;?>js/javascript/jquery/ui/themes/ui-lightness/jquery-ui-1.8.9.custom.css" />
+						<?}?>
+						<script type="text/javascript"><!--
+							$('input[name=\'product\']').autocomplete({
+								delay: 0,
+								source: function(request, response) {
+									$.ajax({
+										url: 'productautocomplete?token=<?echo rand(10,100);?>',
+										type: 'POST',
+										dataType: 'json',
+										data: 'filter_name=' +  encodeURIComponent(request.term),
+										success: function(data) {
+											response($.map(data, function(item) {
+												return {
+													label: item.name,
+													value: item.product_id
+												}
+											}));
+											
+										}
+									});
+									
+								},
+								select: function(event, ui) {
+									$('#featured-product' + ui.item.value).remove();
+									
+									$('#featured-product').append('<div id="featured-product' + ui.item.value + '">' + ui.item.label + '<img src="<?php echo PATH_TO_ADMIN_IMAGES;?>cross-small.gif" /><input type="hidden"  value="' + ui.item.value + '" /></div>');
+									
+									$('#featured-product div:odd').attr('class', 'odd');
+									$('#featured-product div:even').attr('class', 'even');
+									//fnfprod();
+									
+									
+									return false;
+								}
+							});
+							
+							$('#featured-product div img').live('click', function() {
+								//fnfprod();
+								
+								$(this).parent().remove();
+								
+								$('#featured-product div:odd').attr('class', 'odd');
+								$('#featured-product div:even').attr('class', 'even');
+							});
+						//--></script>
+						<script type="text/javascript">
+							$('a').bind('click', function() {
+								data = $.map($('#featured-product input'), function(element){
+									return $(element).attr('value');
+								});
+								$('input[name=\'related_product\']').attr('value', data.join());
+								
+							});
+						</script>
+						<!-- end related products  -->
+						
+						
+						<!-- start comment on april 24 2012 -->
+						<script type="text/javascript" src="<?php echo $this->url_to_commonfiles;?>js/javascript/jquery/ui/jquery-ui-timepicker-addon.js"></script> 
+						<!-- commented on jan 8 2012 for date time pickers <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js"></script> -->
+						
+						<script type="text/javascript">
+							<!--
+							if ($.browser.msie && $.browser.version == 6) {
+								$('.date, .datetime, .time').bgIframe();
+							}
+							$('.date').datepicker({dateFormat: 'yy-mm-dd'});
+							$('.datetime').datetimepicker({
+								dateFormat: 'yy-mm-dd',
+								timeFormat: 'h:m'
+							});
+							$('.time').timepicker({timeFormat: 'h:m'});
+							//-->
+							
+							
+							function skuavailability()
+							{
+								$.ajax({
+									url: 'skuavailability',
+									data:$('input[name=\'sku\'],input[name=\'pid\'],'),
+									dataType: 'json',
+									success: function(json) {
+										$('.span-design').append("<span class='design-1'>"+json['success']+"</span>");
+									}
+								});
+								
+							}
+							
+							//window.onload=function(){ skuavailability();}
+							
+							function updateProductSearch()
+							{
+								$.ajax({
+									url: 'update-product-search',
+									dataType: 'json',
+									complete: function() {
+										//$('.bottom-spacing').before().remove();
+									},
+									success: function(json) {
+										
+										if (json['success']) {
+											
+											$('.bottom-spacing').after('<span class="notification n-success">' + json['success'] + '</span>');
+										}
+									}
+								});
+								
+							}
+							
+							function clearCache()
+							{
+								$.ajax({
+									url: 'clear-cache',
+									dataType: 'json',
+									complete: function() {
+										//$('.bottom-spacing').after().remove();
+									},
+									success: function(json) {
+										
+										if (json['success']) {
+											
+											$('.bottom-spacing').after('<span class="notification n-success">' + json['success'] + '</span>');
+										}
+									}
+								});
+								
+							}
+						</script>
+					<!-- end comment on april 24 2012 -->																									

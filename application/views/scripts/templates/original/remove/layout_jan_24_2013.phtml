@@ -1,0 +1,59 @@
+<?php
+include 'includes/header.phtml';
+?>
+<div class="main-content">
+<?php
+echo $this->layout()->content;
+?>
+</div></div>
+<?php include 'includes/footer.phtml';?>
+
+<script type="text/javascript">
+$(document).ready(function()
+{
+	// Search
+	$('.sub-btn').bind('click', function() {
+
+		var newsletter = $('input[name=\'newsletter_email\']').attr('value')
+
+		if (newsletter) {
+			url = '<?echo HTTP_SERVER?>account/newsletter-footer/email/'+newsletter;
+		}else
+		{
+			alert("please enter valid email address!!")
+		}
+
+		location = url;
+	});
+})
+</script>
+<script type='text/javascript' src='<?php echo $this->url_to_templates;?>javascript/jquery/jquery.autocomplete.js'></script>
+<link rel="stylesheet" type="text/css" href="<?php echo $this->url_to_templates;?>javascript/jquery/jquery.autocomplete.css" />
+<script type="text/javascript">
+$().ready(function() {
+	$("#q").autocomplete("<?php echo $this->url_to_site;?>ajax/ajaxseachauto?format=json", {
+		width: 260,
+		matchContains: true,
+		selectFirst: false
+	});
+});
+
+</script>
+<?php 
+/*echo (memory_get_usage()/(1024*1024));
+$cartObj=new Model_Cart();
+echo "value of weight : ".$cartObj->getWeight()."<br/>";
+//echo "shipping country ".$_SESSION['shipping_country_id']." shipping zone ".$_SESSION['shipping_zone_id']."<br/>";
+//echo "payment country ".$_SESSION['payment_country_id']."  payment zone ".$_SESSION['payment_zone_id'];*/
+/*ECHO "<pre>";
+print_r($_SESSION);
+echo "</pre>";
+$_SESSION['shipping_address_id'];
+//echo "value of ".MODULE_SHIPPING_TABLE_ZONE;
+isset($_SESSION['guest'])*/
+//echo "value of lang code ".$_SESSION['Curr']['currency'];
+//echo "<pre>";
+//print_r($_SESSION['voucher']);
+//echo "value of ".$_SESSION['Lang']['language_id'];
+
+?>

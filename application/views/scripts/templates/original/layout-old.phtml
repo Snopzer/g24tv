@@ -1,0 +1,105 @@
+<?php
+include 'includes/header.phtml';?>
+
+<div class="main-content">
+<?php echo $this->layout()->content; ?>
+</div></div>
+
+<div class="main-footer-div"><!-- Footer-main start-->
+<?php $footer_file=file_exists(PATH_TO_FILES."/footer.phtml")?PATH_TO_FILES."footer.phtml":"includes/footer.phtml";
+include $footer_file;?>
+
+<!-- Footer-main End--></div>
+</div>
+
+<div class="copyright-main"><!-- copyright-main start-->
+<div class="copyright"><!-- copyright start-->
+
+<p> <a href="http://www.rcart99.com/" class="logo" target="_blank"> Powered By </a> </p>
+<p class="left"><?php echo @constant('STORE_COPY_RIGHT');?></p>
+<!--<p class="center"><a href="<?echo $ftr['privacy_link']?>">Privacy Policy</a> | <a href="<?echo $ftr['terms_link']?>">Terms and Conditions</a></p>-->
+
+
+<div class="clear"></div>
+<!-- copyright end--></div>
+
+
+
+
+<div class="clear"></div>
+<!-- copyright-main End--></div>
+
+
+
+
+        <p id="back-top">
+		<a href="#top"><span>Back to Top</span></a>
+	</p>
+
+<!-- main-wraper End--></div>
+</body>
+</html>
+
+<!--back-top js code files-->
+
+        <script>
+$(document).ready(function(){
+
+	// hide #back-top first
+	$("#back-top").hide();
+	
+	// fade in #back-top
+	$(function () {
+		$(window).scroll(function () {
+			if ($(this).scrollTop() > 100) {
+				$('#back-top').fadeIn();
+			} else {
+				$('#back-top').fadeOut();
+			}
+		});
+
+		// scroll body to 0px on click
+		$('#back-top a').click(function () {
+			$('body,html').animate({
+				scrollTop: 0
+			}, 800);
+			return false;
+		});
+	});
+
+});
+</script>
+<!--back-top js code files-->
+
+<script type="text/javascript">
+$(document).ready(function()
+{
+	// Search
+	$('.new-letter-btn').bind('click', function() {
+
+		var newsletter = $('input[name=\'newsletter_email\']').attr('value')
+
+		if (newsletter) {
+			window.location.href = '<?echo HTTP_SERVER?>account/newsletter-footer/email/'+newsletter;
+		}else
+		{
+			alert("please enter valid email address!!")
+		}
+	});
+})
+</script>
+<script type='text/javascript' src='<?php echo $this->url_to_commonfiles;?>js/javascript/jquery/jquery.autocomplete.js'></script>
+<link rel="stylesheet" type="text/css" href="<?php echo $this->url_to_commonfiles;?>js/javascript/jquery/jquery.autocomplete.css" />
+<script type="text/javascript">
+$().ready(function() {
+	$("#q").autocomplete("<?php echo $this->url_to_site;?>ajax/ajaxseachauto?format=json", {
+		width: 260,
+		matchContains: true,
+		selectFirst: false
+	});
+});
+</script>
+<?
+/*echo "<pre>";
+print_r($_SESSION);
+echo "</pre>";*/?>

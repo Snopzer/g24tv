@@ -1,0 +1,166 @@
+<div class="main-column"><!--main-max-banner start-->
+<div id="container"><!--container start-->
+
+<? if(count($this->pos[left])>0){?>
+<div id="column-left"><!--column-left start-->
+<?php echo $this->action('left','modules',null,array('mod' =>$this->pos[left]));?>
+<!--column-left End--></div>
+<?}?>
+
+<?if(count($this->pos[right])>0){?>
+<div id="column-right"><!--column-right start-->
+<?php echo $this->action('right','modules',null,array('mod' =>$this->pos[right]));?>
+<!--column-right End--></div>
+<?}?>
+		
+            <div id="content"><!--content start-->
+<?if(count($this->pos[top])>0){?>
+<div id="main-max-banner"><!--start main-max-banner-->
+<?php echo $this->action('top','modules',null,array('mod' =>$this->pos[top]));?>
+<!--End main-max-banner--></div>
+<?}?>
+
+          <div class="breadcrumb"><!--readcrumb start-->
+	<p>
+	
+		<?php foreach ($this->data[breadcrumbs] as $breadcrumb) { ?>
+    <?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
+    <?php } ?>
+                  </p>
+  <!--readcrumb End--></div>
+  
+                    <div class="page-title">
+			 <h1> <?php echo $this->trans->_('heading_title_affiliate_edit'); ?></h1></div>
+				
+      	<div class="box">             
+   <?php
+   /*echo "<pre>";
+   print_r($this->data);
+   echo "</pre>";*/
+   if ($this->data[error_warning]) { ?>
+  <div class="warning"><?php echo $this->data[error_warning]; ?></div>
+  <?php } ?>
+  
+  <div class="box-content">
+  <form action="<?php echo $this->data[action]; ?>" method="post" enctype="multipart/form-data" id="edit">
+    <div class="content">
+      <table class="form">
+        <tr>
+          <td><span class="required">*</span> <?php echo $this->trans->_('entry_firstname_affiliate_edit'); ?></td>
+          <td><input type="text" name="firstname" value="<?php echo $this->data[firstname]; ?>" />
+            <?php if ($this->data[error_firstname]) { ?>
+            <span class="error"><?php echo $this->data[error_firstname]; ?></span>
+            <?php } ?></td>
+        </tr>
+        <tr>
+          <td><span class="required">*</span> <?php echo $this->trans->_('entry_lastname_affiliate_edit'); ?></td>
+          <td><input type="text" name="lastname" value="<?php echo $this->data[lastname]; ?>" />
+            <?php if ($this->data[error_lastname]) { ?>
+            <span class="error"><?php echo $this->data[error_lastname]; ?></span>
+            <?php } ?></td>
+        </tr>
+        <tr>
+          <td><span class="required">*</span> <?php echo $this->trans->_('entry_email_affiliate_edit'); ?></td>
+          <td><input type="text" name="email" value="<?php echo $this->data[email]; ?>" />
+            <?php if ($this->data[error_email]) { ?>
+            <span class="error"><?php echo $this->data[error_email]; ?></span>
+            <?php } ?></td>
+        </tr>
+        <tr>
+          <td><span class="required">*</span> <?php echo $this->trans->_('entry_telephone_affiliate_edit'); ?></td>
+          <td><input type="text" name="telephone" value="<?php echo $this->data[telephone]; ?>" />
+            <?php if ($this->data[error_telephone]) { ?>
+            <span class="error"><?php echo $this->data[error_telephone]; ?></span>
+            <?php } ?></td>
+        </tr>
+        <tr>
+          <td><?php echo $this->trans->_('entry_fax_affiliate_edit'); ?></td>
+          <td><input type="text" name="fax" value="<?php echo $this->data[fax]; ?>" /></td>
+        </tr>
+	        <tr>
+          <td><?php echo $this->trans->_('entry_company_affiliate_edit'); ?></td>
+          <td><input type="text" name="company" value="<?php echo $this->data[company]; ?>" /></td>
+        </tr>
+	        <tr>
+          <td><?php echo $this->trans->_('entry_website_affiliate_edit'); ?></td>
+          <td><input type="text" name="website" value="<?php echo $this->data[website]; ?>" /></td>
+        </tr>
+	        <tr>
+          <td><span class="required">*</span><?php echo $this->trans->_('entry_address_1_affiliate_edit'); ?></td>
+          <td><input type="text" name="address_1" value="<?php echo $this->data[address_1]; ?>" />
+	  <?php if ($this->data[error_address_1]) { ?>
+            <span class="error"><?php echo $this->data[error_address_1]; ?></span>
+            <?php } ?>
+	  </td>
+        </tr>
+	        <tr>
+          <td><?php echo $this->trans->_('entry_address_2_affiliate_edit'); ?></td>
+          <td><input type="text" name="address_2" value="<?php echo $this->data[address_2]; ?>" /></td>
+        </tr>
+		        <tr>
+          <td><span class="required">*</span><?php echo $this->trans->_('entry_city_affiliate_edit'); ?></td>
+          <td><input type="text" name="city" value="<?php echo $this->data[city]; ?>" />
+	  <?php if ($this->data[error_city]) { ?>
+            <span class="error"><?php echo $this->data[error_city]; ?></span>
+            <?php } ?>
+	  </td>
+        </tr>
+
+	<tr>
+          <td><span class="required">*</span> <?php echo $this->trans->_('entry_postcode_affiliate_edit'); ?></td>
+          <td><input type="text" name="postcode" value="<?php echo $this->data[postcode]; ?>" />
+            <?php if ($this->data[error_postcode]) { ?>
+            <span class="error"><?php echo $this->data[error_postcode]; ?></span>
+            <?php } ?></td>
+        </tr>
+<tr>
+          <td><span class="required">*</span> <?php echo $this->trans->_('entry_country_affiliate_edit'); ?></td>
+          <td>
+
+		  <select name="country_id" onchange="$('select[name=\'zone_id\']').load('<?php echo $this->url_to_site;?>ajax/zone/country_id/' + this.value + '/zone_id/<?php echo $this->data[zone_id]; ?>');">
+              <option value=""><?php echo $this->trans->_('text_select'); ?></option>
+              <?php foreach ($this->data[countries] as $country) { ?>
+              <?php if ($country['countries_id'] == $this->data[country_id]) { ?>
+              <option value="<?php echo $country['countries_id']; ?>" selected="selected"><?php echo $country['countries_name']; ?></option>
+              <?php } else { ?>
+              <option value="<?php echo $country['countries_id']; ?>"><?php echo $country['countries_name']; ?></option>
+              <?php } ?>
+              <?php } ?>
+            </select>
+            <?php if ($this->data[error_country]) { ?>
+            <span class="error"><?php echo $this->data[error_country]; ?></span>
+            <?php } ?></td>
+        </tr>
+        <tr>
+          <td><span class="required">*</span> <?php echo $this->trans->_('entry_zone_affiliate_edit'); ?></td>
+          <td><select name="zone_id">
+            </select>
+            <?php if ($this->data[error_zone]) { ?>
+            <span class="error"><?php echo $this->data[error_zone]; ?></span>
+            <?php } ?></td>
+        </tr>
+
+
+      </table>
+    </div>
+ 
+						</div>
+                    <!--innerpage_rightContent --></div>
+					
+					   <div class="buttons">
+      <div class="left"><a href="<?php echo $this->data[back]; ?>" class="button_btn"><span><?php echo $this->trans->_('button_back'); ?></span></a></div>
+      <div class="right"><a onclick="$('#edit').submit();" class="button_btn"><span><?php echo $this->trans->_('button_submit_affiliate_edit'); ?></span></a></div>
+    </div>
+  </form>
+
+						 
+	<?if(count($this->pos[bottom])>0){?>
+<div class="content-bottom"><!--content-bottom srtart-->
+<?php echo $this->action('bottom','modules',null,array('mod' =>$this->pos[bottom]));?>
+</div>
+<?}?>
+                <!--rightContainer --></div>
+            <!--innerContent --></div>
+	  <script type="text/javascript"><!--
+		$('select[name=\'zone_id\']').load('<?echo $this->url_to_site;?>ajax/zone/country_id/<?php echo $this->data[country_id]; ?>/zone_id/<?php echo $this->data[zone_id]; ?>');
+		//--></script>  		

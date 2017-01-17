@@ -1,0 +1,93 @@
+	<div id="caption"><p>Billing Details</p></div>
+	<div style="clear:both;"></div>
+ <div class="orderSteps_content">
+		<!--content start  -->
+		<div class="checkout-main">
+		<div class="left">
+  <h2><?php echo $this->data[text_your_details]; ?></h2>
+<div class="names" > <span class="required">*</span> <?php echo $this->data[entry_firstname]; ?></div>
+ <div class="names-text"> <input type="text" name="firstname" value="<?php echo $this->data[firstname]; ?>" class="large-field" />
+ </div>
+
+
+  <div class="names"><span class="required">*</span> <?php echo $this->data[entry_lastname]; ?></div>
+  <div class="names-text">  <input type="text" name="lastname" value="<?php echo $this->data[lastname]; ?>" class="large-field" /></div>
+
+  <div class="names"><span class="required">*</span> <?php echo $this->data[entry_email]; ?></div>
+  <div class="names-text"> <input type="text" name="email" value="<?php echo $this->data[email]; ?>" class="large-field" /></div>
+
+ <div class="names"> <span class="required">*</span> <?php echo $this->data[entry_telephone]; ?></div>
+<div class="names-text"><input type="text" name="telephone" value="<?php echo $this->data[telephone]; ?>" class="large-field" /></div>
+
+ <div class="names"> <?php echo $this->data[entry_fax]; ?></div>
+ <div class="names-text"> <input type="text" name="fax" value="<?php echo $this->data[fax]; ?>" class="large-field" /></div>
+
+</div>
+<div class="right">
+  <h2><?php echo $this->data[text_your_address]; ?></h2>
+  <div class="names"> <?php echo $this->data[entry_company]; ?></div>
+ <div class="names-text"> <input type="text" name="company" value="<?php echo $this->data[company]; ?>" class="large-field" /></div>
+
+  <div class="names"><span class="required">*</span> <?php echo $this->data[entry_address_1]; ?></div>
+  <div class="names-text"> <input type="text" name="address_1" value="<?php echo $this->data[address_1]; ?>" class="large-field" /></div>
+
+ <div class="names"> <?php echo $this->data[entry_address_2]; ?></div>
+  <div class="names-text"> <input type="text" name="address_2" value="<?php echo $this->data[address_2]; ?>" class="large-field" /></div>
+
+  <div class="names"><span class="required">*</span> <?php echo $this->data[entry_city]; ?></div>
+   <div class="names-text"><input type="text" name="city" value="<?php echo $this->data[city]; ?>" class="large-field" /></div>
+
+  <div class="names"><span class="required">*</span> <?php echo $this->data[entry_postcode]; ?></div>
+   <div class="names-text"><input type="text" name="postcode" value="<?php echo $this->data[postcode]; ?>" class="large-field" /></div>
+
+ <div class="names"> <span class="required">*</span> <?php echo $this->data[entry_country]; ?></div>
+    <div class="names-text"><select name="country_id" class="large-field" onchange="$('#chkOutContainer select[name=\'zone_id\']').load('<?php echo $this->view->url_to_site;?>ajax/zone/country_id/' + this.value);">
+
+
+    <option value=""><?php echo $this->data[text_select]; ?></option>
+    <?php foreach ($this->data[countries] as $country) { ?>
+    <?php if ($country['countries_id'] == $this->data[country_id]) { ?>
+    <option value="<?php echo $country['countries_id']; ?>" selected="selected"><?php echo $country['countries_name']; ?></option>
+    <?php } else { ?>
+    <option value="<?php echo $country['countries_id']; ?>"><?php echo $country['countries_name']; ?></option>
+    <?php } ?>
+    <?php } ?>
+  </select></div>
+
+
+  <div class="names"> <span class="required">*</span> <?php echo $this->data[entry_zone]; ?></div>
+  <div class="names-text"><select name="zone_id" class="large-field">
+  </select></div>
+
+
+
+</div>
+<?php if ($this->data[shipping_required]) { ?>
+<div style="clear: both; padding-top: 15px; border-top: 1px solid #DDDDDD; text-align:right; ">
+  <?php if ($this->data[shipping_address]) { ?>
+  <input type="checkbox" name="shipping_address" value="1" id="shipping" checked="checked" />
+  <?php } else { ?>
+  <input type="checkbox" name="shipping_address" value="1" id="shipping" />
+  <?php } ?>
+  <label for="shipping"><?php echo $this->data[entry_shipping]; ?></label>
+
+
+
+</div>
+<?php } ?>
+</div>
+<div class="buttons">
+  <div class="right"><a id="button-guest" class="button_btn"><span><?php echo $this->data[button_continue]; ?></span></a></div>
+</div>
+<script type="text/javascript"><!--
+$('select[name=\'zone_id\']').load('<?php echo $this->view->url_to_site;?>ajax/zone/country_id/<?php echo $this->data[country_id]; ?>/zone_id/<?php echo $this->data[zone_id]; ?>');
+//--></script>
+
+
+		<!--content end  -->
+		</div>
+		<div id="shipping_address"></div>
+		<div id="shipping_method"></div>
+	
+</div>
+

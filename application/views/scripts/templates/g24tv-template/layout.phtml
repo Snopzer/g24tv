@@ -1,0 +1,41 @@
+<?php
+include 'includes/header.phtml';?>
+
+<div class="main-content">
+	<?php echo $this->layout()->content; ?>
+</div></div>
+
+<div class="main-footer-div"><!-- Footer-main start-->
+	<?php $footer_file=file_exists(PATH_TO_FILES."/footer.phtml")?PATH_TO_FILES."footer.phtml":"includes/footer.phtml";
+	include $footer_file;?>
+	
+	<div class="footer_bottom">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+					<div class="footer_bottom_left">
+						<p><?php echo @constant('STORE_COPY_RIGHT');?></p>
+					</div>   
+				</div>
+				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+					<div class="footer_bottom_right">
+						<a href="http://snopzer.com" target="_blank"><p>Developed by <img src="<?PHP echo $this->url_to_templates;?><?php echo SITE_DEFAULT_TEMPLATE;?>/includes/img/snopzer-logo.png"></p></a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</footer>
+
+<!-- jQuery google CDN Library -->
+<script src="<?PHP echo $this->url_to_templates;?><?php echo SITE_DEFAULT_TEMPLATE;?>/includes/js/jquery.min.js"></script> 
+<!-- For content animatin  -->
+<script src="<?PHP echo $this->url_to_templates;?><?php echo SITE_DEFAULT_TEMPLATE;?>/includes/js/wow.min.js"></script>
+<!-- bootstrap js file -->
+<script src="<?PHP echo $this->url_to_templates;?><?php echo SITE_DEFAULT_TEMPLATE;?>/includes/js/bootstrap.min.js"></script> 
+<!-- slick slider js file -->
+<script src="<?PHP echo $this->url_to_templates;?><?php echo SITE_DEFAULT_TEMPLATE;?>/includes/js/slick.min.js"></script> 
+<!-- custom js file include -->
+<script src="<?PHP echo $this->url_to_templates;?><?php echo SITE_DEFAULT_TEMPLATE;?>/includes/js/custom.js"></script> 
+</body>
+</html>

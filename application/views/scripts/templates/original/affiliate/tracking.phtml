@@ -1,0 +1,93 @@
+<div class="main-column"><!--main-max-banner start-->
+<div id="container"><!--container start-->
+
+<? if(count($this->pos[left])>0){?>
+<div id="column-left"><!--column-left start-->
+<?php echo $this->action('left','modules',null,array('mod' =>$this->pos[left]));?>
+<!--column-left End--></div>
+<?}?>
+
+<?if(count($this->pos[right])>0){?>
+<div id="column-right"><!--column-right start-->
+<?php echo $this->action('right','modules',null,array('mod' =>$this->pos[right]));?>
+<!--column-right End--></div>
+<?}?>
+		
+            <div id="content"><!--content start-->
+<?if(count($this->pos[top])>0){?>
+<div id="main-max-banner"><!--start main-max-banner-->
+<?php echo $this->action('top','modules',null,array('mod' =>$this->pos[top]));?>
+<!--End main-max-banner--></div>
+<?}?>
+
+          <div class="breadcrumb"><!--readcrumb start-->
+	<p>
+	<?php foreach ($this->data[breadcrumbs] as $breadcrumb) { ?>
+    <?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
+    <?php } ?></p>
+                 <!--readcrumb End--></div>
+				 
+                    <div class="page-title">
+			 <h1> <?php echo $this->trans->_('heading_title_affiliate_tracking'); ?></div>
+						
+							<div class="box">    
+                <div class="box-tracking-box">       	
+ 	    <div class="box-content">  
+	<p><?php echo sprintf($this->trans->_('text_description_affiliate_tracking'),STORE_NAME); ?></p>
+    <div class="content">
+      <table class="form">
+        <tr>
+          <td> <?php echo $this->trans->_('text_code_affiliate_tracking'); ?></td>
+          <td><textarea cols="40" rows="5"><?php echo $this->data[code]; ?></textarea></td>
+        </tr>
+        <tr>
+          <td><?php echo $this->trans->_('text_generator_affiliate_tracking'); ?></td>
+          <td>    <input type="text"  name="product" value="" /> </td>
+        </tr>
+	  <tr>
+          <td> <?php echo $this->trans->_('text_link_affiliate_tracking'); ?></td>
+          <td><textarea cols="40" rows="5" name="link"></textarea></td>
+        </tr>
+      </table>
+    </div>
+</div>
+  <!--box end --></div>
+					    
+				<?if(count($this->pos[bottom])>0){?>
+				<div class="container-top">
+				<?php echo $this->action('bottom','modules',null,array('mod' =>$this->pos[bottom]));?></div>
+				<?}?>
+                <!--rightContainer --></div>
+            <!--innerContent --></div>
+<script type="text/javascript" src="<?php echo URL_TO_TEMPLATES;?>javascript/jquery/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="<?php echo URL_TO_TEMPLATES;?>javascript/jquery/ui/jquery-ui-1.8.9.custom.min.js"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo URL_TO_TEMPLATES;?>javascript/jquery/ui/themes/ui-lightness/jquery-ui-1.8.9.custom.css" />
+
+	    <script type="text/javascript"><!--
+$('input[name=\'product\']').autocomplete({
+	delay: 0,
+	source: function(request, response) {
+		$.ajax({
+			url: '<? echo $this->url_to_site;?>ajax/autocomplete',
+			type: 'POST',
+			dataType: 'json',
+			data: 'filter_name=' +  encodeURIComponent(request.term),
+			success: function(data) {
+				response($.map(data, function(item) {
+					return {
+						label: item.name,
+						value: item.link
+					}
+				}));
+			}
+		});
+
+	},
+	select: function(event, ui) {
+		$('input[name=\'product\']').attr('value', ui.item.label);
+		$('textarea[name=\'link\']').attr('value', ui.item.value);
+
+		return false;
+	}
+});
+//--></script>

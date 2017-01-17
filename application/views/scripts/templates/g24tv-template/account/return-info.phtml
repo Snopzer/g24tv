@@ -1,0 +1,134 @@
+<div class="main-column"><!--main-max-banner start-->
+<div id="container"><!--container start-->
+
+<? if(count($this->pos[left])>0){?>
+<div id="column-left"><!--column-left start-->
+<?php echo $this->action('left','modules',null,array('mod' =>$this->pos[left]));?>
+<!--column-left End--></div>
+<?}?>
+
+<?if(count($this->pos[right])>0){?>
+<div id="column-right"><!--column-right start-->
+<?php echo $this->action('right','modules',null,array('mod' =>$this->pos[right]));?>
+<!--column-right End-->
+<?}?>
+		
+            <div id="content"><!--content start-->
+<?if(count($this->pos[top])>0){?>
+<div id="main-max-banner"><!--start main-max-banner-->
+<?php echo $this->action('top','modules',null,array('mod' =>$this->pos[top]));?>
+<!--End main-max-banner--></div>
+<?}?>
+
+          <div class="breadcrumb"><!--readcrumb start-->
+	<p>
+	<?php foreach ($this->data[breadcrumbs] as $breadcrumb) { ?>
+    <?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
+    <?php }
+	/*echo "<pre>";
+	print_r($this->data);
+	echo "</pre>";*/
+	
+?></p>
+                  <!--readcrumb End --></div>
+                    <div class="page-title">
+<h1> <?php echo $this->trans->_('heading_title_account_return'); ?></h1></div>
+						
+                    	<div id="dashBoardCotnent">
+   <table class="list">
+    <thead>
+      <tr>
+        <td class="left" colspan="2"><?php echo $this->trans->_('text_return_detail_account_return'); ?></td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="left" style="width: 50%;"><b><?php echo $this->trans->_('text_return_id_account_return'); ?></b> #<?php echo $this->data[return_id]; ?><br />
+          <b><?php echo $this->trans->_('text_date_added_account_return'); ?></b> <?php echo $this->data[date_added]; ?></td>
+        <td class="left" style="width: 50%;"><b><?php echo $this->trans->_('text_order_id_account_return'); ?></b> #<?php echo $this->data[order_id]; ?><br />
+          <b><?php echo $this->trans->_('text_date_ordered_account_return'); ?></b> <?php echo $this->data[date_ordered]; ?></td>
+      </tr>
+    </tbody>
+  </table>
+  <h2><?php echo $this->trans->_('text_product_account_return'); ?></h2>
+  <table class="list">
+    <thead>
+      <tr>
+        <td class="left" style="width: 33.3%;"><?php echo $this->trans->_('column_name_account_return'); ?></td>
+        <td class="left" style="width: 33.3%;"><?php echo $this->trans->_('column_model_account_return'); ?></td>
+        <td class="right" style="width: 33.3%;"><?php echo $this->trans->_('column_quantity_account_return'); ?></td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="left"><?php echo $this->data['product']; ?></td>
+        <td class="left"><?php echo $this->data[model]; ?></td>
+        <td class="right"><?php echo $this->data[quantity]; ?></td>
+      </tr>
+    </tbody>
+  </table>
+  <table class="list">
+    <thead>
+      <tr>
+        <td class="left" style="width: 33.3%;"><?php echo $this->trans->_('column_reason_account_return'); ?></td>
+        <td class="left" style="width: 33.3%;"><?php echo $this->trans->_('column_opened_account_return'); ?></td>
+        <td class="left" style="width: 33.3%;"><?php echo $this->trans->_('column_action_account_return'); ?></td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="left"><?php echo $this->data[reason]; ?></td>
+        <td class="left"><?php echo $this->data[opened]; ?></td>
+        <td class="left"><?php echo $this->data[action]; ?></td>
+      </tr>
+    </tbody>
+  </table>
+  <table class="list">
+    <?php if ($this->data[comment]) { ?>
+    <thead>
+      <tr>
+        <td class="left"><?php echo $this->trans->_('text_comment_account_return'); ?></td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="left"><?php echo $this->data[comment]; ?></td>
+      </tr>
+    </tbody>
+	<?php } ?>
+  </table>
+  
+  <?php if ($this->data[histories]) { ?>
+  <h2><?php echo $this->trans->_('text_history_account_return'); ?></h2>
+  <table class="list">
+    <thead>
+      <tr>
+        <td class="left" style="width: 33.3%;"><?php echo $this->trans->_('column_date_added_account_return'); ?></td>
+        <td class="left" style="width: 33.3%;"><?php echo $this->trans->_('column_status_account_return'); ?></td>
+        <td class="left" style="width: 33.3%;"><?php echo $this->trans->_('column_comment_account_return'); ?></td>
+      </tr>
+    </thead>
+    <tbody>
+      <?php foreach ($this->data[histories] as $history) { ?>
+      <tr>
+        <td class="left"><?php echo $history['date_added']; ?></td>
+        <td class="left"><?php echo $history['status']; ?></td>
+        <td class="left"><?php echo $history['comment']; ?></td>
+      </tr>
+      <?php } ?>
+    </tbody>
+  </table>
+  <?php } ?>
+
+
+						
+						</div>
+                 <!--box end --></div>
+				<?if(count($this->pos[bottom])>0){?>
+<div class="content-bottom"><!--content-bottom srtart-->
+<?php echo $this->action('bottom','modules',null,array('mod' =>$this->pos[bottom]));?>
+</div>
+<?}?>              
+              
+<!--container End--></div>
+           <!--main-max-banner End--></div>

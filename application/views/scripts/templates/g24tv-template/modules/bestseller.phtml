@@ -1,0 +1,96 @@
+
+<!-- start technology category area -->
+<div class="technology_catrarea">
+	<div class="single_category">
+		<h2>                  
+			<span class="bold_line"><span></span></span>
+			<span class="solid_line"></span>
+			<?if(@constant('bestseller_module_title')!=""){?><a class="title_text"><?php echo @constant('bestseller_module_title'); ?> </a><?}?>
+		</h2>
+		<div class="business_category_left">
+			<ul class="fashion_catgnav wow fadeInDown">
+				<li>
+					<div class="catgimg2_container">
+						<a href="#"><img alt="img" src="<?PHP echo $this->url_to_templates;?><?php echo SITE_DEFAULT_TEMPLATE;?>/includes/img/devhill/390x240x1.jpg"></a>
+					</div>
+					<h2 class="catg_titile"><a href="#">Aenean mollis metus sit amet ligula adipiscing</a></h2>
+					<div class="comments_box">
+						<span class="meta_date">14/12/2013</span>
+						<span class="meta_comment"><a href="#">No Comments</a></span>
+						<span class="meta_more"><a  href="#">Read More...</a></span>
+					</div>
+					<p>Nunc tincidunt, elit non cursus euismod, lacus augue ornare metus, egestas imperdiet nulla...</p>
+				</li>
+			</ul>
+		</div>  
+		<div class="business_category_right">
+			<ul class="small_catg wow fadeInDown">
+			<?php 
+							foreach ($this->info[data][products] as $product) { ?>
+				<li>
+					<div class="media wow fadeInDown">
+						<a class="media-left" href="<?php echo $product['href']; ?>">
+							<img src="<?PHP echo $this->url_to_templates;?><?php echo SITE_DEFAULT_TEMPLATE;?>/includes/img/devhill/112x112.jpg" alt="img">
+						</a>
+						<div class="media-body">
+							<h4 class="media-heading"><a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a></h4> 
+							<div class="comments_box">
+								<span class="meta_date">14/12/2013</span>
+								
+								<?php if ($product['rating']) { ?>
+										<span class="meta_comment"><a><?php echo sprintf($this->trans->_('text_reviews_product_product'), (int)$product['reviews']); ?></a></span>
+									<?php } ?>
+									
+									
+								
+							</div>
+						</div>
+					</div>
+				</li>
+				<?php } ?>
+			</ul>
+		</div>   
+	</div>
+</div><!-- End technology category area -->
+
+
+<?/*
+
+<div class="box">
+	<div class="bestseller-div">
+		<div class="modules-box-div">
+			<?if(@constant('bestseller_module_title')!=""){?>  <div class="box-heading"><p><span><?php echo @constant('bestseller_module_title'); ?> </p></span></div><?}?>
+			<div class="box-bestseller">
+				<div class="box-content">
+					<div class="box-product">
+						
+						<?php 
+							foreach ($this->info[data][products] as $product) { ?>
+							<div>
+								<?php if ($product['thumb']) { ?>
+									<div class="image"><a href="<?php echo $product['href']; ?>"><img src="<?php echo $this->url_to_site."timthumb.php?src=".$product['thumb']; ?>" alt="<?php echo $product['name']; ?>" /></a></div>
+									
+								<?php } ?>
+								<div class="main-box-left">
+									<div class="name"><a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a></div>
+									<?php if ($product['price']) { ?>
+										<div class="price">
+											<?php if (!$product['special']) { ?>
+												<p class="price-dsplay"><?php echo $product['price']; ?></p>
+												<?php } else { ?>
+												<span class="price-old"><?php echo $product['price']; ?></span> <span class="price-new"><?php echo $product['special']; ?></span>
+											<?php } ?>
+										</div>
+									<?php } ?>
+									<?php if ($product['rating']) { ?>
+										<div class="rating"><img src="<?php echo $this->url_to_templates.SITE_DEFAULT_TEMPLATE;?>/includes/images/rating-<?php echo $product['rating']; ?>.jpg" alt="<?php echo sprintf($this->trans->_('text_reviews_product_product'), (int)$product['reviews']); ?>" /></div>
+									<?php } ?>
+									<div class="cart"><a  href="javascript:addToCart('<?php echo $product['product_id']; ?>');"  class="button"><span><?php echo $this->trans->_($this->info[data][button_cart]); ?></span> </a></div>
+								</div>
+							<?php } ?>
+						</div>
+					</div></div>
+			</div>
+		</div>
+	</div>
+</div><?*/?>

@@ -1,0 +1,44 @@
+<?if(count($this->pos[top])>0){?>
+<div id="main-max-banner"><!--start main-max-banner-->
+<?php echo $this->action('top','modules',null,array('mod' =>$this->pos[top]));?>
+<!--End main-max-banner--></div>
+<?}?>
+
+<div class="main-column"><!--main-max-banner start-->
+<div id="container"><!--container start-->
+<div id="notification"></div>
+<? if(count($this->pos[left])>0){?>
+<div id="column-left"><!--column-left start-->
+<?php echo $this->action('left','modules',null,array('mod' =>$this->pos[left]));?>
+<!--column-left End--></div>
+<?}?>
+
+<?if(count($this->pos[right])>0){?>
+<div id="column-right"><!--column-right start-->
+<?php echo $this->action('right','modules',null,array('mod' =>$this->pos[right]));?>
+<!--column-right End--></div>
+<?}?>
+
+
+<div id="content"><!--content start-->
+
+<?if(count($this->pos[bottom])>0){?>
+<div class="content-bottom"><!--content-bottom srtart-->
+<div id="Accordion1" class="Accordion" tabindex="0">
+
+<?php echo $this->action('bottom','modules',null,array('mod' =>$this->pos[bottom]));?>
+</div>
+<div class="clear"></div>
+</div>
+<?}?>
+<script src="<?PHP echo $this->url_to_templates;?><?php echo SITE_DEFAULT_TEMPLATE;?>/includes/scripts/SpryAccordion.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+<!--
+var Accordion1 = new Spry.Widget.Accordion("Accordion1");
+//-->
+</script>
+<div class="clear"></div>
+              
+<!--container End--></div>
+<!--main-max-banner End--></div>

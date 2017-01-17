@@ -1,0 +1,300 @@
+<!-- <link rel="stylesheet" href="<?=PATH_TO_ADMIN_CSS?>table.css"> -->
+<?php
+	$act=new Model_Adminaction();
+	$act_ext=new Model_Adminextaction();
+ 	if($_REQUEST['type']==''){?>
+<div class="container_12">
+           <div style="clear:both;"></div>
+            <div class="grid_12">
+  				<?
+					if($_REQUEST['msg']!=""){?>
+				<span class="notification n-success"><?=base64_decode($_REQUEST['msg'])?></span>
+				<?}?>
+
+                <div class="bottom-spacing">
+                    <!-- Button -->
+                    <div class="float-right"><?=$this->view_pagination;?>
+
+                    </div>
+                    <!-- Table records filtering -->
+
+
+                </div>
+
+
+                <!-- Example table -->
+                <div class="module">
+                	<h2><span><?=$this->actionTitle." [".$this->total_count."]"?></span>  <div class="add-btn-div" > <?php $act->viewAddB(ADMIN_URL_CONTROLLER.$this->actionTitle);?></div>  </h2>
+
+                    <div class="module-table-body">
+                    	<form name="frmMain" id="frmMain" method="post" action="<?php echo ADMIN_URL_CONTROLLER.$this->actionTitle?>">
+                       <?if($this->total_count>0){?>
+						<table id="myTable" class="tablesorter">
+                   	  <thead>
+                                <tr>
+								  <th align="center" style="width:5%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#</th>
+                                  <th style="width:10%"><?echo $act_ext->getSortLable(array("disType"=>$this->disType, "sortby"=>"name", "page"=>$_REQUEST['page'] ,"file"=>"coupon" ,"label"=>"Coupon Title"));?></th>
+								  <th style="width:15%"><?echo $act_ext->getSortLable(array("disType"=>$this->disType, "sortby"=>"coupon_id", "page"=>$_REQUEST['page'] ,"file"=>"coupon" ,"label"=>"Code"));?></th>
+								  <th style="width:15%"><?echo $act_ext->getSortLable(array("disType"=>$this->disType, "sortby"=>"discount", "page"=>$_REQUEST['page'] ,"file"=>"coupon" ,"label"=>"Discount"));?></th>
+								  <th style="width:15%"><?echo $act_ext->getSortLable(array("disType"=>$this->disType, "sortby"=>"date_start", "page"=>$_REQUEST['page'] ,"file"=>"coupon" ,"label"=>"Date Start"));?></th>
+								  <th style="width:15%"><?echo $act_ext->getSortLable(array("disType"=>$this->disType, "sortby"=>"date_end", "page"=>$_REQUEST['page'] ,"file"=>"coupon" ,"label"=>"Date End"));?></th>
+								  <th style="width:15%"><?echo $act_ext->getSortLable(array("disType"=>$this->disType, "sortby"=>"status", "page"=>$_REQUEST['page'] ,"file"=>"coupon" ,"label"=>"Status"));?></th>
+								  <th style="width:15%"><input type="checkbox" name="checkall" id="checkall" onClick="Checkall()"/> <a href="#">Action</a></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+							<?
+								$cur=$act->db->fetchRow("select * from r_currencies where code like '".DEFAULT_CURRENCY."'");
+
+					$i=1;
+					if($this->page!=1)
+					{
+						$i+=($this->page-1)*$this->per_page;
+					}
+
+							foreach ($this->results as $result)
+							{
+
+							$class=fmod($i,2)==0?'':'addcolorne';
+ 							if($result['type']=='F')
+							{
+								$amount=number_format($result['discount']);
+							}else if($result['type']=='P')
+							{
+									$amount=$result['discount']."%";
+							}
+							?>
+                              <tr>
+                                <td align="center" class="<?=$class?>"><?=$i?></td>
+                                 <td class="<?=$class?>"><?php echo $result['name'];?></td>
+								 <td class="<?=$class?>"><?php echo $result['code'];?></td>
+								 <td class="<?=$class?>"><?php echo $amount;?></td>
+								 <td class="<?=$class?>"><?php echo $result['date_start'];?></td>
+								 <td class="<?=$class?>"><?php echo $result['date_end'];?></td>
+								 <td class="<?=$class?>"><?php if($result['status']=='1')echo 'Enable';
+																else echo 'Disable';?></td>
+                                <td class="<?=$class?>">
+
+								<input type="checkbox" name="rid[]" id="rid" value="<?php echo $result[$this->r_id];?>"  />
+								<?php
+									$act->viewEditB(ADMIN_URL_CONTROLLER.$this->actionTitle,$result[$this->r_id],$_REQUEST['page']);
+									$act->viewDelB($this->actionTitle,$result[$this->r_id],$this->r_table,$this->r_id,$_REQUEST['page']);
+								?>
+
+                                </td>
+                              </tr>
+                              <?$i=$i+1;}?>
+
+                            </tbody>
+                        </table>
+<?}else{
+							echo "<table id='myTable' class='tablesorter' border='2'><tr><td align='center'>No records to display</td></tr></table>";
+							}?>
+						<input type="hidden" name="page" id="page" value="<?php echo $this->page;?>">
+                        <div class="table-apply">
+                             <div>
+                            <span>Apply action to selected:</span>
+							<?$arrmact=array('Del'=>'Delete');
+							  $act->viewMultipleAction($arrmact);?>
+
+                            </div>
+                            </form>
+                        </div>
+                        <div style="clear: both"></div>
+                     </div>
+                </div>
+
+                <?=$this->view_pagination;?>
+			</div>
+             <div class="grid_6">
+		  </div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+        </div>
+		<?php }elseif($_REQUEST['type']=='Add' || 'Edit'){
+ 	/*foreach ($this->data as $result)
+	{} print_r($result);*/?>
+		<div class="container_12">
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+            <div class="grid_12">
+                <div class="module">
+                     <h2><span><?php echo $_REQUEST['type']." ".$this->actionTitle;?></span></h2>
+                     <div id="TabbedPanels1" class="TabbedPanels">
+                       <ul class="TabbedPanelsTabGroup">
+                         <li class="TabbedPanelsTab" tabindex="0">Details</li>
+			 <?if($_REQUEST['type']!='Add'){?>
+                         <li class="TabbedPanelsTab" tabindex="0">Coupon History</li><?}?>
+						 <li class="iconsec">
+						 <?php echo $act->editCancelB($this->actionTitle,$_REQUEST['page']);?></li>
+                 				
+                         <li class="iconsec">
+						 <?php echo $act->editSaveB(ADMIN_URL_CONTROLLER.$this->actionTitle,(int)$_REQUEST['rid'],$_REQUEST['type'],$_REQUEST['page']);?></li>
+                       </ul>
+                       <div class="TabbedPanelsContentGroup">
+                         <div class="TabbedPanelsContent"> <form name="frmEdit" method="post" enctype="multipart/form-data">
+                             <?
+				$this->msg=$_REQUEST['msg']!=""?$_REQUEST['msg']:$this->msg;
+ 			     if($this->msg!=""){ echo '<div><span class="notification n-success">'.base64_decode($this->msg).'</span></div> ';}?>
+		 <p><b>All fields indicated with * are mandatory</b></p>
+		 <div class="mode-box">
+<h3><span>Info</span></h3>
+		<? echo $act->field(array('lable'=>'Coupon Title','input_title'=>'name','desc'=>'enter coupon title','input_type'=>'input_text','val'=>$this->data[0]['name'],"req"=>'1'));?>
+		<p>
+		<label>*Coupon code</label>
+		<input id="code" class="input-medium" type="text" tooltiptext="enter coupon code"   value="<?echo $this->data[0]['code'];?>" title="Coupon code" name="code">
+		</p>
+		 <p><label>Type</label>
+		 <select name="type">
+		 <option value="F" <?echo $this->data[0]['type']=='F'?'selected':'';?> >Fixed Amount</option>
+		 <option <?echo $this->data[0]['type']=='P'?'selected':'';?> value="P">Percentage Discount</option>
+		 </select></p>
+		
+		</div>
+		<div class="mode-box">
+<h3><span>Apply for</span></h3>
+<p> 
+		<label>Product</label>
+		<input type="text" name="product" value="" />
+		<div class="scrollbox" id="coupon-product">
+                  <?php $class = 'odd';
+
+				  ?>
+                  <?php
+
+				  if($this->coupon_product!=""){
+				  foreach ($this->coupon_product as $coupon_product) { ?>
+                  <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+                  <div id="coupon-product<?php echo $coupon_product['product_id']; ?>" class="<?php echo $class; ?>"> <?php echo $coupon_product['name']; ?><img src="<?php echo @constant('PATH_TO_ADMIN_IMAGES');?>cross-small.gif" />
+                    <input type="hidden" name="coupon_product[]" value="<?php echo $coupon_product['product_id']; ?>" />
+                  </div>
+                  <?php } }?>
+                </div>
+		</p>
+
+
+		<p>
+		<label>Customer Login</label>
+		<input type="radio" class="radio-icon" name="logged" value="1" <?echo $this->data[0]['logged']=='1'?'checked':'';?>  />Yes
+		<input name="logged" class="radio-icon" type="radio" value="0" <?echo $this->data[0]['logged']=='0'?'checked':'';?> >No
+		</p>
+
+		<p>
+		<label>Free Shipping</label>
+		<input type="radio" name="shipping"  class="radio-icon" value="1" <?echo $this->data[0]['shipping']=='1'?'checked':'';?> />Yes
+		<input name="shipping" type="radio"  class="radio-icon" value="0" <?echo $this->data[0]['shipping']=='0'?'checked':'';?> >No
+		</p>
+</div>
+<div class="mode-box">
+<h3><span>Settings</span></h3>
+		 <? echo $act->field(array('lable'=>'Discount','input_title'=>'discount','desc'=>'enter discount amount','input_type'=>'input_text','val'=>$this->data[0]['discount'],"req"=>'1'));
+
+		 echo $act->field(array('lable'=>'Min Order','input_title'=>'total','desc'=>'enter minimum order','input_type'=>'input_text','val'=>$this->data[0]['total'],"req"=>'1'));
+
+		 echo $act->field(array('lable'=>'Uses per coupon','input_title'=>'uses_total','desc'=>'The maximum number of times the coupon can be used by any customer. Leave blank for unlimited','input_type'=>'input_text','val'=>$this->data[0]['uses_total'],"req"=>'1'));
+
+		 echo $act->field(array('lable'=>'Uses per customer','input_title'=>'uses_customer','desc'=>'The maximum number of times the coupon can be used by a single customer. Leave blank for unlimited','input_type'=>'input_text','val'=>$this->data[0]['uses_customer'],"req"=>'1'));
+
+ 		 echo $act->field(array('lable'=>'Starting Date','input_title'=>'date_start','desc'=>'enter coupons starting date','input_type'=>'input_text','val'=>$this->data[0]['date_start'],"req"=>'1'));
+
+		  echo $act->field(array('lable'=>'Expiry Date','input_title'=>'date_end','desc'=>'enter coupons ending date','input_type'=>'input_text','val'=>$this->data[0]['date_end'],"req"=>'1'));
+
+		echo $act->field(array('lable'=>'status','input_title'=>'status','desc'=>'enable or disable coupon','input_type'=>'select','val'=>$act->reviewstatusdropdown($this->data[0]['status']),"req"=>'0'));
+				?></div>
+
+						 </div>
+						 <?if($_REQUEST['type']!='Add'){?>
+						 <div class="TabbedPanelsContent">
+						 <div class="mode-box">
+<h3><span>Coupon Usage History</span></h3>
+						 <table class="list">
+  <thead>
+    <tr>
+      <td class="right"><b>Order Id</b></td>
+      <td class="left"><b>Customer</b></td>
+      <td class="right"><b>Amount</b></td>
+      <td class="left"><b>Date Added</b></td>
+    </tr>
+  </thead>
+  <tbody>
+    <?php if ($this->histories) { ?>
+    <?php foreach ($this->histories as $history) { ?>
+    <tr>
+      <td class="right"><?php echo $history['order_id']; ?></td>
+      <td class="left"><?php echo $history['customer']; ?></td>
+      <td class="right"><?php echo $history['amount']; ?></td>
+      <td class="left"><?php echo $history['date_added']; ?></td>
+    </tr>
+    <?php } ?>
+    <?php } else { ?>
+    <tr>
+      <td class="center" colspan="4">No Records!!</td>
+    </tr>
+    <?php } ?>
+  </tbody>
+</table>
+						 </div><?}?>
+                        </form></div>
+                       </div>
+                  </div>
+                     <div class="module-body">
+                  </div>
+
+                </div>
+        		<div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+           <div style="clear:both;"></div>
+</div>
+		<?php }?>
+		<script type="text/javascript" src="<?php echo $this->url_to_commonfiles;?>js/javascript/jquery/jquery-1.6.1.min.js"></script>
+<script type="text/javascript" src="<?php echo $this->url_to_commonfiles;?>js/javascript/jquery/ui/jquery-ui-1.8.9.custom.min.js"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo $this->url_to_commonfiles;?>js/javascript/jquery/ui/themes/ui-lightness/jquery-ui-1.8.9.custom.css" />
+<script type="text/javascript">
+<!--
+$('input[name=\'product\']').autocomplete({
+	delay: 0,
+	source: function(request, response) {
+		$.ajax({
+			url: 'productautocomplete?token=<?echo rand(10,100);?>',
+			type: 'POST',
+			dataType: 'json',
+			data: 'filter_name=' +  encodeURIComponent(request.term),
+			success: function(data) {
+				response($.map(data, function(item) {
+					return {
+						label: item.name,
+						value: item.product_id
+					}
+				}));
+			}
+		});
+	},
+	select: function(event, ui) {
+		$('#coupon-product' + ui.item.value).remove();
+
+		$('#coupon-product').append('<div id="coupon-product' + ui.item.value + '">' + ui.item.label + '<img src="<?php echo @constant("PATH_TO_ADMIN_IMAGES");?>cross-small.gif" /><input type="hidden" name="coupon_product[]" value="' + ui.item.value + '" /></div>');
+
+		$('#coupon-product div:odd').attr('class', 'odd');
+		$('#coupon-product div:even').attr('class', 'even');
+
+		$('input[name=\'product\']').val('');
+
+		return false;
+	}
+});
+
+$('#coupon-product div img').live('click', function() {
+	$(this).parent().remove();
+
+	$('#coupon-product div:odd').attr('class', 'odd');
+	$('#coupon-product div:even').attr('class', 'even');
+});
+//--></script>
+
+<script type="text/javascript">
+date_pick('#date_start');
+date_pick('#date_end');
+</script>

@@ -1,0 +1,150 @@
+<?php
+	$act=new Model_Adminaction();
+	 if($_REQUEST['type']==''){?>
+		<script type="text/javascript">
+		function fncustchange(val)
+		{
+			 if(val=='cust')
+			 {
+				 document.getElementById('cust').style.display="";
+				 document.getElementById('custgroup').style.display="none";
+				 document.getElementById('prod').style.display="none";
+				 document.getElementById('customers').title="Customers"
+				  document.getElementById('products').title=""
+				 document.getElementById('customer_groups').title="";
+			 }
+
+			 if(val=='custgroup')
+			 {
+				document.getElementById('custgroup').style.display="";
+				document.getElementById('cust').style.display="none";
+				document.getElementById('prod').style.display="none";
+				document.getElementById('customer_groups').title="Customer Group";
+				document.getElementById('products').title=""
+				document.getElementById('customers').title=""
+			 }
+
+			 if(val=='prod')
+			 {
+				 document.getElementById('prod').style.display="";
+				 document.getElementById('cust').style.display="none";
+				 document.getElementById('custgroup').style.display="none";
+				 document.getElementById('products').title="Products"
+				 document.getElementById('customer_groups').title="";
+				 document.getElementById('customers').title=""
+			 }
+
+			 if(val=='All' || val=='NSub')
+			 {
+				 document.getElementById('cust').style.display="none";
+				 document.getElementById('custgroup').style.display="none";
+				 document.getElementById('prod').style.display="none";
+				 document.getElementById('products').title=""
+				 document.getElementById('customer_groups').title="";
+				 document.getElementById('customers').title=""
+			 }
+		}
+		</script>
+		<div class="container_12">
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+            <div class="grid_12">
+                <div class="module">
+                     <h2><span><?php echo $_REQUEST['type']." ".ucfirst($this->actionTitle);?></span></h2>
+                     <div id="TabbedPanels1" class="TabbedPanels">
+                       <ul class="TabbedPanelsTabGroup">
+                         <li class="TabbedPanelsTab" tabindex="0">Details</li>
+                         <li class="iconsec">
+						 <img alt="" src="images/save_icon.jpg"><a href="javascript:fnSave('newsletter?rid=&amp;type=&amp;play=save&amp;page=')">Send</a></li>
+                       </ul>
+                       <div class="TabbedPanelsContentGroup">
+                         <div class="TabbedPanelsContent"> <form name="frmEdit" method="post" enctype="multipart/form-data">
+                             <?if($_REQUEST['msg']!=""){ echo '<div><span class="notification n-success">'.base64_decode($_REQUEST['msg']).'</span></div> ';}?>
+							 <p><b>All fields indicated with * are mandatory</b></p>
+<div class="mode-box">
+<h3><span>Template Details</span></h3>
+                            <p>
+                                <label>*Template</label>
+                                <select   name="template" id="template" tooltipText="select Template"
+                                onchange="window.location.href='newsletter?temp_id='+this.value">
+								<option value="0">None</option>
+								<?php $act->getNTemplatedropdown($_REQUEST['temp_id']);?>
+                                </select>
+                           </p>
+</div><div class="mode-box">
+<h3><span>Mail Details</span></h3>
+                            <p>
+                                <label>*To</label>
+                                <select   name="to" id="to" title="Customers" tooltipText="select Customers"
+                                onchange="fncustchange(this.value)">
+								<option value="All">All Customers</option>
+								<option value="NSub">All Newsletter subscribers</option>
+								<option value="custgroup">Customer Groups</option>
+								<option value="cust">Customers</option>
+								<option value="prod">Products</option>
+                                </select>
+                           </p>
+
+                         <!-- title="Products"  title="Customers" title="customergroups" -->
+                           <p id="prod" style="display:none" >
+                                <label>*Products</label>
+                                <select   name="products[]" id="products"  tooltipText="select Products" multiple
+                                class="input-medium" >
+								<?php echo $act->getorderproductsdropdown(0);?>
+                                </select>
+                           </p>
+
+                             <p id="cust" style="display:none">
+                                <label>*Customers</label>
+                                <select   name="customers[]" id="customers"  tooltipText="select Customers" multiple
+                                 class="input-medium" size="10">
+				<?php echo $act->getcustomerdropdown(0);?>
+                                </select>
+                           </p>
+                           <p id="custgroup" style="display:none">
+                                <label>*Customer Groups</label>
+                                <select   name="customer_groups[]" id="customer_groups"
+                                tooltipText="select customer groups" multiple class="input-medium" >
+                                <?php echo $act->getcustomergroupdropdown(0);?>
+                                </select>
+                           </p>
+
+			   <p>
+                                <label>*Subject</label>
+                                <input name="subject" id="subject" title="subject" type="text" class="input-medium" value="" tooltipText="enter subject" size="100"/>
+                           </p>
+
+   						   <p>
+                                <label>*Description</label>
+		<textarea name="html" id="html" title="message" class="input-medium" rows="10" cols="50" tooltipText="enter message"><?php $act->getNTDescription($_REQUEST['temp_id']);?></textarea>
+<script type="text/javascript" >
+    window.onload = function()
+    {
+        if(document.getElementById('html')) {
+            var oFCKeditor = new FCKeditor('html') ;
+            oFCKeditor.BasePath = "<?=PUBLIC_PATH?>js/fckeditor/" ;
+            oFCKeditor.Height = 500;
+            oFCKeditor.Width = 1050;
+            oFCKeditor.ReplaceTextarea() ;
+        }
+    }
+</script>
+
+		                    </p>
+
+
+</div>
+						 </div>
+                        </form>
+                       </div>
+                  </div>
+                     <div class="module-body">
+                  </div>
+
+                </div>
+        		<div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+           <div style="clear:both;"></div>
+</div>
+		<?php }?>

@@ -1,0 +1,97 @@
+<div class="main-column"><!--main-max-banner start-->
+<div id="container"><!--container start-->
+
+<? if(count($this->pos[left])>0){?>
+<div id="column-left"><!--column-left start-->
+<?php echo $this->action('left','modules',null,array('mod' =>$this->pos[left]));?>
+<!--column-left End--></div>
+<?}?>
+
+<?if(count($this->pos[right])>0){?>
+<div id="column-right"><!--column-right start-->
+<?php echo $this->action('right','modules',null,array('mod' =>$this->pos[right]));?>
+<!--column-right End-->
+<?}?>
+
+                	<div id="content"><!--content start-->
+					
+					<?if(count($this->pos[top])>0){?>
+<div id="main-max-banner"><!--start main-max-banner-->
+<?php echo $this->action('top','modules',null,array('mod' =>$this->pos[top]));?>
+<!--End main-max-banner--></div>
+<?}?>
+					
+                	<div class="breadcrumb"><!--readcrumb start-->
+<p>
+	<?php foreach ($this->data[breadcrumbs] as $breadcrumb) { ?>
+    <?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
+    <?php } ?></p>
+                  <!--readcrumb End --></div>
+				  
+				  
+                   <div class="page-title"><h1><?php echo $this->trans->_('heading_title_account_wishlist');?></h1></div>
+						 	
+							<div class="wishlist-product">
+							
+						<?php if ($this->data[products]) { ?>
+						<form action="<?php echo $this->data[action]; ?>" method="post" enctype="multipart/form-data" id="wishlist">
+                   
+                           	   <table border="0" width="100%" cellspacing="0" cellpadding="0" >
+        <thead>
+	        <tr>
+            <td class="remove" height="30" width="40"><?php echo $this->trans->_('column_remove_account_wishlist'); ?></td>
+            <td class="image"><?php echo $this->trans->_('column_image_account_wishlist'); ?></td>
+            <td  class="name"><?php echo $this->trans->_('column_name_account_wishlist'); ?></td>
+            <td class="model"><?php echo $this->trans->_('column_model_account_wishlist'); ?></td>
+            <td class="stock"><?php echo $this->trans->_('column_stock_account_wishlist'); ?></td>
+            <td class="price"><?php echo $this->trans->_('column_price_account_wishlist'); ?></td>
+            <td class="cart"><?php echo $this->trans->_('column_cart_account_wishlist'); ?></td>
+          </tr>
+        </thead>
+        <tbody>
+          <?php foreach ($this->data[products] as $product) { ?>
+          <tr>
+            <td class="remove" width="40"><input type="checkbox" class="checkbox" name="remove[]" value="<?php echo $product['product_id']; ?>" /></td>
+            <td class="image"><?php if ($product['thumb']) { ?>
+              <a href="<?php echo $product['href']; ?>"><img src="<?php echo $this->url_to_site."timthumb.php?src=".$product['thumb']; ?>" alt="<?php echo $product['name']; ?>" title="<?php echo $product['name']; ?>" /></a>
+              <?php } ?></td>
+            <td class="name"><a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a></td>
+            <td class="model"><?php echo $product['model']; ?></td>
+            <td class="stock"><?php echo $product['stock']; ?></td>
+            <td class="price"><?php if ($product['price']) { ?>
+              <div class="">
+                <?php if (!$product['special']) { ?>
+                <?php echo $product['price']; ?>
+                <?php } else { ?>
+                <s><?php echo $product['price']; ?></s> <b><?php echo $product['special']; ?></b>
+                <?php } ?>
+              </div>
+              <?php } ?></td>
+            <td class="cart" >
+			<a href="javascript:addToCart('<?php echo $product['product_id']; ?>');" class="button"><span><?php echo $this->trans->_('button_cart'); ?> </span></a></td>
+         <!-- <a onClick="addToCart('<?php echo $product['product_id']; ?>');" class="button"><span><?php echo $this->data[button_cart]; ?></span></a>-->
+		  </tr>
+          <?php } ?>
+        </tbody>
+      </table>
+	  <div class="buttons">
+    <div class="left"><a href="<?php echo $this->data[back]; ?>" class="button_btn"><span><?php echo $this->trans->_('button_back'); ?></span></a></div>
+    <div class="right"><a onClick="$('#wishlist').submit();" class="button_btn"><span><?php echo $this->trans->_('button_update'); ?></span></a></div>
+  </div>
+                            </div></form><?php } else {?>
+							  <div class="content"><?php echo $this->trans->_('text_empty_account_wishlist'); ?></div>
+  <div class="buttons">
+    <div class="right"><a href="<?php echo $this->data['continue']; ?>" class="button_btn"><span><?php echo $this->trans->_('button_continue'); ?></span></a></div>
+  </div>
+							<?}?>
+                            <div id="clear"></div>
+                   	  </div>
+                    <!--innerpage_rightContent --></div>
+					
+			<?if(count($this->pos[bottom])>0){?>
+<div class="content-bottom"><!--content-bottom srtart-->
+<?php echo $this->action('bottom','modules',null,array('mod' =>$this->pos[bottom]));?>
+</div>
+<?}?>
+                <!--rightContainer --></div>
+            <!--innerContent --></div>

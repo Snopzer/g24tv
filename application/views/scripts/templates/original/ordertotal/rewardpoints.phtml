@@ -1,0 +1,41 @@
+<?$rewardObj=new Model_OrderTotal();
+$data=$rewardObj->reward();
+/*echo "<pre>";
+print_r($data);
+echo "</pre>";*/
+if($data!=""){?>
+<div>
+  <div class="cart-heading"><?php echo $data['heading_title_reward']; ?></div>
+  <div class="cart-content" id="reward"><?php echo $data['entry_reward']; ?>&nbsp;
+  <input type="text" name="reward" value="<?php echo $data[reward]; ?>" />
+  &nbsp;<a id="button-reward" class="button_btn"><span><?php echo $this->tr->_('button_reward'); ?></a></div>
+</div>
+<?}?>
+<script type="text/javascript"><!--
+$('#button-reward').bind('click', function() {
+	$.ajax({
+		type: 'POST',
+		url: '<?echo HTTP_SERVER;?>order-total/rewardcalculate',
+		data: $('#reward :input'),
+		dataType: 'json',
+		beforeSend: function() {
+			$('.success, .warning').remove();
+			$('#button-reward').attr('disabled', true);
+			$('#button-reward').after('<span class="wait">&nbsp;<img src="<?php echo URL_TO_TEMPLATES.SITE_DEFAULT_TEMPLATE?>/includes/images/loading.gif" alt="" /></span>');
+		},
+		complete: function() {
+			$('#button-reward').attr('disabled', false);
+			$('.wait').remove();
+		},
+		success: function(json) {
+			if (json['error']) {
+				$('#basket').before('<div class="warning">' + json['error'] + '<img src="<?php echo URL_TO_TEMPLATES.SITE_DEFAULT_TEMPLATE?>/includes/images/close.png" alt="" class="close" /></div>');
+			}
+
+			if (json['redirect']) {
+				location = json['redirect'];
+			}
+		}
+	});
+});
+//--></script>

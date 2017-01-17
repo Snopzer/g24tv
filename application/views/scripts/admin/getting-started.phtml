@@ -1,0 +1,141 @@
+<?$act_ext=new Model_Adminextaction();
+	$currency=new Model_currencies();
+	
+	$cmystore=$act_ext->checkMystore();
+	$cmystore_status=$cmystore['status']=="1"?"hover-d":"";
+	$cmystore_msg=$cmystore['status']=="0"?"<div class='popup-div-d'>".$cmystore['message']."<span></span></div>":"";
+	$cmystore_link=$cmystore['status']=="0"?ADMIN_URL_CONTROLLER."my-store?type=Edit&rid=1&msg=".base64_encode($cmystore['message']):ADMIN_URL_CONTROLLER."my-store?type=Edit&rid=1";
+	
+	
+	$ctheme=$act_ext->checkThemeSelected();
+	$ctheme_status=$ctheme['status']=="1"?"hover-d":"";
+	$ctheme_msg=$ctheme['status']=="0"?"<div class='popup-div-d'>".$ctheme['message']."<span></span></div>":"";
+	$ctheme_link=$ctheme['status']=="0"?ADMIN_URL_CONTROLLER."themes?msg=".base64_encode($ctheme['message']):ADMIN_URL_CONTROLLER."themes";
+	
+	
+	$ccatalog=$act_ext->checkProductUpload();
+	$ccatalog_status=$ccatalog['status']=="1"?"hover-d":"";
+	$ccatalog_msg=$ccatalog['status']=="0"?"<div class='popup-div-d'>".$ccatalog['message']."<span></span></div>":"";
+	$ccatalog_link=$ccatalog['status']=="0"?ADMIN_URL_CONTROLLER."products?msg=".base64_encode($ccatalog['message']):ADMIN_URL_CONTROLLER."products";
+	
+	$cpayment=$act_ext->checkPaymentMethod();
+	$cpayment_status=$cpayment['status']=="1"?"hover-d":"";
+	$cpayment_msg=$cpayment['status']=="0"?"<div class='popup-div-d'>".$cpayment['message']."<span></span></div>":"";
+	$cpayment_link=$cpayment['status']=="0"?ADMIN_URL_CONTROLLER."payment?msg=".base64_encode($cpayment['message']):ADMIN_URL_CONTROLLER."payment";
+	
+	$cshipping=$act_ext->checkShippingMethod();
+	$cshipping_status=$cshipping['status']=="1"?"hover-d":"";
+	$cshipping_msg=$cshipping['status']=="0"?"<div class='popup-div-d'>".$cshipping['message']."<span></span></div>":"";
+	$cshipping_link=$cshipping['status']=="0"?ADMIN_URL_CONTROLLER."shipping?msg=".base64_encode($cshipping['message']):ADMIN_URL_CONTROLLER."shipping";
+	
+	
+	
+	$ctax=$act_ext->checkTax();
+	$ctax_status=$ctax['status']=="1"?"hover-d":"";
+	$ctax_msg=$ctax['status']=="0"?"<div class='popup-div-d'>".$ctax['message']."<span></span></div>":"";
+	$ctax_link=$ctax['status']=="0"?ADMIN_URL_CONTROLLER."taxclass?msg=".base64_encode($ctax['message']):ADMIN_URL_CONTROLLER."taxclass";
+	
+	$total=$cmystore['points']+$ctheme['points']+$ccatalog['points']+$cpayment['points']+$cshipping['points']+$cdomainmapping['points']+$ctax['points'];
+	/*if($_REQUEST[d]=="b")
+		{
+		echo "<pre>";
+		print_r($cmystore);
+		print_r($ctheme);
+		print_r($ccatalog);
+		print_r($cpayment);
+		print_r($cshipping);
+		print_r($cdomainmapping);
+		print_r($ctax);
+		echo "</pre>";
+	}*/
+	$article_link=$ctheme['status']=="0"?ADMIN_URL_CONTROLLER."products?msg=".base64_encode($ctheme['message']):ADMIN_URL_CONTROLLER."products";
+	$categories_link=$ctheme['status']=="0"?ADMIN_URL_CONTROLLER."categories?msg=".base64_encode($ctheme['message']):ADMIN_URL_CONTROLLER."categories";
+	
+?>
+<div class="tabls-div"><!--tabls-div end-->
+	<div class="container_12">
+		<!-- Dashboard icons -->
+		<div class="module">
+			<div class="module-table-body linke-noe">
+				<div class="gettin-started"> <!--gettin-started start-->
+					
+					
+					<div class="store-div"><!--store-div start-->
+						<h4>Write to Earn on g24tv</h4>
+						<div class="line-div"></div>
+						<ul class="middleNavR">
+							<li class="<?echo $cmystore_status;?>"><a href="<?echo $categories_link;?>"  class="tipN" original-title="Add an article" target="_self" style="cursor: pointer; "><span><img src="<?php echo PATH_TO_ADMIN_IMAGES;?>add-to-cart-icon.png" alt=""></span></a>
+								1 . Add Category 
+							  <?php //echo $cmystore_msg;?>           </li>
+							
+							<li class="<?echo $ctheme_status;?>" ><a href="<?echo $article_link;?>" id="cloud1" title=" testing content " class="tTip tipN" original-title="Add an article" target="_self" style="cursor: pointer; "><span><img src="<?php echo PATH_TO_ADMIN_IMAGES;?>upload-your-logo-icon.png" alt=""></span></a>
+							2. Add Artcile           <?php //echo $ctheme_msg;?></li>
+							
+							<?php /*?><li class="<?echo $ccatalog_status;?>" ><a href="<?echo $ccatalog_link;?>" class="tipN" original-title="Add an article" target="_self" style="cursor: pointer; "><span><img src="<?php echo PATH_TO_ADMIN_IMAGES;?>upload-your-prod-icon.png" alt=""></span></a>
+								3 . Upload your 
+							product catalog           <?php echo $ccatalog_msg;?> </li><?php */?>
+						</ul>
+						
+						
+					</div>
+				</div>
+				<?php /*?><form id="frmMain" action="http://na-network/kusumahara/admin/orders" method="post" name="frmMain">
+					<div class="gettin-started"> <!--gettin-started start-->
+					
+					<div class="store-div"><!--store-div start-->
+					<h4>Let's Get Your Store Open for Business</h4>
+					<div class="line-div"></div>
+					<ul class="middleNavR">
+					<li class="<?echo $cmystore_status;?>"><a href="<?echo $cmystore_link;?>"  class="tipN" original-title="Add an article" target="_self" style="cursor: pointer; "><span><img src="<?php echo PATH_TO_ADMIN_IMAGES;?>add-to-cart-icon.png" alt=""></span></a>
+					1 . Configure your 
+					store settings   <?php echo $cmystore_msg;?>           </li>
+					
+					<li class="<?echo $ctheme_status;?>" ><a href="<?echo $ctheme_link;?>" id="cloud1" title=" testing content " class="tTip tipN" original-title="Add an article" target="_self" style="cursor: pointer; "><span><img src="<?php echo PATH_TO_ADMIN_IMAGES;?>upload-your-logo-icon.png" alt=""></span></a>
+					2. Select your theme and upload your logo            <?php echo $ctheme_msg;?></li>
+					
+					<li class="<?echo $ccatalog_status;?>" ><a href="<?echo $ccatalog_link;?>" class="tipN" original-title="Add an article" target="_self" style="cursor: pointer; "><span><img src="<?php echo PATH_TO_ADMIN_IMAGES;?>upload-your-prod-icon.png" alt=""></span></a>
+					3 . Upload your 
+					product catalog           <?php echo $ccatalog_msg;?> </li>
+					</ul>
+					
+					
+					<ul class="middleNavR">
+					<li class="<?echo $cpayment_status;?>" ><a href="<?echo $cpayment_link;?>" class="tipN" original-title="Add an article" target="_self"><span><img src="<?php echo PATH_TO_ADMIN_IMAGES;?>select-pay-icon.png" alt=""></span></a>
+					4. Select a payment <br />
+					method     <?php echo $cpayment_msg;?>  </li>
+					
+					<li class="<?echo $ctax_status;?>" ><a href="<?echo $ctax_link;?>" class="tipN" original-title="Add an article" target="_self" style="cursor: pointer; "><span><img src="<?php echo PATH_TO_ADMIN_IMAGES;?>choocs-icon.png" alt=""></span></a>
+					5.Choose your tax according to your tax zone     <?php echo $ctax_msg;?>   </li>
+					
+					<li class="<?echo $cshipping_status;?>" ><a href="<?echo $cshipping_link;?>" class="tipN" original-title="Add an article" target="_self" style="cursor: pointer; "><span><img src="<?php echo PATH_TO_ADMIN_IMAGES;?>bus-icon.png" alt=""></span></a>
+					6 .Select your shipping method      <?php echo $cshipping_msg;?> </li>
+					
+					</ul>
+					
+					
+					<!--store-div end--></div>
+					
+					<div class="da-circular-div"><!--da-circular-div start--> 
+					
+					<!-- jQuery JavaScript File -->
+					<script type="text/javascript" src="<?echo PATH_TO_ADMIN_JS;?>jquery-1.7.2.min.js"></script>
+					
+					<script type="text/javascript" src="<?echo PATH_TO_ADMIN_JS;?>jquery.metadata.js"></script>
+					
+					<ul class="da-circular-stat-wrap"><div class="heading-design"><?php echo $total=="100"?"Wow..!!":"Oh..!!" ?></div>
+					<li class="da-circular-stat {fillColor: '#38a4e0', value: <?php echo $total;?>, maxValue: 100, label: 'Seeds Collected'}"></li>
+					<div class="heading-design-footer"><?php echo $total=="100"?"Congratulations..!!":"Still Pending..!!" ?></div>
+					</ul>
+					
+					<!--da-circular-div end--></div>
+					
+					
+					<!--gettin-started end--></div>
+					
+					
+					
+				</form><?php */?>
+			</div>
+		</div>
+	</div>
+<!--tabls-div end--></div>

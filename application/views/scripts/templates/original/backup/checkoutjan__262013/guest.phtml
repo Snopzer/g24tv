@@ -1,0 +1,97 @@
+<?/*echo "<pre>";
+print($this->data[shipping_required]);
+echo "</pre>";*/?>
+<div id="chkOutContainer">
+    <div id="caption"><p><?php echo $_SESSION['OBJ']['tr']->translate('text_checkout_payment_address_checkout_checkout');?></p></div>
+	<div style="clear:both;"></div>
+	<div id="chkOutContent">
+		<div id="chkOutConient_block">
+		<!--content start  -->
+		<div class="checkout-main">
+		<div class="left">
+  <h2><?php echo $_SESSION['OBJ']['tr']->translate('text_your_details_checkout_checkout'); ?></h2>
+<div class="names" > <span class="required">*</span> <?php echo $_SESSION['OBJ']['tr']->translate('entry_firstname_checkout_checkout'); ?></div>
+ <div class="names-text"> <input type="text" name="firstname" value="<?php echo $this->data[firstname]; ?>" class="large-field" />
+ </div>
+
+
+  <div class="names"><span class="required">*</span> <?php echo $_SESSION['OBJ']['tr']->translate('entry_lastname_checkout_checkout'); ?></div>
+  <div class="names-text">  <input type="text" name="lastname" value="<?php echo $this->data[lastname]; ?>" class="large-field" /></div>
+
+  <div class="names"><span class="required">*</span> <?php echo $_SESSION['OBJ']['tr']->translate('entry_email_checkout_checkout'); ?></div>
+  <div class="names-text"> <input type="text" name="email" value="<?php echo $this->data[email]; ?>" class="large-field" /></div>
+
+ <div class="names"> <span class="required">*</span> <?php echo $_SESSION['OBJ']['tr']->translate('entry_telephone_checkout_checkout'); ?></div>
+<div class="names-text"><input type="text" name="telephone" value="<?php echo $this->data[telephone]; ?>" class="large-field" /></div>
+
+ <div class="names"> <?php echo $_SESSION['OBJ']['tr']->translate('entry_fax_checkout_checkout'); ?></div>
+ <div class="names-text"> <input type="text" name="fax" value="<?php echo $this->data[fax]; ?>" class="large-field" /></div>
+
+</div>
+<div class="right">
+  <h2><?php echo $_SESSION['OBJ']['tr']->translate('text_your_address_checkout_checkout'); ?></h2>
+  <div class="names"> <?php echo $_SESSION['OBJ']['tr']->translate('entry_company_checkout_checkout'); ?></div>
+ <div class="names-text"> <input type="text" name="company" value="<?php echo $this->data[company]; ?>" class="large-field" /></div>
+
+  <div class="names"><span class="required">*</span> <?php echo $_SESSION['OBJ']['tr']->translate('entry_address_1_checkout_checkout'); ?></div>
+  <div class="names-text"> <input type="text" name="address_1" value="<?php echo $this->data[address_1]; ?>" class="large-field" /></div>
+
+ <div class="names"> <?php echo $_SESSION['OBJ']['tr']->translate('entry_address_2_checkout_checkout'); ?></div>
+  <div class="names-text"> <input type="text" name="address_2" value="<?php echo $this->data[address_2]; ?>" class="large-field" /></div>
+
+  <div class="names"><span class="required">*</span> <?php echo $_SESSION['OBJ']['tr']->translate('entry_city_checkout_checkout'); ?></div>
+   <div class="names-text"><input type="text" name="city" value="<?php echo $this->data[city]; ?>" class="large-field" /></div>
+
+  <div class="names"><span class="required">*</span> <?php echo $_SESSION['OBJ']['tr']->translate('entry_postcode_checkout_checkout'); ?></div>
+   <div class="names-text"><input type="text" name="postcode" value="<?php echo $this->data[postcode]; ?>" class="large-field" /></div>
+
+ <div class="names"> <span class="required">*</span> <?php echo $_SESSION['OBJ']['tr']->translate('entry_country_checkout_checkout'); ?></div>
+    <div class="names-text"><select name="country_id" class="large-field" onchange="$('#chkOutConient_block select[name=\'zone_id\']').load('<?php echo $this->view->url_to_site;?>ajax/zone/country_id/' + this.value);">
+
+
+    <option value=""><?php echo $_SESSION['OBJ']['tr']->translate('text_select'); ?></option>
+    <?php foreach ($this->data[countries] as $country) { ?>
+    <?php if ($country['countries_id'] == $this->data[country_id]) { ?>
+    <option value="<?php echo $country['countries_id']; ?>" selected="selected"><?php echo $country['countries_name']; ?></option>
+    <?php } else { ?>
+    <option value="<?php echo $country['countries_id']; ?>"><?php echo $country['countries_name']; ?></option>
+    <?php } ?>
+    <?php } ?>
+  </select></div>
+
+
+  <div class="names"> <span class="required">*</span> <?php echo $_SESSION['OBJ']['tr']->translate('entry_zone_checkout_checkout'); ?></div>
+  <div class="names-text"><select name="zone_id" class="large-field">
+  </select></div>
+</div>
+
+</div>
+<?php if ($this->data[shipping_required]) { ?>
+<div style="clear: both; padding-top: 15px;  margin-top:6px;  border-top: 1px solid #DDDDDD; text-align:right; ">
+  <?php if ($this->data[shipping_address]) { ?>
+  <input type="checkbox" name="shipping_address" value="1" id="shipping" checked="checked" />
+  <?php } else { ?>
+  <input type="checkbox" name="shipping_address" value="1" id="shipping" />
+  <?php } ?>
+  <label for="shipping"><?php echo $_SESSION['OBJ']['tr']->translate('entry_shipping_checkout_checkout'); ?></label>
+
+
+
+</div>
+<?php } ?>
+
+<div class="buttons">
+  <div class="right"><a id="button-guest" class="button_btn"><span><?php echo $_SESSION['OBJ']['tr']->translate('button_continue'); ?></span></a></div>
+</div>
+<script type="text/javascript"><!--
+$('select[name=\'zone_id\']').load('<?php echo $this->view->url_to_site;?>ajax/zone/country_id/<?php echo $this->data[country_id]; ?>/zone_id/<?php echo $this->data[zone_id]; ?>');
+//--></script>
+
+
+		<!--content end  -->
+		</div>
+		<div id="shipping_address"></div>
+		<div id="shipping_method"></div>
+	</div>
+</div>
+

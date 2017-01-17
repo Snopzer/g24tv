@@ -1,0 +1,18 @@
+# Do not remove this line, otherwise mod_rewrite rules will stop working
+RewriteBase /
+
+SetEnv APPLICATION_ENV development
+Options -Indexes
+<FILES ~ "\.ini$">
+	Order allow,deny
+	Deny from all
+</FILES>
+ 
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} -s [OR]
+RewriteCond %{REQUEST_FILENAME} -l [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^.*$ - [NC,L]
+RewriteRule ^.*$ index.php [NC,L]
+
+php_value max_input_vars 6000

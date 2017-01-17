@@ -1,0 +1,279 @@
+<div class="main-column"><!--main-max-banner start-->
+<div id="container"><!--container start-->
+
+<? if(count($this->pos[left])>0){?>
+<div id="column-left"><!--column-left start-->
+<?php echo $this->action('left','modules',null,array('mod' =>$this->pos[left]));?>
+<!--column-left End--></div>
+<?}?>
+
+<?if(count($this->pos[right])>0){?>
+<div id="column-right"><!--column-right start-->
+<?php echo $this->action('right','modules',null,array('mod' =>$this->pos[right]));?>
+<!--column-right End-->
+<?}?>
+
+  <div id="content"> <!--content start-->
+      
+	  <div class="breadcrumb">    <!--breadcrumb start--><p>
+	    <?php foreach ($this->data[breadcrumbs] as $breadcrumb) { ?>
+	    <?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
+	    <?php } ?></p>
+                    <!--breadcrumb End--></div>
+						<?php if ($this->data[error_warning]) { ?>
+						<div class="warning"><?php echo $this->data[error_warning]; ?></div>
+						<?php } ?>
+						  <div class="register-box-main">
+                 <div class="box">
+				 
+                    	<p class="link-login"><?php echo $this->trans->_('heading_title_account_register'); ?>
+                        <?php echo sprintf($this->trans->_('text_account_already_account_register'),Model_Url::getLink(array("controller"=>"account","action"=>"login"),'',SERVER_SSL)); ?>
+			</p>
+						
+					
+
+						<form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="register">
+                     <div class="box-heading"><p><span><?php echo $this->trans->_('text_your_details_account_register'); ?></span></p></div>
+					
+					 <div class="box-content">
+					 <table class="form" border="0" cellspacing="0" cellpadding="0" >
+                                
+                                  <tr>
+                                    <td width="175" align="left" valign="middle"><?php echo $this->trans->_('entry_firstname_account_register'); ?><span>*</span></td>
+                                    <td width="5" align="left" valign="middle">:</td>
+                                    <td width="420" align="left" valign="middle">
+									<input type="text" name="firstname" value="<?php echo $this->data[firstname]; ?>" />
+									<?php if ($this->data[error_firstname]) { ?>
+									<span class="error"><?php echo $this->data[error_firstname]; ?></span>
+									<?php } ?>
+									</td>
+                                  </tr>
+                                  <tr>
+                                    <td align="left" valign="middle"><?php echo $this->trans->_('entry_lastname_account_register'); ?><span>*</span></td>
+                                    <td align="left" valign="middle">:</td>
+                                    <td align="left" valign="middle">
+									<input type="text" name="lastname" value="<?php echo $this->data[lastname]; ?>" />
+									<?php if ($this->data[error_lastname]) { ?>
+									<span class="error"><?php echo $this->data[error_lastname]; ?></span>
+									<?php } ?>
+									</td>
+                                  </tr>
+                                  <tr>
+                                    <td align="left" valign="middle"><?php echo $this->trans->_('entry_email_account_register'); ?><span>*</span></td>
+                                    <td align="left" valign="middle">:</td>
+                                    <td align="left" valign="middle">
+									<input type="text" name="email" value="<?php echo $this->data[email]; ?>" />
+									<?php if ($this->data[error_email]) { ?>
+									<span class="error"><?php echo $this->data[error_email]; ?></span>
+									<?php } ?>
+									</td>
+                                  </tr>
+                                  <tr>
+                                    <td align="left" valign="middle"><?php echo $this->trans->_('entry_telephone_account_register');?><span>*</span></td>
+                                    <td align="left" valign="middle">:</td>
+                                    <td align="left" valign="middle">
+									<input type="text" name="telephone" value="<?php echo $this->data[telephone]; ?>" />
+									<?php if ($this->data[error_telephone]) { ?>
+									<span class="error"><?php echo $this->data[error_telephone]; ?></span>
+									<?php } ?>
+									</td>
+                                  </tr>
+                                  <tr>
+                                    <td align="left" valign="middle"><?php echo $this->trans->_('entry_fax_account_register');?></td>
+                                    <td align="left" valign="middle">:</td>
+                                    <td align="left" valign="middle">
+									<input type="text" name="fax" value="<?php echo $this->data[fax]; ?>" /></td>
+                                  </tr>
+                                  <tr>
+                                    <td align="left" valign="middle">&nbsp;</td>
+                                    <td align="left" valign="middle">&nbsp;</td>
+                                    <td align="left" valign="middle">&nbsp;</td>
+                                  </tr>
+                                </table>
+					 
+					 </div>
+</div>					 
+					 <div class="box">
+          <div class="box-heading"><p><span><?php echo $this->trans->_('text_your_address_account_register'); ?></span></p></div>
+		  
+		    <div class="box-content">
+		  <table border="0" cellspacing="0" cellpadding="0" class="form" >
+                                 
+                                  <tr>
+                                    <td width="175" align="left" valign="middle"><?php echo $this->trans->_('entry_company_account_register');?></td>
+                                    <td width="5" align="left" valign="middle">:</td>
+                                    <td width="420" align="left" valign="middle"><input type="text" name="company" value="<?php echo $this->data[company]; ?>" /></td>
+                                  </tr>
+                                  <tr>
+                                    <td align="left" valign="middle"><?php echo $this->trans->_('entry_address_1_account_register');?><span>*</span></td>
+                                    <td align="left" valign="middle">:</td>
+                                    <td align="left" valign="middle">
+									<input type="text" name="address_1" value="<?php echo $this->data[address_1]; ?>" />
+									<?php if ($this->data[error_address_1]) { ?>
+									<span class="error"><?php echo $this->data[error_address_1]; ?></span>
+									<?php } ?>
+									</td>
+                                  </tr>
+                                  <tr>
+                                    <td align="left" valign="middle"><?php echo $this->trans->_('entry_address_2_account_register');?></td>
+                                    <td align="left" valign="middle">:</td>
+                                    <td align="left" valign="middle"><input type="text" name="address_2" value="<?php echo $this->data[address_2]; ?>" /></td>
+                                  </tr>
+                                  <tr>
+                                    <td align="left" valign="middle"><?php echo $this->trans->_('entry_city_account_register');?><span>*</span></td>
+                                    <td align="left" valign="middle">:</td>
+                                    <td align="left" valign="middle">
+									<input type="text" name="city" value="<?php echo $this->data[city]; ?>" />
+									<?php if ($this->data[error_city]) { ?>
+									<span class="error"><?php echo $this->data[error_city]; ?></span>
+									<?php } ?>
+									</td>
+                                  </tr>
+                                  <tr>
+                                    <td align="left" valign="middle"><?php echo $this->trans->_('entry_postcode_account_register');?><span>*</span></td>
+                                    <td align="left" valign="middle">:</td>
+                                    <td align="left" valign="middle">
+									<input type="text" name="postcode" value="<?php echo $this->data[postcode]; ?>" />
+									<?php if ($this->data[error_postcode]) { ?>
+									<span class="error"><?php echo $this->data[error_postcode]; ?></span>
+									<?php } ?>
+									</td>
+                                  </tr>
+                                  <tr>
+                                    <td align="left" valign="middle"><?php echo $this->trans->_('entry_country_account_register');?><span>*</span></td>
+                                    <td align="left" valign="middle">:</td>
+                                    <td align="left" valign="middle">
+									<select name="country_id" onchange="$('select[name=\'zone_id\']').load('<?echo $this->url_to_site;?>ajax/zone/country_id/' + this.value + '/zone_id/<?php echo $this->data[zone_id]; ?>');">
+								  <option value=""><?php echo $this->data[text_select]; ?></option>
+								  <?php foreach ($this->data[countries] as $country) { ?>
+								  <?php if ($country['countries_id'] == $this->data[country_id]) { ?>
+								  <option value="<?php echo $country['countries_id']; ?>" selected="selected"><?php echo $country['countries_name']; ?></option>
+								  <?php } else { ?>
+								  <option value="<?php echo $country['countries_id']; ?>"><?php echo $country['countries_name']; ?></option>
+								  <?php } ?>
+								  <?php } ?>
+								</select>
+								<?php if ($this->data[error_country]) { ?>
+								<span class="error"><?php echo $this->data[error_country]; ?></span>
+								<?php } ?>
+									</td>
+                                  </tr>
+                                  <tr>
+                                    <td align="left" valign="middle"><?php echo $this->trans->_('entry_zone_account_register');?><span>*</span></td>
+                                    <td align="left" valign="middle">:</td>
+                                    <td align="left" valign="middle">
+									<select name="zone_id">
+									</select>
+									<?php if ($this->data[error_zone]) { ?>
+									<span class="error"><?php echo $this->data[error_zone]; ?></span>
+									<?php } ?>
+									</td>
+                                  </tr>
+                              
+                                
+                                </table>
+		  </div>
+		  </div>
+		  
+		    <div class="box">
+          <div class="box-heading"><p><span><?php echo $this->trans->_('text_your_password_account_register'); ?></span></p></div>
+		  
+		   <div class="box-content">
+		   
+		   <table border="0" cellspacing="0" cellpadding="0" class="form" >
+                               
+                                  <tr>
+                                    <td width="175" align="left" valign="middle"><?php echo $this->trans->_('entry_password_account_register');?><span>*</span></td>
+                                    <td width="5" align="left" valign="middle">:</td>
+                                    <td width="420" align="left" valign="middle">
+									<input type="password" name="password" value="<?php echo $this->data[password]; ?>" />
+									<?php if ($this->data[error_password]) { ?>
+									<span class="error"><?php echo $this->data[error_password]; ?></span>
+									<?php } ?>
+									</td>
+                                  </tr>
+                                  <tr>
+                                    <td align="left" valign="middle"><?php echo $this->trans->_('entry_confirm_account_register');?><span>*</span></td>
+                                    <td align="left" valign="middle">:</td>
+                                    <td align="left" valign="middle">
+									<input type="password" name="confirm" value="<?php echo $this->data[confirm]; ?>" />
+									<?php if ($this->data[error_confirm]) { ?>
+									<span class="error"><?php echo $this->data[error_confirm]; ?></span>
+									<?php } ?>
+									</td>
+                                  </tr>
+                                
+                        	</table>      
+		   
+		   </div>
+		  </div>
+		  
+		   
+		    <div class="box">
+          <div class="box-heading"><p><span>News letter</span></p></div>
+          <div class="box-content">
+		   
+		   <table border="0" cellspacing="0" cellpadding="0" class="form" >
+								
+								<tr>
+                                    <td width="175" align="left" valign="middle">Subscribe</td>
+                                    <td width="5" align="left" valign="middle">:</td>
+                                    <td width="420" align="left" valign="middle">
+									<?php if ($this->data[newsletter] == 1) { ?>
+									<input class="checked" type="radio" name="newsletter" value="1" checked="checked" />
+									<?php echo $this->data[text_yes]; ?> Yes
+									<input class="checked" type="radio" name="newsletter" value="0" />
+									<?php echo $this->data[text_no]; ?> No
+									<?php } else { ?>
+									<input class="checked" type="radio" name="newsletter" value="1" />
+									<?php echo $this->data[text_yes]; ?> Yes
+									<input class="checked" type="radio" name="newsletter" value="0" checked="checked" />
+									<?php echo $this->data[text_no]; ?> No
+									<?php } ?>
+									</td>
+                                  </tr>
+								  
+                                  <tr>
+                                    <td align="left" valign="middle">&nbsp;</td>
+                                    <td align="left" valign="middle">&nbsp;</td>
+                                    <td align="left" valign="middle">&nbsp;</td>
+                                  </tr>
+                                </table>
+								</div>   
+								</div>
+							
+							   <div class="buttons"> 
+							   <div class="right">
+							   <label for="agree">
+							   <?php
+								/*echo "<pre>";
+								print_r($this->data);
+								echo "</pre>";*/
+								if ($this->data[text_agree]) { ?>
+								<?php echo $this->data[text_agree]; ?>
+								<?php if ($this->data[agree]) { ?>
+								<input type="checkbox" name="agree"  id="agree" value="1" checked="checked" />
+								<?php } else { ?>
+								<input type="checkbox" name="agree" id="agree" value="1" />
+								<?php }} ?></label>
+								 <input type="submit" name="button"  class="button_btn"  id="button" value="<?php echo $this->trans->_('button_continue'); ?>" class="button_btn" onclick="$('#register').submit();" />
+                                  <input type="button" name="button"  class="button_btn" id="button" value="Reset" class="button_btn" onClick="this.form.reset()" />
+								
+							   </div></div>	
+							   </div>	
+								
+						
+
+                    </div>
+                 </div>
+      <!--container End--></div>
+           <!--main-max-banner End--></div>
+		<script type="text/javascript"><!--
+		$('select[name=\'zone_id\']').load('<?php echo $this->url_to_site;?>ajax/zone/country_id/<?php echo $this->data[country_id]; ?>/zone_id/<?php echo $this->data[zone_id]; ?>');
+		//--></script>
+<script type="text/javascript"><!--
+$('.colorbox').colorbox({
+	width: 560,
+	height: 560
+});
+//--></script>

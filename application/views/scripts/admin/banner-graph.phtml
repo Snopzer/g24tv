@@ -1,0 +1,243 @@
+ <?$act=new Model_Adminaction();
+$act_ext=new Model_Adminextaction();
+//$act->p($_REQUEST,'0');?>
+<?//$year='\'Jan\',\'Feb\',\'Mar\',\'Apr\',\'May\'';
+
+if($_REQUEST['type']=='yearly')
+{
+	$f=$act->db->fetchAll("SELECT distinct year(banners_history_date) as year FROM r_banners_history order by year asc");
+	foreach($f as $k)
+	{
+
+		$label=$label.$pre."'".$k['year']."'";
+		$pre=",";
+	}
+}
+if($_REQUEST['type']=='monthly')
+{
+	$f=$act->db->fetchRow("SELECT max(year(banners_history_date)) as year FROM r_banners_history");
+	$y_sel=$f['year'];
+
+	$label='\'Jan\',\'Feb\',\'Mar\',\'Apr\',\'May\',\'Jun\',\'Jul\',\'Aug\',\'Sep\',\'Oct\',\'Nov\',\'Dec\'';
+	$month=array('Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec');
+}
+
+if($_REQUEST['type']=='daily' || $_REQUEST['type']=='')
+{
+	$f=$act->db->fetchRow("SELECT max(year(banners_history_date)) as year FROM r_banners_history");
+	$y_sel=$f['year'];
+	$m_sel=$_REQUEST['month']==""?(int)date(m):$_REQUEST['month'];
+
+	$days = (date('t', mktime(0,0,0,$m_sel))+1);
+	 for ($i=1; $i<$days; $i++)
+	 {
+	    $label=$label.$pre."'".$i."'";
+		$pre=",";
+	 }
+}
+?>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+		<script type="text/javascript" src="js/highcharts.js"></script>
+		<!--[if IE]>
+			<script type="text/javascript" src="js/excanvas.compiled.js"></script>
+		<![endif]-->
+
+
+		<!-- 2. Add the JavaScript to initialize the chart on document ready -->
+		<script type="text/javascript">
+		$(document).ready(function() {
+			var chart = new Highcharts.Chart({
+				chart: {
+					renderTo: 'container11',
+					defaultSeriesType: 'column'
+				},
+				title: {
+					text: 'Data extracted from a HTML table in the page'
+				},
+				xAxis: {
+					categories: [<?=$label;?>]
+				},
+				yAxis: {
+					title: {
+						text: 'Units'
+					}
+				},
+				tooltip: {
+					formatter: function() {
+						return '<b>'+ this.series.name +'</b><br/>'+
+							this.y +' '+ this.x.toLowerCase();
+					}
+				},
+				plotOptions: {
+					column: {
+						data: 'datatable',
+						// define a custom data parser function for both series
+						dataParser: function(data) {
+							var table = document.getElementById(data),
+								// get the data rows from the tbody element
+								rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr'),
+								// define the array to hold the real data
+								result = [],
+								// decide which column to use for this series
+								column = { 'Clicks': 0, 'Views': 1 }[this.options.name];
+
+							// loop through the rows and get the data depending on the series (this) name
+							for (var i = 0; i < rows.length; i++) {
+								result.push(
+									parseInt(
+										rows[i].getElementsByTagName('td')[column]. // the data cell
+										innerHTML
+									)
+								);
+							}
+							return result;
+						}
+					}
+				},
+				series: [{
+					name: 'Clicks'
+				}, {
+					name: 'Views'
+				}]
+			});
+
+
+		});
+		</script>
+
+	</head>
+
+	<form method="post" action="">
+	<table>
+	<tr><td>type</td><td>
+<select onchange="this.form.submit();" name="type">
+<option value="daily" <?echo $_REQUEST['type']=='daily'?'selected':'';?> >Daily</option>
+<option value="monthly" <?echo $_REQUEST['type']=='monthly'?'selected':'';?> >Monthly</option>
+<option value="yearly" <?echo $_REQUEST['type']=='yearly'?'selected':'';?> >Yearly</option>
+</select>
+</td>
+</tr>
+<?if($_REQUEST['type']=='daily' || $_REQUEST['type']=="")
+{
+
+?>
+<tr><td>Month</td><td><select onchange="this.form.submit();" name="month">
+<option value="1" <?echo $m_sel=='1'?'selected':'';?> >January</option>
+<option value="2" <?echo $m_sel=='2'?'selected':'';?> >February</option>
+<option value="3" <?echo $m_sel=='3'?'selected':'';?> >March</option>
+<option value="4" <?echo $m_sel=='4'?'selected':'';?> >April</option>
+<option value="5" <?echo $m_sel=='5'?'selected':'';?> >May</option>
+<option value="6" <?echo $m_sel=='6'?'selected':'';?> >June</option>
+<option value="7" <?echo $m_sel=='7'?'selected':'';?> >July</option>
+<option value="8" <?echo $m_sel=='8'?'selected':'';?> >August</option>
+<option value="9" <?echo $m_sel=='9'?'selected':'';?> >September</option>
+<option value="10" <?echo $m_sel=='10'?'selected':'';?> >October</option>
+<option value="11" <?echo $m_sel=='11'?'selected':'';?> >November</option>
+<option value="12" <?echo $m_sel=='12'?'selected':'';?> >December</option>
+</select></td></tr>
+<?}?>
+<?if($_REQUEST['type']!='yearly')
+{?>
+<tr><td>yearly</td><td><select onchange="this.form.submit();" name="yearly">
+<?$f=$act->db->fetchAll("SELECT distinct year(banners_history_date) as year FROM r_banners_history where banners_id='".$_REQUEST[banner_id]."'");
+foreach($f as $k)
+{
+	$y_sel=$_REQUEST['yearly']==""?$y_sel:$_REQUEST['yearly'];
+	$ysel=$y_sel==$k['year']?'selected':'';
+
+	echo '<option value="'.$k['year'].'" '.$ysel.' >'.$k['year'].'</option>';
+}
+ reset($f);?>
+</select></td></tr>
+<?}?>
+<input type="hidden" name="banner_id" id="banner_id" value="<?=$_REQUEST['banner_id']?>">
+</table>
+<form>
+		<!-- 3. Add the container -->
+		<div id="container11" style="width: 800px; height: 400px; margin: 0 auto"></div>
+
+
+<?if($_REQUEST['type']=='yearly'){?>
+		<table id="datatable">
+			<thead>
+				<tr>
+					<th>Years</th>
+					<th>Clicks</th>
+					<th>Views</th>
+				</tr>
+			</thead>
+			<tbody>
+			<?$f=$act->db->fetchAll("SELECT year( banners_history_date ) AS year, sum( banners_shown ) AS value, sum( banners_clicked ) AS dvalue FROM r_banners_history WHERE banners_id = '".$_REQUEST['banner_id']."' GROUP BY year");
+			echo "SELECT year( banners_history_date ) AS year, sum( banners_shown ) AS value, sum( banners_clicked ) AS dvalue FROM r_banners_history WHERE banners_id = '".$_REQUEST['banner_id']."' GROUP BY year";
+			foreach($f as $k){?>
+				<tr>
+					<th><?=$k[year]?></th>
+					<td><?=$k[dvalue]?></td>
+					<td><?=$k[value]?></td>
+				</tr>
+				 <?}?>
+			</tbody>
+		</table>
+		<?}?>
+
+		<?if($_REQUEST['type']=='monthly'){?>
+		<table id="datatable">
+			<thead>
+				<tr>
+					<th>Months</th>
+					<th>Clicks</th>
+					<th>Views</th>
+				</tr>
+			</thead>
+			<tbody>
+			<?$fs=$act->db->fetchAll("select month(banners_history_date) as banner_month, sum(banners_shown) as value, sum(banners_clicked) as dvalue from r_banners_history where banners_id = '".$_REQUEST['banner_id']."' and year(banners_history_date) = '".$_REQUEST['yearly']."' group by banner_month");
+
+			foreach($fs as $k1)
+			{
+				$dvalue[$k1[banner_month]-1]=$k1[dvalue];
+				$value[$k1[banner_month]-1]=$k1[value];
+			}
+			foreach($month as $k=>$v){?>
+				<tr>
+					<th><?=$v?></th>
+					<td><?=$dvalue[$k]==""?'0':$dvalue[$k]?></td>
+					<td><?=$value[$k]==""?'0':$value[$k]?></td>
+				</tr>
+				 <?}?>
+			</tbody>
+		</table>
+		<?}?>
+
+		<?if($_REQUEST['type']=='daily' || $_REQUEST['type']=='' ){
+			//$y_sel=$_REQUEST['yearly']==""?$y_sel:$_REQUEST['yearly'];
+			//$m_sel=$_REQUEST['month']==""?(int)date(m):$_REQUEST['month'];
+
+ 			$days = (date('t', mktime(0,0,0,$m_sel))+1);
+		 ?>
+		<table id="datatable">
+			<thead>
+				<tr>
+					<th>Days</th>
+					<th>Clicks</th>
+					<th>Views</th>
+				</tr>
+			</thead>
+			<tbody>
+			<?$fs=$act->db->fetchAll("select dayofmonth(banners_history_date) as banner_day, banners_shown as value, banners_clicked as dvalue from r_banners_history where banners_id = '".$_REQUEST['banner_id']."' and month(banners_history_date) = '".$m_sel."' and year(banners_history_date) = '".$y_sel."'");
+
+
+			foreach($fs as $k1)
+			{
+				$dvalue[$k1[banner_day]-1]=$k1[dvalue];
+				$value[$k1[banner_day]-1]=$k1[value];
+			}
+			 for ($i=1; $i<$days; $i++) {//foreach($month as $k=>$v){?>
+				<tr>
+					<th><?=$i?></th>
+					<td><?=$dvalue[$i]==""?'0':$dvalue[$i]?></td>
+					<td><?=$value[$i]==""?'0':$value[$i]?></td>
+				</tr>
+				 <?}?>
+			</tbody>
+		</table>
+		<?}?>

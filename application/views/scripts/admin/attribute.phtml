@@ -1,0 +1,166 @@
+<?php
+	$act=new Model_Adminaction();
+	$act_ext=new Model_Adminextaction();
+ 	if($_REQUEST['type']==''){?>
+<div class="container_12">
+           <div style="clear:both;"></div>
+            <div class="grid_12">
+  				<?
+					if($_REQUEST['msg']!=""){?>
+				<span class='<?php echo $_REQUEST['m']==""?"notification n-success":"notification n-error"?>'><?=base64_decode($_REQUEST['msg']);?></span>
+				<?}?>
+
+                <div class="bottom-spacing">
+                    <!-- Button -->
+                    <div class="float-right">
+<?=$this->view_pagination;?>						
+                    </div>
+                    <!-- Table records filtering -->
+
+
+                </div>
+
+
+                <!-- Example table -->
+                <div class="module">
+                	<h2><span><?=$this->actionTitle." [".$this->total_count."]"?></span> <div class="add-btn-div"><?php $act->viewAddB(ADMIN_URL_CONTROLLER.$this->actionTitle);?></div></h2>
+
+                    <div class="module-table-body">
+                    	<form name="frmMain" id="frmMain" method="post" action="<?php echo ADMIN_URL_CONTROLLER.$this->actionTitle?>">
+                      <?if($this->total_count>0){?>
+			<table id="myTable" class="tablesorter">
+                   	  <thead>
+                                <tr>
+								  <th align="center" style="width:5%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#</th>
+                                  <th style="width:20%"><?echo $act_ext->getSortLable(array("disType"=>$this->disType, "sortby"=>"agd.name", "page"=>$_REQUEST['page'] ,"file"=>"attribute" ,"label"=>"Attribute"));?></th>
+                                       <th style="width:20%"><?echo $act_ext->getSortLable(array("label"=>"Attribute Group"));?></th>
+                                   <th style="width:13%"><?echo $act_ext->getSortLable(array("label"=>"Sort Order"));?></th>
+                                  <th style="width:15%"><input type="checkbox" name="checkall" id="checkall" onClick="Checkall()"/> <a href="#">Check All</a></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+							<?
+					$i=1;
+					if($this->page!=1)
+					{
+						$i+=($this->page-1)*$this->per_page;
+					}
+					//echo "<pre>";
+					//print_r($this->results);
+							foreach ($this->results as $result)
+							{
+
+							$class=fmod($i,2)==0?'':'addcolorne';
+							?>
+                              <tr>
+                                <td align="center" class="<?=$class?>"><?=$i?></td>
+                                <td class="<?=$class?>"><?php echo $result['group_name'];?></td>
+								<td class="<?=$class?>"><?php echo $result['gname'];?></td>
+                                <td class="<?=$class?>"><?php echo $result['sort_order'];?></td>
+                                <td class="<?=$class?>">
+
+								<input type="checkbox" name="rid[]" id="rid" value="<?php echo $result[$this->r_id];?>"  />
+								<?php
+									$act->viewEditB(ADMIN_URL_CONTROLLER.$this->actionTitle,$result[$this->r_id],$_REQUEST['page']);
+									$act->viewDelB($this->actionTitle,$result[$this->r_id],$this->r_table,$this->r_id,$_REQUEST['page']);
+								?>
+
+                                </td>
+                              </tr>
+                              <?$i=$i+1;}?>
+
+                            </tbody>
+                        </table><?}else{
+							echo "<table id='myTable' class='tablesorter' border='2'><tr><td align='center'>No records to display</td></tr></table>";
+							}?>
+
+						<input type="hidden" name="page" id="page" value="<?php echo $this->page;?>">
+                        <div class="table-apply">
+                    <?$act->fnmultipleactdropdown(array('Del'=>'Delete'));?>
+
+                            </form>
+                        </div>
+                        <div style="clear: both"></div>
+                     </div>
+                </div>
+
+                <?=$this->view_pagination;?>
+			</div>
+             <div class="grid_6">
+		  </div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+        </div>
+		<?php }elseif($_REQUEST['type']=='Add' || 'Edit'){
+ 	/*foreach ($this->data as $result)
+	{} print_r($result);*/?>
+		<div class="container_12">
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+            <div class="grid_12">
+                <div class="module">
+                     <h2><span><?php echo $_REQUEST['type']." ".$this->actionTitle;?></span></h2>
+                     <div id="TabbedPanels1" class="TabbedPanels">
+                       <ul class="TabbedPanelsTabGroup">
+                         <li class="TabbedPanelsTab" tabindex="0">Details</li>
+                         <li class="iconsec">
+						 <?php echo $act->editCancelB($this->actionTitle,$_REQUEST['page']);?></li>
+                         
+						 <?php
+						 if($_REQUEST['type']=='Edit'){
+						 echo "<li class='iconsec'>";
+ echo $act->editApplyB(ADMIN_URL_CONTROLLER.$this->actionTitle,(int)$_REQUEST['rid'],$_REQUEST['type']);
+ echo "</li>";
+		}					?>
+                         <li class="iconsec">
+						 <?php echo $act->editSaveB(ADMIN_URL_CONTROLLER.$this->actionTitle,(int)$_REQUEST['rid'],$_REQUEST['type'],$_REQUEST['page']);?></li>
+                       </ul>
+                       <div class="TabbedPanelsContentGroup">
+                         <div class="TabbedPanelsContent"> <form name="frmEdit" method="post" enctype="multipart/form-data">
+                             <?if($this->msg!=""){ echo '<div><span class="notification n-success">'.base64_decode($this->msg).'</span></div> ';}
+                             	$ret=$act->getEditdetails('r_attribute_description',$this->r_id,(int)$_REQUEST['rid']);
+								$rcat=$act->getEditdetails($this->r_table,$this->r_id,(int)$_REQUEST['rid']);
+								if(count($ret)>0)
+								{
+								foreach($ret as $res)
+								{
+									$lang[$res['language_id']]=array("name" =>$res['name']);
+								}
+								}
+
+								?>
+							 <p><b>All fields indicated with * are mandatory</b></p>
+<div class="mode-box">
+<h3><span>Attribute Name</span></h3>
+                            <?php echo $act->lang_field(array('lable'=>'Attribute Name','input_title'=>'name','desc'=>'enter attribute name','input_type'=>'input_text','val'=>$lang,"req"=>'1'));
+                           ?></div>
+			   <div class="mode-box">
+<h3><span>Attribute Group</span></h3>
+                           <p>
+                                <label>*Attribute Group</label>
+                                <select name="attribute_group" id="attribute_group" title="attribute_group" class="input-medium" tooltipText="select attribute group"/>
+                          <?php echo  $act->getattributegroupdropdown($rcat[0]['attribute_group_id']);?>
+                                </select>
+
+                           </p></div>
+			   <div class="mode-box">
+<h3><span>Sort Order</span></h3>
+
+                            <? echo $act->field(array('lable'=>'Sort order','input_title'=>'sort_order','desc'=>'enter sort_order','input_type'=>'input_text','val'=>$rcat[0]['sort_order'],"req"=>'0'));
+                            ?></div>
+						 </div>
+                        </form>
+                       </div>
+                  </div>
+                     <div class="module-body">
+                  </div>
+
+                </div>
+        		<div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+           <div style="clear:both;"></div>
+</div>
+		<?php }?>

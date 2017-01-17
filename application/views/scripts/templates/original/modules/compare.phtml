@@ -1,0 +1,26 @@
+<div class="box">
+<div class="box-newsletter">
+<div class="modules-box-div">
+<?if(@constant('compare_module_title')!=""){?><div class="box-heading"><p><span><?php echo @constant('compare_module_title');?></p></span></div><?}?>
+<div class="box-content">
+<div class="compare">
+<div id="prod-compare" ></div>
+</div>
+</div>
+</div></div>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+$.ajax({
+	url: HTTP_SERVER+'ajax/ajaxcompareupdate',
+	dataType: 'json',
+	success: function(json) 
+	{
+		if (json['output']) 
+		{
+			$('#prod-compare').html(json['output']);
+		}
+	}
+	});
+});
+</script>

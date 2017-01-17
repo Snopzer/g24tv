@@ -1,0 +1,99 @@
+<?php
+$currency=new Model_currencies();
+	$act=new Model_Adminaction();
+	$act_ext=new Model_Adminextaction();
+ 	if($_REQUEST['type']==''){?>
+<div class="container_12">
+           <div style="clear:both;" ></div>
+            <div class="grid_12" >
+
+
+				<?if($_REQUEST['msg']!=""){?>
+				<span class="notification n-error"><?=base64_decode($_REQUEST['msg']);?></span>
+				<?}?>
+
+                <div class="bottom-spacing">
+                    <!-- Button -->
+                    <div class="float-right"><?=$this->view_pagination;?>
+						<?php //$act->viewAddB(ADMIN_URL_CONTROLLER.$this->actionTitle);
+						//print_r($this->data);
+						?>
+                    </div>
+					<form  name="frmfilter" id="frmfilter" method="post" action="">
+					 <input type="text" name="date_start" id="date_start" autocomplete="off" onfocus="if(this.value=='Start Date') this.value=''"  value="<?php echo $this->data[date_start]!=""?$this->data[date_start]:'Start Date';?>" > <input type="text" name="date_end" id="date_end" autocomplete="off" onfocus="if(this.value=='End Date') this.value=''"  value="<?php echo $this->data[date_end]!=""?$this->data[date_end]:'End Date';?>"> <input type="submit" name="filter" id="filter" value="filter">   <script type="text/javascript">
+					/*($(document).ready(function(){
+					$("#date_start").datepicker({ yearRange: '2000:2020',showOn: 'both', buttonImageOnly: true, buttonImage: 'images/date/icon_cal.png',dateFormat:"yy-mm-dd"});
+						});
+
+					$(document).ready(function(){
+					$("#date_end").datepicker({ yearRange: '2000:2020',showOn: 'both', buttonImageOnly: true, buttonImage: 'images/date/icon_cal.png',dateFormat:"yy-mm-dd"});
+					});*/
+						date_pick('#date_start');
+						date_pick('#date_end');
+						/*dateFormat:"%d-%m-%Y"*/
+						</script>
+					</form>
+                </div>
+
+
+                <!-- Example table -->
+                <div class="module">
+                	<h2><span><?=$this->actionTitle." [".$this->total_count."]"?></span></h2>
+
+                    <div class="module-table-body">
+                    	<form name="frmMain" id="frmMain" method="post" action="<?php echo ADMIN_URL_CONTROLLER.$this->actionTitle?>">
+						<?if($this->total_count>0){?>
+                        <table id="myTable" class="tablesorter">
+                   	  <thead>
+                                <tr>
+								<th style="width:15%">Coupon Name</th>
+					<th style="width:15%">Code</th>
+					<th style="width:15%">Orders</th>
+					<th style="width:15%">Total</th>
+					<th style="width:15%">Action</th>
+				</tr>
+                            </thead>
+                            <tbody>
+
+							<?
+					$i=1;
+					if($this->page!=1)
+					{
+						$i+=($this->page-1)*$this->per_page;
+					}
+
+							foreach ($this->results as $result)
+							{
+
+							$class=fmod($i,2)==0?'':'addcolorne';
+							?>
+                              <tr>
+				<td class="<?=$class?>"><?php echo $result['name'];?></td>
+				<td class="<?=$class?>"><?php echo $result['code'];?></td>
+				<td class="<?=$class?>"><?php echo $result['r_orders'];?></td>
+				<td class="<?=$class?>"><?php echo $currency->format($result['total']);?></td>
+				<td class="<?=$class?>"><a href="coupon?type=Edit&rid=<?php echo $result['coupon_id'];?>">Edit</a></td>
+     			     </tr>
+                              <?$i=$i+1;}?>
+
+                            </tbody>
+                        </table><?}else{
+							echo "<table id='myTable' class='tablesorter' border='2'><tr><td align='center'>No records to display</td></tr></table>";
+							}?>
+
+						<input type="hidden" name="page" id="page" value="<?php echo $this->page;?>">
+                           </form>
+                        </div>
+                        <div style="clear: both"></div>
+                     </div>
+                </div>
+
+                <?=$this->view_pagination;?>
+			</div>
+             <div class="grid_6">
+		  </div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+        </div>
+		<?php }?>

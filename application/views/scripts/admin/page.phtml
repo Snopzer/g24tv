@@ -1,0 +1,196 @@
+<?php
+	$act=new Model_Adminaction();
+	$act_ext=new Model_Adminextaction();
+ 	if($_REQUEST['type']==''){?>
+<div class="container_12">
+           <div style="clear:both;"></div>
+            <div class="grid_12">
+  				<?
+				if($_REQUEST['msg']!=""){?>
+				<span class="notification n-success"><?=base64_decode($_REQUEST['msg']);?></span>
+				<?}?>
+				
+                <div class="bottom-spacing">
+                    <!-- Button -->
+                    <div class="float-right"><?=$this->view_pagination;?>
+						
+						
+                    </div>
+                    <!-- Table records filtering -->
+                    
+                    
+                </div>
+                
+                
+                <!-- Example table -->
+                <div class="module">
+                	<h2><span><?=$this->actionTitle." [".$this->total_count."]"?></span> <div class="add-btn-div"><?php echo  $act->viewAddB(ADMIN_URL_CONTROLLER.$this->actionTitle); ?> </div> </h2>
+                    
+                    <div class="module-table-body">
+                    	<form name="frmMain" id="frmMain" method="post" action="<?php echo ADMIN_URL_CONTROLLER.$this->actionTitle?>"> 
+                        <table id="myTable" class="tablesorter">
+                   	  <thead>
+                                <tr>
+								  <th align="center" style="width:5%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#</th>
+                                  <th style="width:20%"><?echo $act_ext->getSortLable(array("disType"=>$this->disType, "sortby"=>"c.page_name", "page"=>$_REQUEST['page'] ,"file"=>"page" ,"label"=>"Page"));?></th>
+                                       <th style="width:20%"><?echo $act_ext->getSortLable(array("disType"=>$this->disType, "sortby"=>"cd.title", "page"=>$_REQUEST['page'] ,"file"=>"page" ,"label"=>"Title"));?></th>
+                                   <th style="width:13%"><?echo $act_ext->getSortLable(array("disType"=>$this->disType, "sortby"=>"c.status", "page"=>$_REQUEST['page'] ,"file"=>"page" ,"label"=>"Status"));?></th>
+                                  <th style="width:15%"><input type="checkbox" name="checkall" id="checkall" onClick="Checkall()"/> <a href="#">Action</a></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+						
+							<? 
+					$i=1;
+					if($this->page!=1)
+					{
+						$i+=($this->page-1)*$this->per_page;
+					}
+					//echo "<pre>";
+					//print_r($this->results);
+							foreach ($this->results as $result) 
+							{
+							 
+							$class=fmod($i,2)==0?'':'addcolorne';
+							?>
+                              <tr>
+                                <td align="center" class="<?=$class?>"><?=$i?></td>
+                                <td class="<?=$class?>"><?php echo $result['page_name'];?></td>
+								<td class="<?=$class?>"><?php echo $result['title'];?></td>
+                                <td class="<?=$class?>"><?php if($result['status']=='1')echo 'Enable'; else echo 'Disable';?></td>
+                                <td class="<?=$class?>">
+								<input type="checkbox" name="rid[]" id="rid" value="<?php echo $result[$this->r_id];?>"  />
+								<?php 
+									$act->viewEditB(ADMIN_URL_CONTROLLER.$this->actionTitle,$result[$this->r_id],$_REQUEST['page']);
+									$act->viewDelB($this->actionTitle,$result[$this->r_id],$this->r_table,$this->r_id,$_REQUEST['page']);
+								?>	
+								
+                                </td>
+                              </tr>
+                              <?$i=$i+1;}?>
+                                 
+                            </tbody>
+                        </table>
+
+						<input type="hidden" name="page" id="page" value="<?php echo $this->page;?>">
+    					
+						<div class="table-apply">
+                             <?$act->fnmultipleactdropdown(array('Pub'=>'Enable','UnPub'=>'Disable','Del'=>'Delete'));?>
+                            </form>
+                        </div>
+						
+						
+                        <div style="clear: both"></div>
+                     </div>  
+                </div>  
+
+                <?=$this->view_pagination;?>
+			</div>  
+             <div class="grid_6">
+		  </div>  
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+        </div>  
+		<?php }elseif($_REQUEST['type']=='Add' || 'Edit'){ 
+ 	/*foreach ($this->data as $result) 
+	{} print_r($result);*/?>
+		<div class="container_12">
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+            <div class="grid_12">
+                <div class="module">
+                     <h2><span><?php echo $_REQUEST['type']." ".$this->actionTitle;?></span></h2>
+                     <div id="TabbedPanels1" class="TabbedPanels">
+                       <ul class="TabbedPanelsTabGroup">
+                         <li class="TabbedPanelsTab" tabindex="0">Details</li>
+						 <li class="TabbedPanelsTab" tabindex="0">Meta Tags</li>
+                         <li class="iconsec">
+						 <?php echo $act->editCancelB($this->actionTitle,$_REQUEST['page']);?></li>
+						 <?php 
+						
+						 echo $act->editApplyB(ADMIN_URL_CONTROLLER.$this->actionTitle,(int)$_REQUEST['rid'],$_REQUEST['type']);
+					?>
+                         <li class="iconsec">
+						 <?php echo $act->editSaveB(ADMIN_URL_CONTROLLER.$this->actionTitle,(int)$_REQUEST['rid'],$_REQUEST['type'],$_REQUEST['page']);?></li>
+                       </ul> 
+                       <div class="TabbedPanelsContentGroup">
+                         <div class="TabbedPanelsContent"> <form name="frmEdit" method="post" enctype="multipart/form-data">
+                             <?if($this->msg!=""){ echo '<div><span class="notification n-success">'.base64_decode($this->msg).'</span></div> ';}
+                             	$ret=$act->getEditdetails('r_cms_description',$this->r_id,(int)$_REQUEST['rid']);
+								$rcat=$act->getEditdetails($this->r_table,$this->r_id,(int)$_REQUEST['rid']);
+								if(count($ret)>0)
+								{
+									foreach($ret as $res)
+									{
+										$lang[$res['language_id']]=array("title"=>$res['title'],"meta_title"=>$res['meta_title'],"meta_keywords"=>$res['meta_keywords'],"meta_description"=>$res['meta_description'],"description"=>$res['description']);
+									}
+								}
+								
+								?>
+							 <p><b>All fields indicated with * are mandatory</b></p>
+                            <div class="mode-box">
+<h3><span>Page Details</span></h3>
+							<p>
+                               <label>Page Name</label><input type="text" name="page_name" id="page_name" class="input-medium" tooltipText="Name of the page" value=<?=$rcat[0]['page_name']?>  >
+							</p>
+                           
+
+                            <?php 
+							echo $act->lang_field(array('lable'=>'Title','input_title'=>'title','desc'=>'enter title','input_type'=>'input_text','val'=>$lang,"req"=>'1'));
+
+							echo $act->lang_field(array('lable'=>'Description','input_title'=>'description','desc'=>'enter  description','input_type'=>'textarea','val'=>$lang,"req"=>'0'));
+                           ?>
+                            <?
+							echo $act->field(array('lable'=>'Sort Order','input_title'=>'sort_order','desc'=>'Set to -1 to hide from listing','input_type'=>'input_text','val'=>$rcat[0]['sort_order'],"req"=>'0'));
+							
+							echo $act->field(array('lable'=>'status','input_title'=>'status','desc'=>'enable or disable review','input_type'=>'select','val'=>$act->reviewstatusdropdown($rcat[0]['status']),"req"=>'0'));
+							
+							?>
+</div>
+			
+						 </div>
+						 <div class="TabbedPanelsContent" >
+<div class="mode-box">
+<h3><span>Meta Details</span></h3>						 
+						 <?php
+
+						echo $act->lang_field(array('lable'=>'Meta Keywords','input_title'=>'meta_keywords','desc'=>'enter meta keywords','input_type'=>'textarea','val'=>$lang,"req"=>'0'));
+
+						echo $act->lang_field(array('lable'=>'Meta Description','input_title'=>'meta_description','desc'=>'enter meta description','input_type'=>'textarea','val'=>$lang,"req"=>'0'));
+						?>
+						</div>
+						 </div>
+                        </form>
+                       </div>
+                  </div>
+                     <div class="module-body">
+                  </div> 
+
+                </div>  
+        		<div style="clear:both;"></div>
+            </div> 
+            <div style="clear:both;"></div>
+           <div style="clear:both;"></div>
+</div>
+		<?php }?>
+		<script type="text/javascript" >
+				window.onload = function()
+				{</script>
+				<?$select = $act->db->fetchAll("select * from r_languages order by sort_order");
+				foreach($select as $row){?>
+				<script type="text/javascript" >
+			
+					if(document.getElementById('description_<?=$row[languages_id]?>')) 
+					{
+						var oFCKeditor = new FCKeditor('description_<?=$row[languages_id]?>') ;
+					}
+						oFCKeditor.BasePath = "<?=PUBLIC_PATH?>js/fckeditor/" ;
+						oFCKeditor.Height = 300;
+						oFCKeditor.Width = '96%';
+						oFCKeditor.ReplaceTextarea() ;
+				</script>
+				<?}?><script type="text/javascript" >
+					}
+				</script>
+

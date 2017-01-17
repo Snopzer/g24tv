@@ -1,0 +1,183 @@
+<?php
+	$act=new Model_Adminaction();
+	$act_ext=new Model_Adminextaction();
+ 	if($_REQUEST['type']==''){?>
+<div class="container_12">
+           <div style="clear:both;"></div>
+            <div class="grid_12">
+  				<?
+					if($_REQUEST['msg']!=""){?>
+				<span class='<?php echo $_REQUEST['m']==""?"notification n-success":"notification n-error"?>'><?=base64_decode($_REQUEST['msg']);?></span>
+				<?}?>
+
+                <div class="bottom-spacing">
+                    <!-- Button -->
+                    <div class="float-right"><?=$this->view_pagination;?>
+						
+                    </div>
+                    <!-- Table records filtering -->
+
+
+                </div>
+
+
+                <!-- Example table -->
+                <div class="module">
+                	<h2><span><?=$this->actionTitle." [".$this->total_count."]"?></span> <div class="add-btn-div"> <?php $act->viewAddB(ADMIN_URL_CONTROLLER.$this->actionTitle);?> </div>  </h2>
+
+                    <div class="module-table-body">
+                    	<form name="frmMain" id="frmMain" method="post" action="<?php echo ADMIN_URL_CONTROLLER.$this->actionTitle?>">
+                        <table id="myTable" class="tablesorter">
+                   	  <thead>
+                                <tr>
+								  <th align="center" style="width:5%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#</th>
+                                  <th style="width:15%"><?php echo $act_ext->getSortLable(array("disType"=>$this->disType, "sortby"=>"admin_name", "page"=>$_REQUEST['page'] ,"file"=>"administrator" ,"label"=>"Name"));?></th>
+								  <th style="width:20%"><?php echo $act_ext->getSortLable(array("disType"=>$this->disType, "sortby"=>"email", "page"=>$_REQUEST['page'] ,"file"=>"administrator" ,"label"=>"Email"));?></th>
+								  <th style="width:15%"><?php echo $act_ext->getSortLable(array("disType"=>$this->disType, "sortby"=>"date_added", "page"=>$_REQUEST['page'] ,"file"=>"administrator" ,"label"=>"Date Registered"));?></th>
+								  <th style="width:15%"><?php echo $act_ext->getSortLable(array("disType"=>$this->disType, "sortby"=>"last_visit_date", "page"=>$_REQUEST['page'] ,"file"=>"administrator" ,"label"=>"Date Last Visited"));?></th>
+								  <th style="width:5%"><?php echo $act_ext->getSortLable(array("disType"=>$this->disType, "sortby"=>"status", "page"=>$_REQUEST['page'] ,"file"=>"administrator" ,"label"=>"Status"));?></th>
+								  <th style="width:10%">Role</th>
+								  <th style="width:15%"><input type="checkbox" name="checkall" id="checkall" onClick="Checkall()"/> <a href="#">Action</a></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+							<?
+					$i=1;
+					if($this->page!=1)
+					{
+						$i+=($this->page-1)*$this->per_page;
+					}
+
+							foreach ($this->results as $result)
+							{
+
+							$class=fmod($i,2)==0?'':'addcolorne';
+							?>
+                              <tr>
+                                <td align="center" class="<?=$class?>"><?=$i?></td>
+                                 <td class="<?=$class?>"><?php echo $result['full_name'];?></td>
+								 <td class="<?=$class?>"><?php echo $result['email'];?></td>
+								 <td class="<?=$class?>"><?php echo $result['date_added'];?></td>
+								 <td class="<?=$class?>"><?php echo $result['last_visit_date'];?></td>
+								 <td class="<?=$class?>"><?php echo $result['status']=='1'?'Enable':'Disable';?></td>
+								 <td class="<?=$class?>"><?php echo $result['role'];?></td>
+                                <td class="<?=$class?>">
+                                <input type="checkbox" name="rid[]" id="rid" value="<?php echo $result[$this->r_id];?>"  />
+								<?php
+									$act->viewEditB(ADMIN_URL_CONTROLLER.$this->actionTitle,$result[$this->r_id],$_REQUEST['page']);
+									$act->viewDelB($this->actionTitle,$result[$this->r_id],$this->r_table,$this->r_id,$_REQUEST['page']);
+								?>
+
+                                </td>
+                              </tr>
+                              <?$i=$i+1;}?>
+
+                            </tbody>
+                        </table>
+
+						<input type="hidden" name="page" id="page" value="<?php echo $this->page;?>">
+                        <div class="table-apply">
+                              <?$act->fnmultipleactdropdown(array('Del'=>'Delete'));?>
+                            </form>
+                        </div>
+                        <div style="clear: both"></div>
+                     </div>
+                </div>
+
+                <?=$this->view_pagination;?>
+			</div>
+             <div class="grid_6">
+		  </div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+        </div>
+		<?php }elseif($_REQUEST['type']=='Add' || 'Edit'){
+ 	/*foreach ($this->data as $result)
+	{} print_r($result);*/?>
+		<div class="container_12">
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+            <div class="grid_12">
+                <div class="module">
+                     <h2><span><?php echo $_REQUEST['type']." ".$this->actionTitle;?></span></h2>
+                     <div id="TabbedPanels1" class="TabbedPanels">
+                       <ul class="TabbedPanelsTabGroup">
+                         <li class="TabbedPanelsTab" tabindex="0">Details</li>
+                         <li class="iconsec">
+						 <?php echo $act->editCancelB($this->actionTitle,$_REQUEST['page']);?></li>
+                         <li class="iconsec">
+						 <?php
+						 if($_REQUEST['type']=='Edit'){
+						 echo $act->editApplyB(ADMIN_URL_CONTROLLER.$this->actionTitle,(int)$_REQUEST['rid'],$_REQUEST['type']);
+		}					?></li>
+                         <li class="iconsec">
+						 <?php echo $act->editSaveB(ADMIN_URL_CONTROLLER.$this->actionTitle,(int)$_REQUEST['rid'],$_REQUEST['type'],$_REQUEST['page']);?></li>
+                       </ul>
+                       <div class="TabbedPanelsContentGroup">
+                         <div class="TabbedPanelsContent"> <form name="frmEdit" method="post" enctype="multipart/form-data">
+                             <?if($this->msg!=""){ echo '<div><span class="notification n-success">'.base64_decode($this->msg).'</span></div> ';}?>
+							 <p><b>All fields indicated with * are mandatory</b></p>
+							<div class="mode-box">
+							<h3><span>Personal Details</span></h3>
+							 <?
+							//echo $act_ext->getDecryptPassword($this->data[0]['admin_pass']);
+							echo $act->field(array('lable'=>'Full Name ','input_title'=>'r_admin[full_name]','desc'=>'','input_type'=>'input_text','val'=>$this->data[0]['full_name'],"req"=>'1'));?>
+							<?
+							echo $act->field(array('lable'=>'Phone','input_title'=>'r_admin[phone]','desc'=>'phone','input_type'=>'input_text','val'=>$this->data[0]['phone'],"req"=>'0'));
+
+							if($_REQUEST['type']=='Edit')
+							{
+								echo $act->field(array('lable'=>'Email','input_title'=>'r_admin[email]','desc'=>'email','input_type'=>'input_text','val'=>$this->data[0]['email'],"req"=>'1','readonly'=>'readonly'));
+							}else
+							{
+								echo $act->field(array('lable'=>'Email','input_title'=>'r_admin[email]','desc'=>'email','input_type'=>'input_text','val'=>$this->data[0]['email'],"req"=>'1'));
+							}
+							?>
+							
+
+							<!--<p>
+							<label>*Email</label>
+							<input id="r_admin[email]" <?echo $_REQUEST['type']=='Edit'?'readonly':'';?> class="input-medium" type="text" tooltiptext="email id" value="<?=$this->data[0]['email']?>" title="Email" name="r_admin[email]">
+							</p>-->
+
+
+							</div>
+							<div class="mode-box">
+							<h3><span>Login Credentials</span></h3>
+							<p>
+							<label>*User name</label>
+							<input id="r_admin[admin_name]" <?echo $_REQUEST['type']=='Edit'?'readonly':'';?> class="input-medium" type="text" tooltiptext="usrename should be unique" value="<?=$this->data[0]['admin_name']?>" title="User name" name="r_admin[admin_name]">
+							
+			  				</p>
+							<?echo $act->field(array('lable'=>'Password','input_title'=>'r_admin[admin_pass]','desc'=>'password','input_type'=>'password','val'=>$act_ext->getDecryptPassword($this->data[0]['admin_pass']),"req"=>'1'));
+							?>
+							</div>
+							
+								<div class="mode-box">
+							<h3><span>Role</span></h3>
+							
+							<p><label>Role</label><select name="r_admin[admin_roles_id]"  id="r_admin[admin_roles_id]" ><?=$act_ext->getadminroledropdown($this->data[0]['admin_roles_id'])?></select></p>
+							</div>
+	<div class="mode-box">
+							<h3><span>Stats</span></h3>
+							<?
+
+							echo $act->field(array('lable'=>'status','input_title'=>'r_admin[status]','desc'=>'enable or disable review','input_type'=>'select','val'=>$act->reviewstatusdropdown($this->data[0]['status']),"req"=>'0'));
+							?></div>
+
+						 </div>
+                        </form>
+                       </div>
+                  </div>
+                     <div class="module-body">
+                  </div>
+
+                </div>
+        		<div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+           <div style="clear:both;"></div>
+</div>
+		<?php }?>

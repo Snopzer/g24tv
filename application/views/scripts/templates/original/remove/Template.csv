@@ -1,0 +1,54 @@
+T_body_BackGround_Color	#f8f9f9
+T_body_font_Family	"Arial, Helvetica, sans-serif;"
+T_body_font_Color	#333333
+T_body_link_Color	#333333
+T_body_link_font_Family	"Arial, Helvetica, sans-serif;"
+T_Container_Id_BackGround_Color	block
+T_Cart_Btn_BackGround_Color	#FF0000;
+T_Cart_Btn_font_Family	"Arial, Helvetica, sans-serif;"
+T_Cart_Btn_font_Color	#ffffff
+T_Cart_Btn_font_Size	12px
+T_button_font_Size	13px
+T_button_font_Color	#ffffff
+T_button_font_Family	"Arial, Helvetica, sans-serif;"
+T_button_BackGround_Color	#539605
+T_Box_Header_BackGround_Color	block
+T_Box_Header_border_Color	#FF0000;
+T_Box_Header_font_Family	oswald
+T_Box_Header_font_Size	22px
+T_Box_Header_font_Color	#333333
+T_Top_Cart_BackGround_Color	#535355
+T_Top_Cart_font_Family	"Arial, Helvetica, sans-serif;"
+T_Top_Cart_font_Color	#333333
+T_Top_Menu_BackGround_Color	#535355
+T_Sub_Manu_Div_BackGround_Color	#d0e7ec
+T_Manu_Div_Border_Color	#FF0000
+T_Manu_Div_font_Family	"Arial, Helvetica, sans-serif;"
+T_Manu_Div_font_Color	#333333
+T_Manu_Div_font_Size	15px
+T_Sub_Sub_Manu_Div_font_Family	"Arial, Helvetica, sans-serif;"
+T_Sub_Sub_Manu_Div_font_Color	#333333
+T_Sub_Sub_Manu_Div_font_Size	13px
+T_Sub_Sub_Manu_Div_backgroud_Color	#7a8284
+T_Notification_Div_BackGround	#ceecf4 
+T_Notification_Div_border_Color	#b9e3ee
+T_Notification_Div_font_Size	12px
+T_Notification_Div_font_Color	#333333
+T_Notification_Div_font_Family	"Arial, Helvetica, sans-serif;"
+T_Footer_Div_BackGround_Color	#535355
+T_Footer_Div_border_Color	#FF0000
+T_Back_to_top_Div_BackGround_Color	#7a8284 
+T_Back_to_top_border_Color	#5f6465
+T_Popup_BackGround_Color	#dee6ed
+T_Popup_Border_Color	#dbe3ea
+T_Product_Border_h3_Font_Color	#FF0000
+T_Product_Border_h3_Font_Size	15px;
+T_Product_Border_h3_Font_Family	"Arial, Helvetica, sans-serif;"
+T_Breadcrumb_BackGround_Color	block
+T_Breadcrumb_Font_Color	#333
+T_Breadcrumb_Font_Family	"Arial, Helvetica, sans-serif;"
+T_Breadcrumb_Font_Size	14px
+T_Breadcrumb_Border_Color	#FF0000
+T_Breadcrumb_A_link_Color	#333
+T_Footer_Contact_Address_Text	"8901 Marmora Road, Glasgow, D04 89GR"
+T_Footer_Contact_Number_Text	1 (234) 567-8902

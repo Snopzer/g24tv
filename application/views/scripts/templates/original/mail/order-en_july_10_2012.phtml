@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/1999/REC-html401-19991224/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title><?php echo $title; ?></title>
+<style type="text/css">
+body {
+	color: #000000;
+	font-family: Arial, Helvetica, sans-serif;
+}
+body, td, th, input, textarea, select, a {
+	font-size: 12px;
+}
+p {
+	margin-top: 0px;
+	margin-bottom: 20px;
+}
+a, a:visited, a b {
+	color: #378DC1;
+	text-decoration: underline;
+	cursor: pointer;
+}
+a:hover {
+	text-decoration: none;
+}
+a img {
+	border: none;
+}
+#container {
+	width: 680px;
+}
+#logo {
+	margin-bottom: 20px;
+}
+table.list {
+	border-collapse: collapse;
+	width: 100%;
+	border-top: 1px solid #DDDDDD;
+	border-left: 1px solid #DDDDDD;
+	margin-bottom: 20px;
+}
+table.list td {
+	border-right: 1px solid #DDDDDD;
+	border-bottom: 1px solid #DDDDDD;
+}
+table.list thead td {
+	background-color: #EFEFEF;
+	padding: 0px 5px;
+}
+table.list thead td a, .list thead td {
+	text-decoration: none;
+	color: #222222;
+	font-weight: bold;
+}
+table.list tbody td a {
+	text-decoration: underline;
+}
+table.list tbody td {
+	vertical-align: top;
+	padding: 0px 5px;
+}
+table.list .left {
+	text-align: left;
+	padding: 7px;
+}
+table.list .right {
+	text-align: right;
+	padding: 7px;
+}
+table.list .center {
+	text-align: center;
+	padding: 7px;
+}
+</style>
+</head>
+<body>
+<div id="container"><a href="<?php echo $store_url; ?>" title="<?php echo $store_name; ?>"><img src="<?php echo $logo; ?>" alt="<?php echo $store_name; ?>" id="logo" /></a>
+  <p><?php echo "Thank you for your interest in our products. Your order has been received and will be processed once payment has been confirmed"; ?></p>
+  <?php if ($customer_id) { ?>
+  <p><?php echo "To view your order click on the link below:"; ?></p>
+  <p><a href="<?php echo $link; ?>"><?php echo $link; ?></a></p>
+  <?php } ?>
+  <?php if ($download) { ?>
+  <p><?php echo "Once your payment has been confirmed you can click on the link below to access your downloadable products:"; ?></p>
+  <p><a href="<?php echo $download; ?>"><?php echo $download; ?></a></p>
+  <?php } ?>
+  <table class="list">
+    <thead>
+      <tr>
+        <td class="left" colspan="2"><?php echo 'Order Details'; ?></td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="left"><?php if ($invoice_no) { ?>
+          <b><?php echo 'Invoice No.:'; ?></b> <?php echo $invoice_no; ?><br />
+          <?php } ?>
+          <b><?php echo 'Order ID:'; ?></b> <?php echo $order_id; ?><br />
+          <b><?php echo 'Date Added:'; ?></b> <?php echo $date_added; ?><br />
+          <b><?php echo 'Payment Method:'; ?></b> <?php echo $payment_method; ?><br />
+          <?php if ($shipping_method) { ?>
+          <b><?php echo 'Shipping Method:'; ?></b> <?php echo $shipping_method; ?>
+          <?php } ?></td>
+        <td class="left"><b><?php echo 'Email:'; ?></b> <?php echo $email; ?><br />
+          <b><?php echo 'Telephone:'; ?></b> <?php echo $telephone; ?><br />
+          <b><?php echo 'IP Address:'; ?></b> <?php echo $ip; ?><br /></td>
+      </tr>
+    </tbody>
+  </table>
+  <table class="list">
+    <thead>
+      <tr>
+        <td class="left"><?php echo 'Payment Address'; ?></td>
+        <?php if ($shipping_address) { ?>
+        <td class="left"><?php echo 'Shipping Address'; ?></td>
+        <?php } ?>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="left"><?php echo $payment_address; ?></td>
+        <?php if ($shipping_address) { ?>
+        <td class="left"><?php echo $shipping_address; ?></td>
+        <?php } ?>
+      </tr>
+    </tbody>
+  </table>
+  <table class="list">
+    <thead>
+      <tr>
+        <td class="left"><?php echo 'Product'; ?></td>
+        <td class="left"><?php echo 'Model'; ?></td>
+        <td class="right"><?php echo 'Quantity'; ?></td>
+        <td class="right"><?php echo 'Price'; ?></td>
+        <td class="right"><?php echo 'Total'; ?></td>
+      </tr>
+    </thead>
+    <tbody>
+      <?php foreach ($products as $product) { ?>
+      <tr>
+        <td class="left"><?php echo $product['name']; ?>
+          <?php foreach ($product['option'] as $option) { ?>
+          <br />
+          &nbsp;<small> - <?php echo $option['name']; ?>: <?php echo $option['value']; ?></small>
+          <?php } ?></td>
+        <td class="left"><?php echo $product['model']; ?></td>
+        <td class="right"><?php echo $product['quantity']; ?></td>
+        <td class="right"><?php echo $product['price']; ?></td>
+        <td class="right"><?php echo $product['total']; ?></td>
+      </tr>
+      <?php } ?>
+    </tbody>
+    <tfoot>
+      <?php foreach ($totals as $total) { ?>
+      <tr>
+        <td colspan="4" class="right"><b><?php echo $_SESSION['TObj']->_($total['title']); ?></b></td>
+        <td class="right"><?php echo $total['text']; ?></td>
+      </tr>
+      <?php } ?>
+    </tfoot>
+  </table>
+  <p><?php echo 'Please reply to this email if you have any questions.'; ?></p>
+  <p><?php echo 'Powered By <a href="http://www.rcart99.com">Rcart</a>.'; ?></p>
+</div>
+</body>
+</html>

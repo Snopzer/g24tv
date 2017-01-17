@@ -1,0 +1,140 @@
+<?php  $ftr=$this->footer();?>
+<div class="main-footer-div"><!-- Footer-main start-->
+
+<div id="container"><!-- container start-->
+
+<div class="footer-div"><!--footer start-->
+
+<div class="footer-div-box">
+<div class="box">
+<h4>Company</h4>
+<ul class="line-k">
+                    	<li><a href="<?echo $ftr['aboutus_link']?>">About Us</a></li>
+                        <li><a href="<?echo $ftr['our_promise_link']?>">Our Promise</a></li>
+                        <li><a href="<?echo $ftr['team_link']?>">Team</a></li>
+                        <li><a href="<?echo $ftr['protection_link']?>">Protection</a></li>
+                        <li><a href="<?echo $ftr['location_link']?>">Locations</a></li>
+                    </ul>
+</div>
+<div class="clear"></div>
+</div>
+
+
+<div class="footer-div-box" id="footer-box-2">
+<div class="box" >
+<h4>Buy</h4>
+<ul class="line-k">
+                    	<li><a href="<?echo $ftr['specials_link']?>">Specials</a></li>
+			<li><a href="<?echo $ftr['voucher_link']?>">Gift Vouchers</a></li>
+                        <li><a href="<?echo $ftr['best_selling_brand_link']?>">Best Sales Brands</a></li>
+                        <li><a href="<?echo $ftr['security_link']?>">Security</a></li>
+			<li><a href="<?echo $ftr['contactus_link']?>">Contactus</a></li>
+
+
+                    </ul>
+</div>
+<div class="clear"></div>
+</div>
+
+<div class="footer-div-box">
+<div class="box"  id="footer-box-3">
+<h4>Customer</h4>
+ <ul class="line-k">
+                    	<li><a href="<?echo $ftr['signin_link']?>">Customer Sign In</a></li>
+                        <li><a href="<?echo $ftr['register_link']?>">Customer Register</a></li>
+                        <li><a href="<?echo $ftr['affiliate_signin_link']?>">Affiliate Sign In</a></li>
+                        <li><a href="<?echo $ftr['affiliate_register_link']?>">Affiliate Register</a></li>
+                        <li><a href="<?echo $ftr['sitemap_link']?>">Sitemap</a></li>
+                    </ul>
+</div>
+<div class="clear"></div>
+</div>
+
+
+<div class="footer-div-box" id="footer-box-4" >
+<div class="box">
+<h4>Contact Us</h4>
+<p>8901 Marmora Road, Glasgow, D04 89GR</p>
+<h3>1 (234) 567-8902</h3>
+<div class="pay-icon"><a href="" class="pay-mc-icon"></a> <a href="" class="pay-vise-icon"></a> <a href="" class="pay-ac-icon"></a> <a href="" class="pay-emi-icon"></a> <a href="" class="pay-net-icon"></a>  <a href="" class="pay-cart-icon"></a></div>
+</div>
+<div class="clear"></div>
+</div>
+ 
+
+
+<div class="clear"></div>
+<!--footer End--></div>
+<div class="footer-line-big">
+
+<div class="footer-line-big-inner">
+<div class="news-box">
+<div class="news-title">Newsletter</div> <div class="news-textbox"><input name="newsletter_email" id="newsletter_email" type="text" value="Enter Email ID" onfocus="value=''" class="new-letter"> <a href="" class="new-letter-btn"></a></div> </div>
+<div class="follow-us-on-box">
+<p><span>Follow Us On:</span> <a href="" class="fb-icon"></a> <a href="" class="tw-icon"></a> <a href="" class="rs-icon"></a> <a href="" class="inp-icon"></a> <a href="" class="in-icon"></a></p>
+</div>
+</div>
+</div>
+
+<!--container End--></div>
+<!-- Footer-main End--></div>
+</div>
+
+<div class="copyright-main"><!-- copyright-main start-->
+<div class="copyright"><!-- copyright start-->
+
+<p> <a href="http://www.rcart99.com/" class="logo" target="_blank"> Powered By </a> </p>
+<p class="left">Copyright © 2012 <a href="http://www.rcart99.com/" target="_blank">Rcart E Commerce solutions Pvt. Ltd </a>. All rights reserved.</p>
+<p class="center"><a href="<?echo $ftr['privacy_link']?>">Privacy Policy</a> | <a href="<?echo $ftr['terms_link']?>">Terms and Conditions</a></p>
+
+
+<div class="clear"></div>
+<!-- copyright end--></div>
+
+
+
+
+<div class="clear"></div>
+<!-- copyright-main End--></div>
+
+
+
+
+        <p id="back-top">
+		<a href="#top"><span>Back to Top</span></a>
+	</p>
+
+<!-- main-wraper End--></div>
+</body>
+</html>
+
+<!--back-top js code files-->
+
+        <script>
+$(document).ready(function(){
+
+	// hide #back-top first
+	$("#back-top").hide();
+	
+	// fade in #back-top
+	$(function () {
+		$(window).scroll(function () {
+			if ($(this).scrollTop() > 100) {
+				$('#back-top').fadeIn();
+			} else {
+				$('#back-top').fadeOut();
+			}
+		});
+
+		// scroll body to 0px on click
+		$('#back-top a').click(function () {
+			$('body,html').animate({
+				scrollTop: 0
+			}, 800);
+			return false;
+		});
+	});
+
+});
+</script>
+<!--back-top js code files-->

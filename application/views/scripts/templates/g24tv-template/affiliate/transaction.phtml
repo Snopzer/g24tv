@@ -1,0 +1,75 @@
+<div class="main-column"><!--main-max-banner start-->
+<div id="container"><!--container start-->
+
+<? if(count($this->pos[left])>0){?>
+<div id="column-left"><!--column-left start-->
+<?php echo $this->action('left','modules',null,array('mod' =>$this->pos[left]));?>
+<!--column-left End--></div>
+<?}?>
+
+<?if(count($this->pos[right])>0){?>
+<div id="column-right"><!--column-right start-->
+<?php echo $this->action('right','modules',null,array('mod' =>$this->pos[right]));?>
+<!--column-right End--></div>
+<?}?>
+		
+            <div id="content"><!--content start-->
+<?if(count($this->pos[top])>0){?>
+<div id="main-max-banner"><!--start main-max-banner-->
+<?php echo $this->action('top','modules',null,array('mod' =>$this->pos[top]));?>
+<!--End main-max-banner--></div>
+<?}?>
+
+          <div class="breadcrumb"><!--readcrumb start-->
+	<p>
+	<?php foreach ($this->data[breadcrumbs] as $breadcrumb) { ?>
+    <?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
+    <?php } ?></p>
+                 <!--readcrumb End--></div>
+				 
+                    <div class="page-title">
+			 <h1> <?php echo $this->trans->_('heading_title_affiliate_transaction'); ?></h1></div>
+						
+                    	<div class="box">    
+						<div class="box-transactions">
+						    <div class="box-content">  
+						 <p><?php echo $this->trans->_('text_balance_affiliate_transaction'); ?><b> <?php echo $this->data[balance]; ?></b>.</p>
+  <table class="list">
+    <thead>
+      <tr>
+        <td class="dashBar"><?php echo $this->trans->_('column_date_added_affiliate_transaction'); ?></td>
+        <td  class="dashBar"><?php echo $this->trans->_('column_description_affiliate_transaction'); ?></td>
+        <td  class="dashBar"><?php echo $this->trans->_('column_amount_affiliate_transaction'); ?></td>
+      </tr>
+    </thead>
+    <tbody>
+      <?php if ($this->data[transactions]) { ?>
+      <?php foreach ($this->data[transactions]  as $transaction) { ?>
+      <tr>
+        <td class="dashgrid"><?php echo $transaction['date_added']; ?></td>
+        <td class="dashgrid"><?php echo $transaction['description']; ?></td>
+        <td class="dashgrid"><?php echo $transaction['amount']; ?></td>
+      </tr>
+      <?php } ?>
+      <?php } else { ?>
+      <tr>
+        <td class="center" colspan="5"><?php echo $this->trans->_('text_empty_affiliate_transaction'); ?></td>
+      </tr>
+      <?php } ?>
+    </tbody>
+  </table>
+  <div class="pagination"><?php echo $this->data[pagination]; ?></div>
+
+
+
+						</div>
+                    <!--innerpage_rightContent --></div>
+					  <!-- <div class="buttons">
+    <div class="right"><a href="<?php echo $this->data['continue']; ?>" class="button_btn"><span><?php echo $this->trans->_('button_continue'); ?></span></a></div>
+  </div> --></div>
+				<?if(count($this->pos[bottom])>0){?>
+				<div class="container-top">
+				<?php echo $this->action('bottom','modules',null,array('mod' =>$this->pos[bottom]));?></div>
+				<?}?>
+                <!--rightContainer --></div>
+            <!--innerContent --></div>

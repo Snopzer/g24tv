@@ -1,0 +1,176 @@
+<?php
+	$act=new Model_Adminaction();
+	if($_REQUEST['type']==''){?>
+<div class="container_12">
+           <div style="clear:both;"></div>
+            <div class="grid_12">
+  				<?
+					if($_REQUEST['msg']!=""){?>
+				<span class='<?php echo $_REQUEST['m']==""?"notification n-success":"notification n-error"?>'><?=base64_decode($_REQUEST['msg']);?></span>
+				<?}?>
+
+                <div class="bottom-spacing">
+                    <!-- Button -->
+                    <div class="float-right">
+		    <?=$this->view_pagination;?>
+						
+                    </div>
+                    <!-- Table records filtering -->
+
+
+                </div>
+
+
+                <!-- Example table -->
+                <div class="module">
+                	<h2><span><?=$this->actionTitle." [".$this->total_count."]"?></span>  <div class="add-btn-div"><?php $act->viewAddB(ADMIN_URL_CONTROLLER.$this->actionTitle);?></div> </h2>
+
+                    <div class="module-table-body">
+                    	<form name="frmMain" id="frmMain" method="post" action="<?php echo ADMIN_URL_CONTROLLER.$this->actionTitle?>">
+                          <?if($this->total_count>0){?>  <table id="myTable" class="tablesorter">
+                   	  <thead>
+                                <tr>
+								  <th align="center" style="width:5%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#</th>
+                                  <th style="width:20%">Name</th>
+                                   <th style="width:13%">Remaining</th>
+                                   <th style="width:13%">Date Added</th>
+                                  <th style="width:15%"><input type="checkbox" name="checkall" id="checkall" onClick="Checkall()"/> <a href="#">Action</a></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+							<?
+					$i=1;
+					if($this->page!=1)
+					{
+						$i+=($this->page-1)*$this->per_page;
+					}
+
+							foreach ($this->results as $result)
+							{
+
+							$class=fmod($i,2)==0?'':'addcolorne';
+							?>
+                              <tr>
+                                <td align="center" class="<?=$class?>"><?=$i?></td>
+                                 <td class="<?=$class?>"><?php echo $result['name'];?></td>
+                                <td class="<?=$class?>"><?php echo $result['remaining'];?></td>
+								<td class="<?=$class?>"><?php echo $result['date_added'];?></td>
+                                <td class="<?=$class?>">
+
+								<input type="checkbox" name="rid[]" id="rid" value="<?php echo $result['download_id'];?>"  />
+								<?php
+									$act->viewEditB(ADMIN_URL_CONTROLLER.$this->actionTitle,$result['download_id'],$_REQUEST['page']);
+									$act->viewDelB($this->actionTitle,$result['download_id'],'r_download','download_id',$_REQUEST['page']);
+								?>
+
+                                </td>
+                              </tr>
+                              <?$i=$i+1;}?>
+
+                            </tbody>
+                        </table><?}else{
+								echo "<table id='myTable' class='tablesorter' border='2'><tr><td align='center'>No records to display</td></tr></table>";}?>
+
+						<input type="hidden" name="page" id="page" value="<?php echo $this->page;?>">
+                        <div class="table-apply">
+                             <?$act->fnmultipleactdropdown(array('Del'=>'Delete'));?>
+                            </form>
+                        </div>
+                        <div style="clear: both"></div>
+                     </div>
+                </div>
+
+                <?=$this->view_pagination;?>
+			</div>
+             <div class="grid_6">
+		  </div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+        </div>
+		<?php }elseif($_REQUEST['type']=='Add' || 'Edit'){
+ 	/*foreach ($this->data as $result)
+	{} print_r($result);*/?>
+		<div class="container_12">
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+            <div class="grid_12">
+                <div class="module">
+                     <h2><span><?php echo $_REQUEST['type']." ".$this->actionTitle;?></span></h2>
+                     <div id="TabbedPanels1" class="TabbedPanels">
+                       <ul class="TabbedPanelsTabGroup">
+                         <li class="TabbedPanelsTab" tabindex="0">Details</li>
+                         <li class="iconsec">
+						 <?php echo $act->editCancelB($this->actionTitle,$_REQUEST['page']);?></li>
+                         <li class="iconsec">
+						 <?php
+						 if($_REQUEST['type']=='Edit'){
+						 echo $act->editApplyB(ADMIN_URL_CONTROLLER.$this->actionTitle,(int)$_REQUEST['rid'],$_REQUEST['type']);
+		}					?></li>
+                         <li class="iconsec">
+						 <?php echo $act->editSaveB(ADMIN_URL_CONTROLLER.$this->actionTitle,(int)$_REQUEST['rid'],$_REQUEST['type'],$_REQUEST['page']);?></li>
+                       </ul>
+                       <div class="TabbedPanelsContentGroup">
+                         <div class="TabbedPanelsContent"> <form name="frmEdit" method="post" enctype="multipart/form-data">
+                             <?
+
+			     if($_REQUEST['msg']!="" )
+			     {
+				echo '<div><span class="notification n-success">'.base64_decode($_REQUEST['msg']).'</span></div> ';
+			     }
+
+			     if($this->msg!=""){ echo '<div><span class="notification n-success">'.base64_decode($this->msg).'</span></div> ';}
+                             	$ret=$act->getEditdetails('r_download_description','download_id',(int)$_REQUEST['rid']);
+								$rcat=$act->getEditdetails('r_download','download_id',(int)$_REQUEST['rid']);
+								if(count($ret)>0)
+								{
+								foreach($ret as $res)
+								{
+									$lang[$res['language_id']]=array("name" =>$res['name']);
+								}
+								}
+
+								?>
+							 <p><b>All fields indicated with * are mandatory</b></p>
+							 <div class="mode-box">
+<h3><span>Download Details</span></h3>
+
+                            <?php echo $act->lang_field(array('lable'=>'Download Name','input_title'=>'name','desc'=>'enter downloads name','input_type'=>'input_text','val'=>$lang,"req"=>'1'));
+                            echo $act->field(array('lable'=>'Total Downloads Allowed','input_title'=>'remaining','desc'=>'enter total downloads allowed','input_type'=>'input_text','val'=>$rcat[0]['remaining'],"req"=>'0'));
+                            ?>
+							<p>
+                                <label>*Upload File</label>
+                                <input name="image" id="image"  type="file" class="input-medium" value="<?=$this->data[0]['filename'];?>" tooltipText="upload file"/>
+								                       <!-- <a href="#" style="color:black;cursor:pointer;text-decoration:underline;" class="tt"><?=$rcat[0]['filename'];?><span class="tooltip"><img src="<?=PATH_TO_UPLOADS."downloads/".$rcat[0]['filename'];?>"  /></span></a> -->
+
+			   <?  $file=$rcat[0]['filename'];
+ 			       $exp=explode(".",$file);
+			       $ext=end($exp);
+		$images=array("jpeg","jpg","gif","psd","tga","eps","bmp","iff","pict","tga","lzw","ico","ttf");
+		if(in_array($ext,$images))
+		{?>
+			<a href="#" style="color:black;cursor:pointer;text-decoration:underline;" class="tt"><?=$rcat[0]['filename'];?><span class="tooltip"><img src="<?=PATH_TO_UPLOADS."downloads/".$rcat[0]['filename'];?>"  /></span></a>
+		<?}else{?>
+		<a href="<?php echo ADMIN_URL_CONTROLLER.$this->actionTitle."?type=".$_REQUEST['type']."&rid=".(int)$_REQUEST['rid']."&page=".$_REQUEST['page']."&file=".$rcat[0]['filename']?>"><?php echo $rcat[0]['filename'];?></a>
+		<?}?>
+						   <input name="prev_image" id="prev_image" type="hidden" value="<?=$rcat[0]['filename'];?>" />
+						   </p>
+
+      
+ 
+			</div>			 </div>
+                        </form>
+
+                       </div>
+                  </div>
+                     <div class="module-body">
+                  </div>
+
+                </div>
+        		<div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+           <div style="clear:both;"></div>
+</div>
+		<?php }?>

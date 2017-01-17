@@ -1,0 +1,103 @@
+<?
+$act=new Model_Adminaction();
+$order=array();
+if(sizeof($_REQUEST['rid'])>0)
+{
+	$order=$act->db->fetchAssoc("select * from r_orders where orders_id in(".implode(',',$_REQUEST[rid]).")");
+}
+
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en" xml:lang="en">
+<head>
+<title><?php echo @constant('STORE_NAME');?></title>
+<link rel="stylesheet" type="text/css" href="<?=PATH_TO_ADMIN_CSS?>invoice.css" />
+</head>
+<body>
+<?
+foreach($order as $k) {?>
+<div style="page-break-after: always;">
+<img src="<?echo PATH_TO_UPLOADS."image/".STORE_LOGO?>"  alt="<?php echo STORE_NAME?>" />
+  <h1>Invoice</h1>
+  <div class="div1">
+    <table width="100%">
+
+      <tr>
+        <td><?echo nl2br(STORE_NAME_ADDRESS);?></td>
+
+        <td align="right" valign="top"><table>
+            <tr>
+              <td><b>Date Added:</b></td>
+              <td>#<?=$k[date_purchased]?></td>
+            </tr>
+                        <tr>
+              <td><b>Invoice No.:</b></td>
+
+              <td><?=INVOICE_PREFIX.$k[invoice_id]?></td>
+            </tr>
+						<tr>
+              <td><b>Invoice Date:</b></td>
+              <td><?=date("d/m/y");?></td>
+            </tr>
+            			            <tr>
+
+              <td><b>Order ID:</b></td>
+              <td>#<?=$k[orders_id]?></td>
+            </tr>
+          </table></td>
+      </tr>
+    </table>
+  </div>
+  <table class="address">
+
+    <tr class="heading">
+      <td width="50%"><b>To</b></td>
+      <td width="50%"><b>Ship To (if different address)</b></td>
+    </tr>
+    <tr>
+      <td><?="$k[billing_name]<br/>$k[billing_company]<br/>$k[billing_street_address]<br/>$k[billing_suburb]<br/>$k[billing_city]<br/>$k[billing_postcode]<br/>$k[billing_state]<br/>$k[billing_country]<br/>"?></td>
+      <td><?="$k[delivery_name]<br/>$k[delivery_company]<br/>$k[delivery_street_address]<br/>$k[delivery_suburb]<br/>$k[delivery_city]<br/>$k[delivery_postcode]<br/>$k[delivery_state]<br/>$k[delivery_country]<br/>"?></td>
+    </tr>
+  </table>
+
+  <table class="product">
+    <tr class="heading">
+      <td><b>Product</b></td>
+      <td><b>Model</b></td>
+      <td align="right"><b>Quantity</b></td>
+      <td align="right"><b>Unit Price</b></td>
+      <td align="right"><b>Total</b></td>
+<?$prod=$act->db->fetchAll("select p.*,o.currency_id,c.symbol_left,c.symbol_right from r_orders_products p,r_orders o,r_currencies c where p.orders_id='".$k[orders_id]."' and p.orders_id=o.orders_id and c.currencies_id=o.currency_id");
+foreach($prod as $prod){ ?>
+</tr>
+       <tr>
+      <td>
+<?=$prod['products_name'];
+$opt=$act->db->fetchAll("select * from r_orders_products_option where order_id='".$k[orders_id]."' and order_product_id='".$prod['orders_products_id']."'");
+if(count($opt)>0)
+{
+foreach($opt as $o)
+{?>
+<br>&nbsp;<small> - <?=$o['name']?> : <?=$o['value']?></small>
+<?}}?>
+	  </td>
+      <td><?=$prod['products_model'];?></td>
+      <td align="right"><?=$prod['products_quantity'];?></td>
+
+      <td align="right"><?=$prod['symbol_left'].number_format($prod['products_price'],2).$prod['symbol_right']?></td>
+      <td align="right"><?=$prod['symbol_left'].number_format($prod['final_price'],2).$prod['symbol_right']?></td>
+    </tr>
+<?}?>
+<?$ord=$act->db->fetchAll("select * from r_orders_total where orders_id='".$k['orders_id']."' order by sort_order asc");
+foreach($ord as $ot)
+{ ?>
+	<tr>
+      <td align="right" colspan="4"><?=$ot['title']?></td>
+      <td align="right"><?=$ot['text']?></td>
+    </tr>
+<?}?>
+   </table>
+  </div>
+  <?}?>
+</body>
+</html>

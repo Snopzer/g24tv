@@ -1,0 +1,68 @@
+<div class="main-column"><!--main-max-banner start-->
+<div id="container"><!--container start-->
+
+<? if(count($this->pos[left])>0){?>
+<div id="column-left"><!--column-left start-->
+<?php echo $this->action('left','modules',null,array('mod' =>$this->pos[left]));?>
+<!--column-left End--></div>
+<?}?>
+
+<?if(count($this->pos[right])>0){?>
+<div id="column-right"><!--column-right start-->
+<?php echo $this->action('right','modules',null,array('mod' =>$this->pos[right]));?>
+<!--column-right End-->
+<?}?>
+		
+            <div id="content"><!--content start-->
+<?if(count($this->pos[top])>0){?>
+<div id="main-max-banner"><!--start main-max-banner-->
+<?php echo $this->action('top','modules',null,array('mod' =>$this->pos[top]));?>
+<!--End main-max-banner--></div>
+<?}?>
+
+          <div class="breadcrumb"><!--readcrumb start-->
+	<p>
+	<?php foreach ($this->data[breadcrumbs] as $breadcrumb) { ?>
+    <?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
+    <?php } ?></p>
+                  <!--readcrumb End--></div>
+				  
+				  
+                     <div class="page-title">
+<h1>  <?php echo $this->trans->_('heading_title_account_return'); ?></h1></div>
+				
+                  <div class="box">
+				  
+				  <div class="box-content">
+ 
+ <?php 
+ 
+ if ($this->data[returns]) { ?>
+  <?php foreach ($this->data[returns] as $return) { ?>
+  <div class="return-list">
+  <div class="list-title-bar">
+    <div class="return-id"><b><?php echo $this->trans->_('text_return_id_account_return');?></b> #<?php echo $return['return_id']; ?></div>
+    <div class="return-status"><b><?php echo $this->trans->_('text_status_account_return');?></b> <?php echo $return['status']; ?></div>
+	</div>
+    <div class="return-content">
+      <div><b><?php echo $this->trans->_('text_date_added_account_return');?></b> <?php echo $return['date_added']; ?><br />
+        <b><?php echo $this->trans->_('text_order_id_account_return');?></b> <?php echo $return['order_id']; ?></div>
+      <div><b><?php echo $this->trans->_('text_customer_account_return');?></b> <?php echo $return['name']; ?></div>
+      <div class="return-info"><a href="<?php echo $return['href']; ?>" class="button_btn"><span><?php echo $this->trans->_('button_view'); ?></span></a></div>
+    </div>
+  </div>
+  <?php } ?>
+  <div class="pagination"><?php echo $this->data[pagination]; ?></div>
+  <?php } else { ?>
+  <div class="content"><?php echo $this->trans->_('text_empty_account_return');?></div>
+  <?php } ?>
+ </div>
+                    <!--box end --></div>
+				<?if(count($this->pos[bottom])>0){?>
+<div class="content-bottom"><!--content-bottom srtart-->
+<?php echo $this->action('bottom','modules',null,array('mod' =>$this->pos[bottom]));?>
+</div>
+<?}?>
+                           
+<!--container End--></div>
+           <!--main-max-banner End--></div>

@@ -1,0 +1,179 @@
+<?php
+	$act=new Model_Adminaction();
+	$act_ext=new Model_Adminextaction();
+ 	if($_REQUEST['type']==''){?>
+<div class="container_12">
+           <div style="clear:both;"></div>
+            <div class="grid_12">
+  				<?
+					if($_REQUEST['msg']!=""){?>
+				<span class="notification n-success"><?=base64_decode($_REQUEST['msg']);?></span>
+				<?}?>
+				
+                <div class="bottom-spacing">
+                    <!-- Button -->
+                    <div class="float-right"><?=$this->view_pagination;?>
+						<?php $act->viewAddB(ADMIN_URL_CONTROLLER.$this->actionTitle);?>
+                    </div>
+                    <!-- Table records filtering -->
+                    
+                    
+                </div>
+                
+                
+                <!-- Example table -->
+                <div class="module">
+                	<h2><span><?=$this->actionTitle."s [".$this->total_count."]"?></span></h2>
+                    
+                    <div class="module-table-body">
+                    	<form name="frmMain" id="frmMain" method="post" action="<?php echo ADMIN_URL_CONTROLLER.$this->actionTitle?>"> 
+                        <table id="myTable" class="tablesorter">
+                   	  <thead>
+                                <tr>
+								  <th align="center" style="width:5%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#</th>
+                                  <th style="width:20%">Title</th>
+								  <th style="width:15%">Group</th>
+								  <th style="width:15%">Views/Clicks</th>
+								  <th style="width:15%">Status</th>
+								  <th style="width:15%">graph</th>
+                                  <th style="width:15%"><input type="checkbox" name="checkall" id="checkall" onClick="Checkall()"/> <a href="#">Action</a></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+						
+							<? 
+					$i=1;
+					if($this->page!=1)
+					{
+						$i+=($this->page-1)*$this->per_page;
+					}
+
+							foreach ($this->results as $result) 
+							{
+							 
+							$class=fmod($i,2)==0?'':'addcolorne';
+							$row=$act_ext->banners_history($result['banners_id']);
+							?>
+                              <tr>
+                                <td align="center" class="<?=$class?>"><?=$i?></td>
+                                 <td class="<?=$class?>"><?php echo $result['banners_title'];?></td>
+								 <td class="<?=$class?>"><?php echo $result['banners_group'];?></td>
+								 <td class="<?=$class?>"><?php echo $row['view']."/".$row['click'];?></td>
+								 <td class="<?=$class?>"><?php echo $result['status']=='1'?'Enable':'Disable';?></td>
+								 <td class="<?=$class?>"><?php echo "<a href='banner-graph?banner_id=".$result['banners_id']."'>views</a>";?></td>
+                                <td class="<?=$class?>">
+                                
+								<input type="checkbox" name="rid[]" id="rid" value="<?php echo $result[$this->r_id];?>"  />
+								<?php 
+							    if($result['status']=='0'){?>
+								<a href="javascript:fnSingleAction('Pub','banner','<?php echo $result['banners_id'];?>','r_banners','status','banners_id','<?=$this->page?>');">
+								<img src="images/minus-circle.gif"   width="16" height="16" title="unpublish" />
+								</a>
+								<?php }else{?>
+								<a href="javascript:fnSingleAction('UnPub','banner','<?php echo $result['banners_id'];?>','r_banners','status','banners_id','<?=$this->page?>');">
+								<img src="images/tick-circle.gif"   width="16" height="16" title="publish" />
+								</a>
+								<?php }
+									$act->viewEditB(ADMIN_URL_CONTROLLER.$this->actionTitle,$result[$this->r_id],$_REQUEST['page']);
+								//	$act->viewDelB($this->actionTitle,$result[$this->r_id],$this->r_table,$this->r_id,$_REQUEST['page']);
+								?>	
+								
+                                </td>
+                              </tr>
+                              <?$i=$i+1;}?>
+                                 
+                            </tbody>
+                        </table>
+
+						<input type="hidden" name="page" id="page" value="<?php echo $this->page;?>">
+                        <div class="table-apply">
+                             <div>
+                            <span>Apply action to selected:</span> 
+							<?$arrmact=array('Pub'=>'Enable','UnPub'=>'Disable');
+							  $act->viewMultipleAction($arrmact);?>
+     
+                            </div>
+                            </form>
+                        </div>
+                        <div style="clear: both"></div>
+                     </div>  
+                </div>  
+
+                <?=$this->view_pagination;?>
+			</div>  
+             <div class="grid_6">
+		  </div>  
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+        </div>  
+		<?php }elseif($_REQUEST['type']=='Add' || 'Edit'){ 
+ 	/*foreach ($this->data as $result) 
+	{} print_r($result);*/?>
+		<div class="container_12">
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+            <div class="grid_12">
+                <div class="module">
+                     <h2><span><?php echo $_REQUEST['type']." ".$this->actionTitle;?></span></h2>
+                     <div id="TabbedPanels1" class="TabbedPanels">
+                       <ul class="TabbedPanelsTabGroup">
+                         <li class="TabbedPanelsTab" tabindex="0">Details</li>
+                         <li class="iconsec">
+						 <?php echo $act->editCancelB($this->actionTitle,$_REQUEST['page']);?></li>
+                         <li class="iconsec">
+						 <?php 
+						 if($_REQUEST['type']=='Edit'){
+						 echo $act->editApplyB(ADMIN_URL_CONTROLLER.$this->actionTitle,(int)$_REQUEST['rid'],$_REQUEST['type']);
+		}					?></li>
+                         <li class="iconsec">
+						 <?php echo $act->editSaveB(ADMIN_URL_CONTROLLER.$this->actionTitle,(int)$_REQUEST['rid'],$_REQUEST['type'],$_REQUEST['page']);?></li>
+                       </ul> 
+                       <div class="TabbedPanelsContentGroup">
+                         <div class="TabbedPanelsContent"> <form name="frmEdit" method="post" enctype="multipart/form-data">
+                             <?if($this->msg!=""){ echo '<div><span class="notification n-success">'.base64_decode($this->msg).'</span></div> ';}?>
+							 <p><b>All fields indicated with * are mandatory</b></p>
+							 <div class="mode-box">
+<h3><span>Banner Details</span></h3>
+
+                            <? echo $act->field(array('lable'=>'Banner Title','input_title'=>'title','desc'=>'enter title','input_type'=>'input_text','val'=>$this->data[0]['banners_title'],"req"=>'1'));?>
+	
+							<p><label>Banner Group</label><input type="text" name="banner_group" id="banner_group" value="<?=$this->data[0]['banners_group']?>" readonly ></p>
+
+							<?echo $act->field(array('lable'=>'Url','input_title'=>'url','desc'=>'enter banner url','input_type'=>'input_text','val'=>$this->data[0]['banners_url'],"req"=>'1'));?>
+							
+							<p>
+                                <label>Upload Banners</label>
+                                <input name="banner" id="banner"  type="file" class="input-medium" value="<?=$this->data[0]['banners_image'];?>" tooltipText="upload banner"/>
+								 <a href="#" style="color:black;cursor:pointer;text-decoration:underline;" class="tt"><?=$this->data[0]['banners_image'];?><span class="tooltip"><img src="<?=PATH_TO_UPLOADS."image/".$this->data[0]['banners_image'];?>"  /></span></a>
+								    <input name="prev_image" id="prev_image" type="hidden" value="<?=$this->data[0]['banners_image'];?>" />
+						   </p>
+						   
+						   <?echo $act->field(array('lable'=>'Html Text','input_title'=>'html_text','desc'=>'enter html text','input_type'=>'textarea','val'=>$this->data[0]['banners_html_text'],"req"=>'1'));
+
+							echo $act->field(array('lable'=>'Date Scheduled','input_title'=>'date_scheduled','desc'=>'enter scheduled date','input_type'=>'input_text','val'=>$this->data[0]['date_scheduled'],"req"=>'0'));
+
+							?>
+							
+							<p><label>Expires On</label><input type="text" name="expires_on" id="expires_on" value="<?=$this->data[0]['expires_date']?>" >  <input type="text" name="impressions" id="impressions" value="<?=$this->data[0]['expires_impressions']?>" > or Impressions/Views</p>
+							<p><label>Status</label><select name="status" id="status"><?=$act->reviewstatusdropdown($this->data[0]['status']);?></select></p>
+							
+						    
+						 </div></div>
+                        </form>
+                       </div>
+                  </div>
+                     <div class="module-body">
+                  </div> 
+
+                </div>  
+        		<div style="clear:both;"></div>
+            </div> 
+            <div style="clear:both;"></div>
+           <div style="clear:both;"></div>
+</div>
+		<?php }?>
+<script type="text/javascript">
+date_pick('#expires_on');
+date_pick('#date_scheduled');
+</script>

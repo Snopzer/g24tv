@@ -1,0 +1,121 @@
+<?php
+$act=new Model_Adminaction();
+	if($_REQUEST['type']==''){?>
+<div class="container_12">
+           <div style="clear:both;"></div>
+            <div class="grid_12">
+  				<?
+					if($_REQUEST['msg']!=""){?>
+				<span class="notification n-success"><?=base64_decode($_REQUEST['msg']);?></span>
+				<?}?>
+
+                <div class="bottom-spacing">
+                    <!-- Button -->
+                    <div class="float-right"><?php echo  $this->paginationControl($this->shipping,'sliding','admin/pagelinks.phtml');?>
+						<?php $act->viewAddB(ADMIN_URL_CONTROLLER.$this->actionTitle);?>
+                    </div>
+                    <!-- Table records filtering -->
+
+
+                </div>
+
+
+                <!-- Example table -->
+                <div class="module">
+                	<h2><span><?=$this->actionTitle." [".sizeof($this->results)."]"?></span></h2>
+                    <!-- <span style="float:right"><b>Upload:</b><input type="file" name="upload" id="upload" value=""><input type="submit" value="Upload"></span> -->
+                    <div class="module-table-body">
+                    	<form name="frmMain" id="frmMain" method="post" action="<?php echo ADMIN_URL_CONTROLLER.$this->actionTitle?>">
+                        <table id="myTable" class="tablesorter">
+                   	  <thead>
+                                <tr>
+								  <th align="center" style="width:5%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#</th>
+                                  <th style="width:20%">Modules</th>
+                                  <th style="width:21%"><a href="<?php echo $this->actionTitle?>?disType=<?php echo $this->disType?>&sortby=zone_name&page=<?php echo $this->page?>">Sort Order</a></th>
+                                  <th style="width:15%">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+						                             </tbody>
+<?echo $this->row;?>
+						</table>
+
+						<input type="hidden" name="page" id="page" value="<?php echo $this->page;?>">
+                        <!-- <div class="table-apply">
+                             <div>
+                            <span>Apply action to selected:</span>
+							<?$arrmact=array('Del'=>'Delete');
+							  $act->viewMultipleAction($arrmact);?>
+
+                            </div>
+                         -->    </form>
+                        </div>
+                        <div style="clear: both"></div>
+                     </div>
+                </div>
+
+                <?=$this->view_pagination;?>
+			</div>
+             <div class="grid_6">
+		  </div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+        </div>
+		<?php }elseif($_REQUEST['type']=='Add' || 'Edit'){
+ 	/*foreach ($this->data as $result)
+	{} print_r($result);*/?>
+		<div class="container_12">
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+            <div class="grid_12">
+                <div class="module">
+                     <h2><span><?php echo $_REQUEST['type']." ".$this->actionTitle;?></span></h2>
+                     <div id="TabbedPanels1" class="TabbedPanels">
+                       <ul class="TabbedPanelsTabGroup">
+                         <li class="TabbedPanelsTab" tabindex="0">Details</li>
+                         <li class="iconsec">
+						 <?php echo $act->editCancelB($this->actionTitle,$_REQUEST['page']);?></li>
+                         <li class="iconsec">
+						 <?php echo $act->editSaveB(ADMIN_URL_CONTROLLER.$this->actionTitle,$_REQUEST['rid'],$_REQUEST['type'],$_REQUEST['page']);?></li>
+                       </ul>
+                       <div class="TabbedPanelsContentGroup">
+                         <div class="TabbedPanelsContent categortee"> <form name="frmEdit" method="post" enctype="multipart/form-data">
+                             <?if($this->msg!=""){ echo '<div><span class="notification n-success">'.base64_decode($this->msg).'</span></div> ';}?>
+							 <?//echo $this->fields;
+
+							$class="Model_Shipping_".substr(ucfirst($_REQUEST['rid']),0,-4);
+
+							include_once APPLICATION_PATH.'/models/functions.php';
+							$edit=new $class;
+								foreach($edit->keys() as $k=>$v)
+								{
+										$arr=$act->selectConfig($v);
+										if($arr[0]['set_function'])
+										{
+											echo '<p><label>'.$arr[0]['configuration_title'].'</label>';
+											eval($arr[0]['set_function'] . "'" . $arr[0]['configuration_value'] . "', '" . $arr[0]['configuration_key'] . "');");
+											echo '</p>';
+
+										}else{
+										echo '<p><label>'.$arr[0]['configuration_title'].'</label><input name="configuration['.$arr[0]['configuration_key'].']" id="configuration['.$arr[0]['configuration_key'].']" type="text" class="input-medium" value="'.$arr[0]['configuration_value'].'" tooltipText="'.$arr[0]['configuration_description'].'"/></p>';
+										}
+								}
+
+								?>
+
+						 </div>
+                        </form>
+                       </div>
+                  </div>
+                     <div class="module-body">
+                  </div>
+
+                </div>
+        		<div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+           <div style="clear:both;"></div>
+</div>
+		<?php }?>

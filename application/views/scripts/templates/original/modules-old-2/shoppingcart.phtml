@@ -1,0 +1,33 @@
+<script type="text/javascript">
+$(document).ready(function() {
+	//shopping cart side block
+			$.ajax({
+			url: HTTP_SERVER+'ajax/cartupdate',
+			dataType: 'json',
+					success: function(json) {
+				if (json['output']) {
+					$('#cart_block').html(json['output']);
+				}
+			}
+		});
+		});
+</script>
+
+    <div class="box">
+	<div class="modules-box-div">
+	   <div class="box-newsletter">
+    <?php if($this->info[data][title]!=""){?><div class="box-heading"><p><span><?php echo $this->info[data][title];?></p></span></div><?}?>
+    <div class="box-content">
+
+	
+		
+     <div class="shopping-cart">
+	 <div  id="cart_block">
+	 
+	 </div>
+	 </div>
+	 
+ </div>
+			</div>
+		</div>
+	</div>

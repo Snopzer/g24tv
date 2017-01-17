@@ -1,0 +1,26 @@
+<?php //exit('in featured');?>
+<div class="content_bottom_right">
+	<div class="single_bottom_rightbar">
+		<?php if(@constant('featured_module_title')!=""){ ?><h2><?php echo @constant('featured_module_title'); ?></h2><? } ?>
+		<ul class="small_catg popular_catg wow fadeInDown">
+			<?php foreach ($this->info[data][products] as $product) { ?> 
+				<li>
+					<div class="media wow fadeInDown">
+						<?php if ($product['thumb']) { ?>
+							<a href="<?php echo $product['href']; ?>" class="media-left">
+								<img alt="img" src="<?php echo $this->url_to_site."timthumb.php?src=".$product['thumb']; ?>" alt="<?php echo $product['name']; ?>">
+							</a>
+						<?php } ?>
+						<div class="media-body">
+							<h4 class="media-heading"><a href="<?php echo $product['href']; ?>"><?php echo $product['name']; ?></a></h4> 
+							<div class="comments_box">
+								<span class="meta_date"><?php echo $product['date_added'];?></span>
+								<span class="meta_comment"><?php echo sprintf($this->trans->_('text_reviews_product_product'), (int)$product['reviews']); ?></span> 
+							</div>
+						</div>
+					</div>
+				</li>
+			<? } ?>
+		</ul>
+	</div>
+</div>

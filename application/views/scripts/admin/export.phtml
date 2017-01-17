@@ -1,0 +1,133 @@
+<?php
+$act=new Model_Adminaction();
+$act_ext=new Model_Adminextaction();?>
+<!-- popup stylesheet -->
+<!-- <link rel="stylesheet" type="text/css" href="<?echo PATH_TO_ADMIN_CSS;?>popup.css"  media="screen" /> -->
+<script src="<?echo PATH_TO_ADMIN_JS;?>../SpryAssets/SpryTabbedPanels.js" type="text/javascript"></script>
+<link href="<?echo PATH_TO_ADMIN_CSS;?>../SpryAssets/SpryTabbedPanels.css" rel="stylesheet" type="text/css" />
+
+<!-- start popup field msg popup -->
+<!-- <link rel="stylesheet" href="<?echo PATH_TO_ADMIN_CSS;?>form-field-tooltip.css" media="screen" type="text/css"> -->
+<script type="text/javascript" src="<?echo PATH_TO_ADMIN_JS;?>rounded-corners.js"></script>
+<script type="text/javascript" src="<?echo PATH_TO_ADMIN_JS;?>form-field-tooltip.js"></script>
+<!-- end popup field msg popup -->
+
+	<div class="container_12">
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+            <div class="grid_12">
+		<?
+		if($_REQUEST['msg']!=""){?>
+		<span class="notification n-success"><?=base64_decode($_REQUEST['msg']);?>
+		<?php 
+		if($_REQUEST['type']=='import')
+		{
+			if($_SESSION[EXCEL_ERROR_MESSAGE]>0)
+			{
+				echo "<br/>";
+				foreach($_SESSION[EXCEL_ERROR_MESSAGE] as $k=>$v)
+				{
+					echo $v."<br/>";
+				}
+			}
+		}
+		//echo "<pre>";
+		//print_r($_SESSION[EXCEL_ERROR_MESSAGE]);
+		//echo "</pre>";
+		?>
+		</span>
+		<?}?>
+
+                <div class="module"> 
+                     <h2><span>Import/Export</span></h2>
+                     <div id="TabbedPanels1" class="TabbedPanels">
+                       <ul class="TabbedPanelsTabGroup">
+                         <li class="TabbedPanelsTab" tabindex="0">Details</li>
+                         <li class="iconsec">
+						 <?php echo $act->editCancelB($this->actionTitle,$_REQUEST['page']);?></li>
+                         <li class="iconsec">
+			 <a href="#" onclick="fnimport();">Import</a>
+			 </li>
+			 <li class="iconsec">
+			 <a href="javascript:fnSave('<?php echo @constant('ADMIN_URL_CONTROLLER');?>export?type=export')">Export</a>
+			 </li>
+                         <!-- <li class="iconsec">
+						 <?php echo $act->editSaveB(ADMIN_URL_CONTROLLER.$this->actionTitle,$_REQUEST['rid'],$_REQUEST['type'],$_REQUEST['page']);?>
+			</li> -->
+                       </ul>
+                       <div class="TabbedPanelsContentGroup">
+                         <div class="TabbedPanelsContent"> <form name="frmEdit" method="post" enctype="multipart/form-data">
+                             <?if($this->msg!=""){ echo '<div><span class="notification n-success">'.base64_decode($this->msg).'</span></div> ';}?>
+
+                            <p><label> Upload Excel File:</label><input type="file" name="import" id="import" ></p>
+			   <p><label>Download</label> <a class="button" href="<?php echo @constant('ADMIN_URL_CONTROLLER');?>downloads?file=sample.xls"?>Sample Excel File </a>   <a href="javascript:fndownload();" class="button">Document </a></p>
+			
+			  <p>  <i>Note:Upload Excel File to Udate database with Products and Categories.</i></p>
+<table class="list"><thead>
+<tr><td  class="left" colspan="2">Upload images for products,categories by selecting appropriate option.uploaded file must be in zip format.<!-- To Upload large zip files check POST_MAX_SIZE and MAX_UPLOAD_SIZE settings in server. --></td></tr>
+<tr><td  class="left"><select name="directory" class="directory-sele"><option value="categories">Categories</option><option value="products">Products</option></select></td><td  class="left"><input type="file" name="browser">  <a href="javascript:fnSave('<?php echo @constant('ADMIN_URL_CONTROLLER');?>export?type=upload')"  class="button">Upload Zip</a></td></tr></thead></table>
+				<table class="list">
+				
+				<!--<thead><tr><td  class="left" width="25%"><b>Name</b></td><td width=""75%" class="left"><b>Id</b></td></tr></thead>
+				
+				<tbody><tr><td  class="left">Product Id</td><td  class="left"><?php echo $this->product_id;?> [newly inserted product id should start from here]</td></tr>
+				<tr><td>Category_id</td><td><?php echo $this->category_id;?> [newly inserted category id should start from here]</td></tr></tbody>
+				
+				<thead><tr><td  class="left"><b>Language</b></td><td  class="left"><b>Id</b></td></tr></thead>
+				
+				 <?foreach($this->lang as $k=>$v){?>
+				<tbody><tr><td><?php echo $v['name']?></td><td><?php echo $v['languages_id']?></td></tr></tbody>
+				<?}?> -->
+				<thead><tr><td class="left"><b>Stock Status</b></td><td class="left"><b>Id</b></td></tr></thead>
+				<?foreach($this->stock as $k=>$v){?>
+				<tbody><tr><td><?php echo $v['name']?></td><td><?php echo $v['stock_status_id']?></td></tr></tbody>
+				<?}?>
+				<thead><tr><td class="left"><b>Tax Class</b></td><td class="left"><b>Id</b></td></tr></thead>
+				<?foreach($this->tax as $k=>$v){?>
+				<tbody><tr><td class="left"><?php echo $v['tax_class_title']?></td><td class="left"><?php echo $v['tax_class_id']?></td></tr></tbody>
+				<?}?>
+<thead><tr><td class="left" colspan="2" ><b>Downloads</b></td></tr></thead>
+				<?foreach($this->downloads as $k=>$v){?>
+				<tbody><tr><td class="left" colspan="2" ><?php echo $v['name']?></td></tr></tbody>
+				<?}?>
+
+				</table>
+						 </div>
+                        </form>
+                       </div>
+                  </div>
+                     <div class="module-body">
+                  </div>
+
+                </div>
+        		<div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+           <div style="clear:both;"></div>
+</div>
+<script type="text/javascript">
+function fnimport()
+{
+	var fup = document.getElementById('import');
+	var fileName = fup.value;
+	var ext = fileName.substring(fileName.lastIndexOf('.') + 1);
+	if(ext != "xls")
+	{
+		alert("Upload xls file!!");
+		fup.focus();
+		return false;
+	} 
+	else
+	{
+		if(confirm("Do you want to import the excel file.make sure you have export excel file before.database will be updated with the current imported file"))
+		{
+			fnSave('<?php echo @constant('ADMIN_URL_CONTROLLER');?>export?type=import');
+		}
+	}
+}
+
+function fndownload()
+{
+	window.location.href="<?php ECHO HTTP_SERVER;?>library/CommonFiles/import-export.docx";
+}
+</script> 

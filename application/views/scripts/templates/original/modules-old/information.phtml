@@ -1,0 +1,18 @@
+<div class="box">
+<div class="information-div">
+<?php if(@constant('information_module_title')!=""){ ?><div class="box-heading"><p><span><?php echo @constant('information_module_title'); ?></span></p></div><?}?>
+<div class="information-div-content">
+<div class="box-content">
+<div class="box-category">
+<ul>
+			<?php foreach ($this->info[data][informations] as $information) { ?>
+			<li><a href="<?php echo $information['href']; ?>"><?php echo $information['title']; ?></a></li>
+			<?php } ?>
+			<li><a href="<?php echo $this->info[data][contact]; ?>"><?php echo $this->trans->_('text_contact_module_information'); ?></a></li>
+			<li><a href="<?php echo $this->info[data][sitemap] ?>"><?php echo $this->trans->_('text_sitemap_module_information'); ?></a></li>
+			</ul>
+			</div>
+		</div>
+	</div>
+  </div>
+</div>

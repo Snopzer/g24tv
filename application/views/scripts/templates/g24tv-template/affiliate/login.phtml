@@ -1,0 +1,76 @@
+<!-- start site main content -->
+<section id="mainContent">
+<div class="content_top">
+	<div class="row">
+		<?if(count($this->pos[top])>0){?>
+			<?php echo $this->action('top','modules',null,array('mod' =>$this->pos[top]));?>
+		<?}?>
+	</div>
+</div>
+<!-- start main content bottom -->
+<div class="content_bottom">
+	<div class="col-lg-8 col-md-8">
+		<!-- start content bottom left -->
+		<div class="content_bottom_left">
+			
+			<div class="archive_style_1">
+				<div class="row">
+					<div class="col-lg-12 col-md-12 col-sm-12">
+						<!-- start contact area -->
+						<div class="contact_area">
+							<div class="contact_bottom">
+								<div class="contact_us wow fadeInRightBig">
+									<h2>Affiliate Login</h2>
+									
+									   <?php if ($this->data[success]) { ?>
+									  <div class="success"><?php echo $this->data[success]; ?></div>
+									  <?php } ?>
+									  <?php if ($this->data[error_warning]) { ?>
+									  <div class="warning"><?php echo $this->data[error_warning]; ?></div>
+									  <?php } ?>
+  
+  
+									<form class="contact_form" action="<?php echo $this->data[action]; ?>" method="post" enctype="multipart/form-data" id="login">
+										<input class="form-control" type="text" name="email" placeholder="<?php echo $this->trans->_('entry_email_affiliate_login'); ?>">
+										<input class="form-control" type="password" name="password" placeholder="<?php echo $this->trans->_('entry_password_affiliate_login'); ?>">
+										<button type="submit" value="<?php echo $this->trans->_('button_login'); ?>">
+										
+										<?php if ($this->data[redirect]) { ?>
+											<input type="hidden" name="redirect" value="<?php echo $this->data[redirect]; ?>" />
+										<?php } ?>
+		  
+		  
+										</form>
+									</div>
+								</div>
+							</div>
+							<!-- End contact area -->
+						</div>
+					</div>
+					
+				</div>
+				<div class="pagination_area">
+					<?php echo $this->pagination; ?>
+				</div>
+				
+				<? if(count($this->pos[left])>0){?>
+					<?php echo $this->action('left','modules',null,array('mod' =>$this->pos[left]));?>
+				<?}?>
+			</div><!--End content_bottom_left-->                 
+		</div>
+		<!-- start content bottom right -->
+		<div class="col-lg-4 col-md-4">
+			<div class="content_bottom_right">
+				<?if(count($this->pos[right])>0){?>
+					<?php echo $this->action('right','modules',null,array('mod' =>$this->pos[right]));?>
+				<?}?>
+				
+			</div>
+		</div>
+	</div>  
+	<div class="content_middle">
+		<?if(count($this->pos[bottom])>0){?>
+			<?php echo $this->action('bottom','modules',null,array('mod' =>$this->pos[bottom]));?>
+		<?}?>
+	</div><!-- End main content middle -->
+</section><!-- End site main content -->	

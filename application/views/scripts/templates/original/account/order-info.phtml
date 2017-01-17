@@ -1,0 +1,183 @@
+<div class="main-column"><!--main-max-banner start-->
+<div id="container"><!--container start-->
+
+<? if(count($this->pos[left])>0){?>
+<div id="column-left"><!--column-left start-->
+<?php echo $this->action('left','modules',null,array('mod' =>$this->pos[left]));?>
+<!--column-left End--></div>
+<?}?>
+
+<?if(count($this->pos[right])>0){?>
+<div id="column-right"><!--column-right start-->
+<?php echo $this->action('right','modules',null,array('mod' =>$this->pos[right]));?>
+<!--column-right End-->
+<?}?>
+		
+            <div id="content"><!--content start-->
+<?if(count($this->pos[top])>0){?>
+<div id="main-max-banner"><!--start main-max-banner-->
+<?php echo $this->action('top','modules',null,array('mod' =>$this->pos[top]));?>
+<!--End main-max-banner--></div>
+<?}?>
+
+          <div class="breadcrumb"><!--readcrumb start-->
+	<p><?php foreach ($this->data[breadcrumbs] as $breadcrumb) { ?>
+    <?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
+    <?php } ?></p>
+                  <!--readcrumb end --></div>
+				  
+           <div class="page-title">
+<h1> <?php echo $this->trans->_('text_order_account_order'); ?></h1></div>
+					<div class="box">
+						
+							<!--<div class="box-heading"><p><span><?php echo $this->trans->_('text_order_account_order'); ?></span></p></div>-->
+                    	<div id="dashBoardCotnent">
+    <table class="list">
+    <thead>
+      <tr>
+        <td class="left" colspan="2"><?php echo $this->trans->_('text_order_detail_account_order');
+	 
+	?></td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="left"><?php if ($this->data[invoice_no]) { ?>
+          <b><?php echo $this->trans->_('text_invoice_no_account_order'); ?></b> <?php echo $this->data[invoice_no]; ?><br />
+          <?php } ?>
+          <b><?php echo $this->trans->_('text_order_id_account_order'); ?></b> #<?php echo $this->data[order_id]; ?><br />
+          <b><?php echo $this->trans->_('text_date_added_account_order'); ?></b> <?php echo $this->data[date_added]; ?></td>
+        <td class="left"><b><?php echo $this->trans->_('text_payment_method_account_order'); ?></b> <?php echo $this->data[payment_method]; ?><br />
+          <?php if ($this->data[shipping_method]) { ?>
+          <b><?php echo $this->trans->_('text_shipping_method_account_order'); ?></b> <?php echo $this->data[shipping_method]; ?>
+          <?php } ?></td>
+      </tr>
+    </tbody>
+  </table>
+  <table class="list">
+    <thead>
+      <tr>
+        <td class="left"><?php echo $this->trans->_('text_payment_address_account_order'); ?></td>
+        <?php if ($this->data[shipping_address]) { ?>
+        <td class="left"><?php echo $this->trans->_('text_shipping_address_account_order'); ?></td>
+        <?php } ?>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="left"><?php echo $this->data[payment_address]; ?></td>
+        <?php if ($this->data[shipping_address]) { ?>
+        <td class="left"><?php echo $this->data[shipping_address]; ?></td>
+        <?php } ?>
+      </tr>
+    </tbody>
+  </table>
+  <form action="<?php echo $this->data[action]; ?>" method="post" enctype="multipart/form-data" id="reorder">
+    <table class="list">
+      <thead>
+        <tr>
+          <td width="1" style="text-align: center;">
+		  <input type="checkbox" onclick="$('input[name*=\'selected\']').attr('checked', this.checked);" />
+		  </td>
+		  <td class="left" >Return 	</td>
+          <td class="left"><?php echo $this->trans->_('column_name_account_order'); ?></td>
+          <td class="left"><?php echo $this->trans->_('column_model_account_order'); ?></td>
+          <td class="right"><?php echo $this->trans->_('column_quantity_account_order'); ?></td>
+          <td class="right"><?php echo $this->trans->_('column_price_account_order'); ?></td>
+          <td class="right"><?php echo $this->trans->_('column_total_account_order'); ?></td>
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+	/*echo "<pre>";
+	print_r($this->data[products]);
+	echo "</pre>";*/
+	foreach ($this->data[products] as $product) { ?>
+        <tr>
+          <td style="text-align: center; vertical-align: middle;">
+	  <?php if ($product['selected']) { ?>
+            <input type="checkbox" name="selected[]" value="<?php echo $product['order_product_id']; ?>" checked="checked" />
+            <?php } else { ?>
+            <input type="checkbox" name="selected[]" value="<?php echo $product['order_product_id']; ?>" />
+            <?php } ?></td>
+			<td><a href="<?echo $product['return']?>"><?php echo $this->trans->_('text_return_account_order'); ?></a></td>
+			
+          <td class="left"><?php echo $product['name']; ?>
+            <?php foreach ($product['option'] as $option) { ?>
+            <br />
+            &nbsp;<small> - <?php echo $option['name']; ?>: <?php echo $option['value']; ?></small>
+            <?php } ?></td>
+          <td class="left"><?php echo $product['model']; ?></td>
+          <td class="right"><?php echo $product['quantity']; ?></td>
+          <td class="right"><?php echo $product['price']; ?></td>
+          <td class="right"><?php echo $product['total']; ?></td>
+        </tr>
+        <?php } ?>
+      </tbody>
+      <tfoot>
+        <?php foreach ($this->data[totals] as $total) { ?>
+        <tr>
+          <td colspan="6" class="right"><b><?php echo $total['title']; ?></b></td>
+          <td class="right"><?php echo $total['text']; ?></td>
+        </tr>
+        <?php } ?>
+      </tfoot>
+    </table>
+  </form>
+  <div class="buttons">
+    <div class="right"><a onclick="$('#reorder').submit();" class="button_btn"><span><?php echo $this->trans->_('button_reorder'); ?></span></a></div>
+  </div>
+  <?php if ($this->data[comment]) { ?>
+  <table class="list">
+    <thead>
+      <tr>
+        <td class="left"><?php echo $this->data[text_comment]; ?></td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="left"><?php echo $this->data[comment]; ?></td>
+      </tr>
+    </tbody>
+  </table>
+  <?php } ?>
+  
+  
+  <?php if ($this->data[histories]) { ?>
+ <div class="box">
+
+  <div class="box-heading"><p><span><?php echo $this->trans->_('text_history_account_order'); ?></span></p></div>
+  <div class="box-content">
+  <table class="list">
+    <thead>
+      <tr>
+        <td class="left"><?php echo $this->trans->_('column_date_added_account_order'); ?></td>
+        <td class="left"><?php echo $this->trans->_('column_status_account_order'); ?></td>
+        <td class="left"><?php echo $this->trans->_('column_comment_account_order'); ?></td>
+      </tr>
+    </thead>
+    <tbody>
+      <?php foreach ($this->data[histories] as $history) { ?>
+      <tr>
+        <td class="left"><?php echo $history['date_added']; ?></td>
+        <td class="left"><?php echo $history['status']; ?></td>
+        <td class="left"><?php echo $history['comment']; ?></td>
+      </tr>
+      <?php } ?>
+    </tbody>
+  </table>
+  <?php } ?>
+  
+  </div>
+  </div>
+ 						
+						</div>
+                    <!--box end --></div>
+			<?if(count($this->pos[bottom])>0){?>
+<div class="content-bottom"><!--content-bottom srtart-->
+<?php echo $this->action('bottom','modules',null,array('mod' =>$this->pos[bottom]));?>
+</div>
+<?}?>
+                           
+<!--container End--></div>
+           <!--main-max-banner End--></div>

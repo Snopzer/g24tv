@@ -1,0 +1,66 @@
+<?php
+$act=new Model_Adminaction();
+$act_ext=new Model_Adminextaction();?>
+<!-- popup stylesheet -->
+<script src="<?echo PATH_TO_ADMIN_JS;?>../SpryAssets/SpryTabbedPanels.js" type="text/javascript"></script>
+<link href="<?echo PATH_TO_ADMIN_CSS;?>../SpryAssets/SpryTabbedPanels.css" rel="stylesheet" type="text/css" />
+
+<!-- start popup field msg popup -->
+<script type="text/javascript" src="<?echo PATH_TO_ADMIN_JS;?>rounded-corners.js"></script>
+<script type="text/javascript" src="<?echo PATH_TO_ADMIN_JS;?>form-field-tooltip.js"></script>
+<!-- end popup field msg popup -->
+
+	<div class="container_12">
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+            <div class="grid_12">
+                <div class="module">
+                     <h2><span>Backup/Restore</span></h2>
+                     <div id="TabbedPanels1" class="TabbedPanels">
+                       <ul class="TabbedPanelsTabGroup">
+                         <li class="TabbedPanelsTab" tabindex="0">Details</li>
+                         <li class="iconsec">
+						 <?php echo $act->editCancelB($this->actionTitle,$_REQUEST['page']);?></li>
+                         <li class="iconsec">
+			 <a href="javascript:fnSave('<?php echo $this->url_to_site;?>admin/database-backup?type=backup')">Backup</a>
+			 </li>
+			 <!-- <li class="iconsec">
+			 <a href="javascript:fnSave('http://sun-network/mve_org_new/admin/database-backup?type=restore')">Restore</a>
+			 </li> -->
+                         <!-- <li class="iconsec">
+						 <?php echo $act->editSaveB(ADMIN_URL_CONTROLLER.$this->actionTitle,$_REQUEST['rid'],$_REQUEST['type'],$_REQUEST['page']);?>
+			</li> -->
+                       </ul>
+                       <div class="TabbedPanelsContentGroup">
+                         <div class="TabbedPanelsContent categortee"> <form name="frmEdit" method="post" enctype="multipart/form-data">
+                             <?if($this->msg!=""){ echo '<div><span class="notification n-success">'.base64_decode($this->msg).'</span></div> ';}?>
+			
+							 <div class="mode-box">
+<h3><span>Database Options</span></h3>
+
+                            <p><label>Category:</label>
+			    <select multiple name="tables[]">
+			    <option value="admin" selected >Administrators</option>
+			    <option value="configuration" selected >Configuration</option>
+			    <option value="customers" selected >Customers</option>
+			    <option value="products" selected >Products/Categorys</option>
+			    <option value="offers_affiliates" selected >Offers/affiliates</option>
+			    <option value="orders_returns" selected >Orders/Returns</option>
+			    </select>	    <i>Note:Tables related to the selected category will be downloaded.</i>
+</div>
+</p>
+		
+						 </div>
+                        </form>
+                       </div>
+                  </div>
+                     <div class="module-body">
+                  </div>
+
+                </div>
+        		<div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+           <div style="clear:both;"></div>
+</div>
+		 

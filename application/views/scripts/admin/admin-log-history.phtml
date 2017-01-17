@@ -1,0 +1,102 @@
+<?php
+	$act=new Model_Adminaction();
+ 	if($_REQUEST['type']==''){?>
+<div class="container_12">
+           <div style="clear:both;"></div>
+            <div class="grid_12">
+  				<?
+					if($_REQUEST['msg']!=""){?>
+				<span class="notification n-success"><?=base64_decode($_REQUEST['msg']);?></span>
+				<?}?>
+				
+                <div class="bottom-spacing">
+                    <!-- Button -->
+                    <div class="float-right"><?=$this->view_pagination;?>
+						<?php $act->viewAddB(ADMIN_URL_CONTROLLER.$this->actionTitle);?>
+                    </div>
+                    <!-- Table records filtering -->
+                    
+                    
+                </div>
+                
+                
+                <!-- Example table -->
+                <div class="module">
+                	<h2><span><?=$this->actionTitle." [".$this->total_count."]"?></span></h2>
+                    
+                    <div class="module-table-body">
+                    	<form name="frmMain" id="frmMain" method="post" action="<?php echo ADMIN_URL_CONTROLLER.$this->actionTitle?>"> 
+                        <table id="myTable" class="tablesorter">
+                   	  <thead>
+                                <tr>
+								  <th align="center" style="width:5%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#</th>
+                                  <th style="width:15%">Admin Name</th>
+								  <th style="width:10%">Role</th>
+								  <th style="width:10%">Page Accessed</th>
+								  <th style="width:10%">Page Url</th>
+								  <th style="width:10%">Action</th>
+								  <th style="width:15%">Date Accessed</th>
+								  <th style="width:15%">Ip Address</th>
+                                  <th style="width:15%"><input type="checkbox" name="checkall" id="checkall" onClick="Checkall()"/> <a href="#">Action</a></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+						
+							<? 
+					$i=1;
+					if($this->page!=1)
+					{
+						$i+=($this->page-1)*$this->per_page;
+					}
+
+							foreach ($this->results as $result) 
+							{
+							 
+							$class=fmod($i,2)==0?'':'addcolorne';
+							?>
+                              <tr>
+                                <td align="center" class="<?=$class?>"><?=$i?></td>
+                                 <td class="<?=$class?>"><?php echo $result['name'];?></td>
+								 <td class="<?=$class?>"><?php echo $result['role'];?></td>
+								 <td class="<?=$class?>"><?php echo $result['page_accessed'];?></td>
+								 <td class="<?=$class?>"><?php echo "<a href='".$result['page_url']."' >click here</a>";?></td>
+								 <td class="<?=$class?>"><?php echo $result['action'];?></td>
+								 <td class="<?=$class?>"><?php echo $result['access_date'];?></td>
+								 <td class="<?=$class?>"><?php echo $result['ip_address'];?></td>
+                                <td class="<?=$class?>">
+                                <input type="checkbox" name="rid[]" id="rid" value="<?php echo $result[$this->r_id];?>"  />
+								<?php 
+									$act->viewDelB($this->actionTitle,$result[$this->r_id],$this->r_table,$this->r_id,$_REQUEST['page']);
+								?>	
+								
+                                </td>
+                              </tr>
+                              <?$i=$i+1;}?>
+                                 
+                            </tbody>
+                        </table>
+
+						<input type="hidden" name="page" id="page" value="<?php echo $this->page;?>">
+                        <div class="table-apply">
+                             <div>
+                            <span>Apply action to selected:</span> 
+							<?$arrmact=array('Del'=>'Delete');
+							  $act->viewMultipleAction($arrmact);?>
+     
+                            </div>
+                            </form>
+                        </div>
+                        <div style="clear: both"></div>
+                     </div>  
+                </div>  
+
+                <?=$this->view_pagination;?>
+			</div>  
+             <div class="grid_6">
+		  </div>  
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+        </div>  
+		<?php }?>
+	 

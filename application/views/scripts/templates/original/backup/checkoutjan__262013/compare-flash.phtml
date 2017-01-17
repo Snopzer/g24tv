@@ -1,0 +1,32 @@
+<?php
+if ($this->data[products]) {?>
+	<div class="content-cart" id="prod-compare">
+	<div class="content">
+	
+  <?php foreach ($this->data[products] as $product) {?>
+   
+	<div class="content-cart">
+	<div class="img"><?php if ($product['thumb']) { ?>
+      <a href="<?php echo $product['href']; ?>"><img src="<?php echo HTTP_SERVER."timthumb.php?src=".$product['thumb']; ?>" alt="<?php echo $product['name']; ?>" title="<?php echo $product['name']; ?>" /></a>
+      <?php } ?></div>
+	
+	<div class="cant">
+	<p><span><a href=""><?php echo $product['name']; ?></a></span></p>
+	<p><a href=""><?php echo $product['price']; ?></a></p>
+	</div>
+	
+	<div class="chackout-box"><input name="remove" type="checkbox" onclick="removeCompare(this.value)" class="chack" value="<?php echo $product['product_id']; ?>" /></div>
+	</div>
+	
+	
+<?php }?>
+<div class="viewmore"><a href="<?php echo $this->url_to_site."product/compare"?>">View all</a></div>
+	
+	</div>
+	
+	</div>
+<? }else { ?>
+<div class="empty">No Products Available</div>	</div>
+	
+	</div>
+<?php } ?>

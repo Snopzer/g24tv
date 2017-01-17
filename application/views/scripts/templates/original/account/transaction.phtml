@@ -1,0 +1,75 @@
+<div class="main-column"><!--main-max-banner start-->
+<div id="container"><!--container start-->
+
+<? if(count($this->pos[left])>0){?>
+<div id="column-left"><!--column-left start-->
+<?php echo $this->action('left','modules',null,array('mod' =>$this->pos[left]));?>
+<!--column-left End--></div>
+<?}?>
+
+<?if(count($this->pos[right])>0){?>
+<div id="column-right"><!--column-right start-->
+<?php echo $this->action('right','modules',null,array('mod' =>$this->pos[right]));?>
+<!--column-right End-->
+<?}?>
+		
+            <div id="content"><!--content start-->
+<?if(count($this->pos[top])>0){?>
+<div id="main-max-banner"><!--start main-max-banner-->
+<?php echo $this->action('top','modules',null,array('mod' =>$this->pos[top]));?>
+<!--End main-max-banner--></div>
+<?}?>
+
+          <div class="breadcrumb"><!--readcrumb start-->
+	<p>
+	<?php foreach ($this->data[breadcrumbs] as $breadcrumb) { ?>
+    <?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
+    <?php } ?></p>
+                  <!--readcrumb End --></div>
+           <div class="page-title">
+<h1> <span>  <?php echo $this->trans->_('heading_title_account_transaction'); ?> </span> </h1></div>
+						 
+                    
+                  <div class="box">
+				   <div class="box-account-transaction">
+				
+				  <div class="box-content">
+ 						 <p ><?php echo $this->trans->_('text_total_account_transaction'); ?><b> <?php echo $this->data[total]; ?></b>.</p>
+  <table class="list">
+    <thead>
+      <tr>
+        <td class="dashBar"><?php echo $this->trans->_('column_date_added_account_transaction'); ?></td>
+        <td  class="dashBar"><?php echo $this->trans->_('column_description_account_transaction'); ?></td>
+        <td  class="dashBar"><?php echo $this->trans->_('column_amount_account_transaction'); ?></td>
+      </tr>
+    </thead>
+    <tbody>
+      <?php if ($this->data[transactions]) { ?>
+      <?php foreach ($this->data[transactions]  as $transaction) { ?>
+      <tr>
+        <td class="dashgrid"><?php echo $transaction['date_added']; ?></td>
+        <td class="dashgrid"><?php echo $transaction['description']; ?></td>
+        <td class="dashgrid"><?php echo $transaction['amount']; ?></td>
+      </tr>
+      <?php } ?>
+      <?php } else { ?>
+      <tr>
+        <td class="center" colspan="5"><?php echo $this->trans->_('text_empty_account_transaction'); ?></td>
+      </tr>
+      <?php } ?>
+    </tbody>
+  </table>
+  <div class="pagination"><?php echo $this->data[pagination]; ?></div>
+ 
+		</div>
+						
+						</div>
+                     <!--box end --></div>
+				<?if(count($this->pos[bottom])>0){?>
+<div class="content-bottom"><!--content-bottom srtart-->
+<?php echo $this->action('bottom','modules',null,array('mod' =>$this->pos[bottom]));?>
+</div>
+<?}?>
+              
+<!--container End--></div>
+           <!--main-max-banner End--></div>

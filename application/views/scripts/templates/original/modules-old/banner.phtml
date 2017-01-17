@@ -1,0 +1,28 @@
+<?
+/*ECHO "<pre>";
+print_r($this->info[data]);
+ECHO "</pre>";*/
+?>
+<div class="box">
+<div class="box-brands-div"> 
+<?if($this->info[data][title]!=""){?><div class="box-heading"><p><span><?php echo $this->info[data][title]?></span></p></div><?}?>
+<div class="box-brand-logo">
+<div class="brand-logo-div">
+                  
+				  <div class="box-content" >
+				  <div class="box-product">
+			   <?foreach($this->info[data][side_banners] as $k1){
+
+			   if($k1['link']){
+			   ?>
+			   <div style="width:<?php echo $k1['width']."px"?>;height:<?php echo $k1['height']."px"?>"> <div class="image">  <a href="<?echo $k1['link'];?>"><img src="<?php echo $this->url_to_site."timthumb.php?src=".$k1['image']; ?>" alt="<?echo $k1['title'];?>" ></a></div>   </div>
+			   <?}else{?>
+			<div class="image"> <img src="<?php echo $this->url_to_site."timthumb.php?src=".$k1['image']; ?>" alt="<?echo $k1['title'];?>" > </div>
+			   <?}}?>
+			   </div>
+		   </div>
+</div>
+
+</div>
+<!--brands End--></div>
+</div>

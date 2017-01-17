@@ -1,0 +1,66 @@
+<div class="main-column"><!--main-max-banner start-->
+<div id="container"><!--container start-->
+
+<? if(count($this->pos[left])>0){?>
+<div id="column-left"><!--column-left start-->
+<?php echo $this->action('left','modules',null,array('mod' =>$this->pos[left]));?>
+<!--column-left End--></div>
+<?}?>
+
+<?if(count($this->pos[right])>0){?>
+<div id="column-right"><!--column-right start-->
+<?php echo $this->action('right','modules',null,array('mod' =>$this->pos[right]));?>
+<!--column-right End-->
+<?}?>
+		
+<div id="content"><!--content start-->
+<?if(count($this->pos[top])>0){?>
+<div id="main-max-banner"><!--start main-max-banner-->
+<?php echo $this->action('top','modules',null,array('mod' =>$this->pos[top]));?>
+<!--End main-max-banner--></div>
+<?}?>
+
+          <div class="breadcrumb"><!--readcrumb start-->
+	<p><?php foreach ($this->data[breadcrumbs] as $breadcrumb) { ?>
+    <?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
+    <?php } ?></p>
+                  <!--readcrumb End--></div>
+		<div class="page-title">
+<h1><?php echo $this->trans->_('heading_title_account_forgotten'); ?></h1>		  
+		</div>		  
+   <?php if ($this->data[error_warning]) { ?>
+  <div class="warning"><?php echo $this->data[error_warning]; ?></div>
+  <?php } ?>
+ 
+ 
+ 
+ 	<div class="box">
+	 <div class="box-content-main">
+ 	<div class="forgotten-password">
+
+ 	<form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="forgotten">
+  <div class="box-content">
+    
+    <p class="forgotten-div"><?php echo $this->trans->_('text_email_account_forgotten'); ?></p>
+	
+    <div class="content">
+      <table class="form">
+        <tr>
+          <td><?php echo $this->trans->_('entry_email_account_forgotten'); ?></td>
+          <td><input type="text" name="email" value="" /></td>
+        </tr>
+      </table>
+    </div>
+	 </div>
+	   </div>
+ 
+  </div>
+
+    </div>
+	     <div class="buttons">
+      <div class="left"><a href="<?php echo $this->data[back]; ?>" class="button_btn"><span><?php echo $this->trans->_('button_back'); ?></span></a></div>
+      <div class="right"><a onclick="$('#forgotten').submit();" class="button_btn"><span><?php echo $this->trans->_('button_submit_forgot'); ?></span></a></div>
+    </div>
+  </form>
+	    </div>
+</div>

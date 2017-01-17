@@ -1,0 +1,87 @@
+     	<div id="caption"><p>Check Out Option</p></div>
+                            <div style="clear:both;"></div>
+                          <div id="chkOutContent" class="checkout-logo-box" >
+                            	<div id="chkOutConient_block">
+                                	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                      <tr>
+                                        <td width="48%" class="textborder" align="left" valign="top"><table width="98%" border="0" cellspacing="0" cellpadding="0">
+                                          <tr>
+                                            <td height="30" align="left" valign="middle">
+											<div class="left"><h2><?php echo $_SESSION['OBJ']['tr']->_('text_new_customer_checkout_checkout'); ?></h2></div>
+					     <!-- <p><?php echo $_SESSION['OBJ']['tr']->_('text_checkout_checkout_checkout'); ?></p> --></td>
+                                          </tr>
+                                          <tr>
+                                            <td height="80" align="center" valign="middle">
+											
+											<table width="435" border="0" cellspacing="0" cellpadding="0">
+                                              <tr>
+                                                <td width="22" height="20" align="left" valign="middle"><?php if ($this->data[account] == 'register') { ?>
+    <input type="radio" name="account" value="register" id="register" checked="checked"  class="radio" />
+    <?php } else { ?>
+    <input type="radio" name="account" value="register" id="register"  class="radio" />
+    <?php } ?></td>
+                                                <td width="228" align="left" valign="middle">
+						<label for="register"><?php echo $_SESSION['OBJ']['tr']->_('text_register_checkout_checkout'); ?></label></td>
+                                              </tr>
+					       <?php if ($this->data[guest_checkout]) { ?>
+					      
+                                              <tr>
+                                                <td height="20" align="left" valign="middle"><?php if ($this->data[account] == 'guest') { ?>
+    <input type="radio" name="account" value="guest" id="guest" checked="checked"  class="radio" />
+    <?php } else { ?>
+    <input type="radio" name="account" value="guest" id="guest"  class="radio" />
+    <?php } ?></td>
+                                                <td align="left" valign="middle"><label for="guest"><?php echo $_SESSION['OBJ']['tr']->_('text_guest_checkout_checkout'); ?></label></td>
+                                              </tr><?}?>
+                                            </table></td>
+                                          </tr>
+                                          <tr>
+                                            <td align="left" valign="middle" >
+                                            <p class="para"><?php echo stripslashes($_SESSION['OBJ']['tr']->_('text_register_account_checkout_checkout')); ?></p></td>
+                                          </tr>
+                                          <tr>
+                                            <td align="left" valign="middle">&nbsp;</td>
+                                          </tr>
+                                          <tr>
+                                            <td align="left" valign="middle" class="loading"> <a id="button-account" class="button_btn"  ><span > <?php echo $_SESSION['OBJ']['tr']->translate('button_continue'); ?></span></a> </td>
+                                          </tr>
+                                        </table></td>
+                                        <td width="14" align="center" valign="middle"></td>
+                                        <td width="48%" class="textborder" align="center" valign="top"><table width="98%" border="0" cellspacing="0" cellpadding="0">
+                                          <tr>
+                                            <td height="30" align="left" valign="middle"><div class="left"><h2><?php echo $_SESSION['OBJ']['tr']->_('text_returning_customer_checkout_checkout'); ?></h2>  <p><?php echo $_SESSION['OBJ']['tr']->_('text_i_am_returning_customer_checkout_checkout'); ?></p></td>
+                                          </tr>
+                                        
+                                          <tr>
+                                            <td height="80" align="center" valign="middle"><table width="95%" border="0" cellspacing="0" cellpadding="0" id="login">
+                                              <tr>
+                                                <td width="24%" align="left" valign="middle" class="field_name font_no_bold"><?php echo $_SESSION['OBJ']['tr']->_('entry_email_checkout_checkout'); ?></td>
+                                                <td width="3%" align="left" valign="middle">:</td>
+                                                <td width="73%" align="left" valign="middle"><input type="text" name="email" value="" /></td>
+                                              </tr>
+                                              <tr>
+                                                <td align="left" height="46" valign="middle" class="field_name font_no_bold"><?php echo $_SESSION['OBJ']['tr']->_('entry_password_checkout_checkout'); ?></td>
+                                                <td align="left" valign="middle">:</td>
+                                                <td align="left" valign="middle"> <input type="password" name="password" value="" /></td>
+                                              </tr>
+											  <tr>
+                                                <td align="left" height="40" valign="middle">&nbsp;</td>
+                                                <td align="left" valign="middle">&nbsp;</td>
+                                                <td align="left" valign="middle">&nbsp;&nbsp;<?php echo $_SESSION['OBJ']['tr']->_('text_forgotten_checkout_checkout'); ?> <a href="<?php echo $this->data[forgotten]; ?>" class="logo-out">click here</a></td>
+                                              </tr>
+                                              <tr>
+                                                <td align="left" valign="middle">&nbsp;</td>
+                                                <td align="left" valign="middle">&nbsp;</td>
+                                                <td align="left" valign="middle" class="loading">  &nbsp;&nbsp;&nbsp;<a id="button-login" class="button_btn"><span class="btn"><?php echo $_SESSION['OBJ']['tr']->translate('button_login'); ?></span></a></td>
+                                              </tr>
+
+                                            </table></td>
+                                          </tr>
+                                          <tr>
+                                            <td align="left" valign="middle">&nbsp;</td>
+                                          </tr>
+                                        </table></td>
+                                      </tr>
+                                    </table>
+                              </div>
+                          </div>

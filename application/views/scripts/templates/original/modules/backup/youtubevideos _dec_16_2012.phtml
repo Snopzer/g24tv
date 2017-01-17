@@ -1,0 +1,21 @@
+  <?
+  $width=$this->info[data][youtubevideos][width];
+  $height=$this->info[data][youtubevideos][height];
+  ?>
+  <div class="box" id="video-best">
+    <div class="box-heading"><p>Watch the Video</p></div>
+    <div class="box-content">
+    <div class="box-product">
+    <?foreach($this->info[data][youtubevideos][value] as $k=>$v){ ?>
+    	<!-- start video here -->
+	<object width="<?php echo $width;?>" height="<?php echo $height;?>">
+	<param name="movie" value="http://www.youtube.com/v/<?php echo $v;?>" />
+	<param name="wmode" value="transparent" />
+	<embed src="http://www.youtube.com/v/<?php echo $v;?>"
+	type="application/x-shockwave-flash"
+	wmode="transparent" width="<?php echo $width;?>" height="<?php echo $height;?>" />
+	</object>
+	<?$v="";}?>
+	<!-- end video here -->		</div>
+		</div>
+	</div>

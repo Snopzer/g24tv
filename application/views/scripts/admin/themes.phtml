@@ -1,0 +1,413 @@
+<?php
+
+$act=new Model_Adminaction();
+$act_ext=new Model_Adminextaction();
+
+
+	if($_REQUEST['type']==''){?>
+<div class="container_12">
+           <div style="clear:both;"></div>
+            <div class="grid_12">
+  				<?
+					if($_REQUEST['msg']!=""){?>
+				<span class="notification n-success"><?=base64_decode($_REQUEST['msg'])?></span>
+				<?}?>
+
+                <div class="bottom-spacing">
+                    <!-- Button -->
+                    <div class="float-right">
+		    <?php echo  $this->paginationControl($this->themes,'sliding','admin/pagelinks.phtml');?>
+						<?php $act->viewAddB(ADMIN_URL_CONTROLLER.$this->actionTitle);?>
+                    </div>
+                    <!-- Table records filtering -->
+
+
+                </div>
+
+
+                <!-- Example table -->
+                <div class="module">
+                	<h2><span><?=$this->actionTitle?></span></h2>
+                     <div class="module-table-body">
+                    	<form name="frmMain" id="frmMain" method="post" action="<?php echo ADMIN_URL_CONTROLLER.$this->actionTitle?>">
+                        <table id="myTable" class="tablesorter">
+                   	
+                            <tbody>
+			    </tbody>
+					<?
+ 
+					$itrt=1;
+					if($_REQUEST['page']=="" || $_REQUEST['page']=="1")
+					{
+						$itrt=1;
+					}else
+					{
+						$itrt+=($_REQUEST['page']-1)*@constant('ADMIN_PAGE_LIMIT');
+					}
+				foreach($this->themes as $v)
+				{
+					$default=$v==SITE_DEFAULT_TEMPLATE?'checked':'';
+				$class=fmod($itrt,2)==0?'':'addcolorne';
+				echo '<div  id="themes-div" class="'.$class.'"><div align="center" class="number-div-theme">'.$itrt.'</div>
+				<div class="imge-div-theme"><a href="themes?type=Edit&rid='.$v.'"><img src="'.HTTP_SERVER."timthumb.php?src=".URL_TO_TEMPLATES.$v.'/mockup.png&w=139&h=160"  /></a></div>
+                               <div class="title-div-theme"><a href="themes?type=Edit&rid='.$v.'">'.$v.'</a></div>
+				<div class="radio-div-theme"><input type="radio" name="theme" id="theme" '.$default.' value="'.$v.'"" onclick="fnTheme(this.value)"></div></div>';
+				$itrt++;
+				}
+					?>
+						</table>
+
+						<input type="hidden" name="page" id="page" value="<?php echo $this->page;?>">
+                        <!-- <div class="table-apply">
+                             <div>
+                            <span>Apply action to selected:</span>
+							<?$arrmact=array('Del'=>'Delete');
+							  $act->viewMultipleAction($arrmact);?>
+
+                            </div>
+                         -->    </form>
+                        </div>
+                        <div style="clear: both"></div>
+                     </div>
+                </div>
+
+                <?=$this->view_pagination;?>
+			</div>
+             <div class="grid_6">
+		  </div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+        </div>
+		<?php }elseif($_REQUEST['type']=='Add' || 'Edit'){
+ 	/*foreach ($this->data as $result)
+	{} print_r($result);*/?>
+	<script type="text/javascript" src="<?echo PATH_TO_ADMIN_JS;?>jscolor/jscolor.js"></script>
+		<div class="container_12">
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+            <div class="grid_12">
+                <div class="module">
+                     <h2><span><?php echo $_REQUEST['type']." ".$this->actionTitle;?></span></h2>
+                     <div id="TabbedPanels1" class="TabbedPanels">
+                       <ul class="TabbedPanelsTabGroup">
+                         <li class="TabbedPanelsTab" tabindex="0">Template Info</li>
+			 <li class="TabbedPanelsTab" tabindex="0">Design Modifications</li>
+			 <li class="TabbedPanelsTab" tabindex="0">Language</li>
+			 <li class="TabbedPanelsTab" tabindex="0">Footer</li>
+			 <li class="TabbedPanelsTab" tabindex="0">Introduction Page</li>
+                         <li class="iconsec">
+						 <?php echo $act->editCancelB($this->actionTitle,$_REQUEST['page']);?></li>
+                         <li class="iconsec">
+						 <?php echo $act->editSaveB(ADMIN_URL_CONTROLLER.$this->actionTitle,$_REQUEST['rid'],$_REQUEST['type'],$_REQUEST['page']);?></li>
+                       </ul>
+                       <div class="TabbedPanelsContentGroup">
+                         <div class="TabbedPanelsContent"> 
+						 <div class="themes-box-main" id="themes-box1">
+						 <form name="frmEdit" method="post" enctype="multipart/form-data">
+                             <?if($_REQUEST['msg']!=""){ echo '<div><span class="notification n-success">'.base64_decode($_REQUEST['msg']).'</span></div>';}?>
+							 <?//echo $this->fields;
+$template_info=file(PATH_TO_TEMPLATES."/".$_REQUEST['rid']."/Template_Info.csv");
+
+if(sizeof($this->temp_keys)==0)
+{
+ 	$template=file(PATH_TO_TEMPLATES."/".$_REQUEST['rid']."/template.txt");
+}else
+{
+ 	$template=$this->temp_keys;
+}
+
+foreach($template_info as $k=>$v)
+{
+	$exp=explode(",",$v);
+	if($exp[0]=='Theme')
+	{
+	$preview='<a href="#" style="color:black;cursor:pointer;text-decoration:underline;" class="tt">'.$exp[1].'<span class="tooltip"><img src="'.URL_TO_TEMPLATES.$_REQUEST['rid'].'/'.$exp[1].'"  /></span></a>';
+
+	echo '<p>'. '<span class="echo-icon">'. $exp[0]. '</span>'.'<span class="echo-arrow">'.':'. '</span>'. $preview.'</p>';
+	}else{
+	echo '<p>'. '<span class="echo-icon">'. $exp[0].'</span>'. '<span class="echo-arrow">'. ':'. '</span>'. $exp[1].'</p>';
+	}
+	//echo $exp[0]." : ".$exp[1]."<br />";
+}
+
+							?>
+ </div>
+						 </div>
+ <div class="TabbedPanelsContent">
+  <div class="themes-box-main" id="color-box-design">
+ <p class="main-div-apply"><span>Apply Modifications</span><input type="checkbox" name="modify_css" value="1"></p>
+<?
+
+foreach($template as $k=>$v)
+{
+	$exp=explode("==",$v);
+	echo '<p class="name-d-div">'. '<span class="expload-div">'.substr($exp[0],2) ;
+	$end=explode("_",$exp[0]);
+	if(end($end)=='Color')
+	{$class='color {hash:true,caps:false,required:false}';
+		$value="<input type='text'  name='cvs[".$exp[0]."]' id='cvs[".$exp[0]."]' class='".$class."' value='".$exp[1]."'>";
+	}else
+	{
+		$value="<input type='text' name='cvs[".$exp[0]."]' id='cvs[".$exp[0]."]' value='".$exp[1].$exp[2].$exp[3].$exp[4].$exp[5]."'>";
+	} 
+ 
+	echo " : ".'</span>'.$value."</p>"  ;
+	
+	//echo '<input type="hidden" name="cvs_title['.$exp[0].']" id="cvs_title[]" value="'.$exp[0].'">';
+	echo '<input type="hidden" name="cvs_value['.$exp[0].']" id="cvs_value['.$exp[0].']" value="'.$exp[1].'">';
+	
+
+}
+$checked=$_REQUEST['rid']==SITE_DEFAULT_TEMPLATE?'checked':'';
+?>
+<p>Set as Default Template : <input type="checkbox" name="default" <?echo $checked;?> id="default" value="<?=$_REQUEST['rid']?>"></p>
+<p class="btn-tabs-div"><a href="<?php echo "themes?type=Edit&rid=".$_REQUEST['rid']?>&do=defaultsettings">Apply Default Setting</a></p>
+</div>
+ </div>
+  <div class="TabbedPanelsContent">
+   <div class="themes-box-main">
+  <p><i>if you want to edit the language file.then you need to download the language file by clicking Download File link,modify it and upload.to revent back to the default language file click Default Settings link.clear the browser cache to check the changes in the front end.</i></p>
+  <p class="btn-tabs-div"> <b><a href="<?php echo "themes?type=Edit&rid=".$_REQUEST['rid']?>&do=download">Download Default File</a></b> </p>
+  <p class="btn-tabs-div"> <b><a href="<?php echo "themes?type=Edit&rid=".$_REQUEST['rid']?>&do=default">Default Settings</a></b> </p>
+  <p><label>Upload Modified File</label><input type="file" name="language"> <?if($this->status!=='Default'){?><a href="<?php echo "themes?type=Edit&rid=".$_REQUEST['rid']?>&do=downloadmod">Download Modified File</a><?}?></p>
+  <p><label>Language Status</label><?php echo $this->status;?></p>
+  </div>
+ </div>
+  <div class="TabbedPanelsContent">
+ <div class="themes-box-main">
+<div class="admin-footer-theme">
+
+<div class="footer-theme-left">
+
+<table class="list">
+<thead>
+<tr>
+<td class="left">Title</td>
+<td class="left">link</td>
+</tr>
+</thead>
+<tbody>
+
+<tr>
+<td class="left">Home</td>
+<td class="left"><?php echo $this->url_to_site;?></td>
+</tr>
+
+<tr>
+<td class="left">Customer Login</td>
+<td class="left"><?php echo $this->url_to_site."account/login"?></td>
+</tr>
+
+<tr>
+<td class="left">Customer Registration</td>
+<td class="left"><?php echo $this->url_to_site."account/register"?></td>
+</tr>
+
+<tr>
+<td class="left">Customer Change Password</td>
+<td class="left"><?php echo $this->url_to_site."account/password"?></td>
+</tr>
+
+<tr>
+<td class="left">Customer Forgot Password</td>
+<td class="left"><?php echo $this->url_to_site."account/forgotten"?></td>
+</tr>
+
+<tr>
+<td class="left">Wishlist</td>
+<td class="left"><?php echo $this->url_to_site."account/wishlist"?></td>
+</tr>
+
+<tr>
+<td class="left">Products Compare</td>
+<td class="left"><?php echo $this->url_to_site."account/compare"?></td>
+</tr>
+
+<tr>
+<td class="left">Customer Orders List</td>
+<td class="left"><?php echo $this->url_to_site."account/order"?></td>
+</tr>
+
+<tr>
+<td class="left">Customer Downloads</td>
+<td class="left"><?php echo $this->url_to_site."account/download"?></td>
+</tr>
+
+<tr>
+<td class="left">Customer Edit Information</td>
+<td class="left"><?php echo $this->url_to_site."account/edit"?></td>
+</tr>
+
+<tr>
+<td class="left">Customer Forgot Password</td>
+<td class="left"><?php echo $this->url_to_site."account/password"?></td>
+</tr>
+
+<tr>
+<td class="left">Gift Voucher</td>
+<td class="left"><?php echo $this->url_to_site."checkout/voucher"?></td>
+</tr>
+
+<tr>
+<td class="left">Customer Forgot Password</td>
+<td class="left"><?php echo $this->url_to_site."account/password"?></td>
+</tr>
+
+<tr>
+<td class="left">Special Products</td>
+<td class="left"><?php echo $this->url_to_site."product/special"?></td>
+</tr>
+
+<tr>
+<td class="left">Manufacturers</td>
+<td class="left"><?php echo $this->url_to_site."product/manufacturer"?></td>
+</tr>
+
+<tr>
+<td class="left">Shopping Cart</td>
+<td class="left"><?php echo $this->url_to_site."checkout/cart"?></td>
+</tr>
+
+<tr>
+<td class="left">Checkout</td>
+<td class="left"><?php echo $this->url_to_site."checkout/checkout"?></td>
+</tr>
+
+<tr>
+<td class="left">Contact Us</td>
+<td class="left"><?php echo $this->url_to_site."information/contact"?></td>
+</tr>
+
+<tr>
+<td class="left">Sitemap</td>
+<td class="left"><?php echo $this->url_to_site."information/sitemap"?></td>
+</tr>
+
+<tr>
+<td class="left">Affiliate Login</td>
+<td class="left"><?php echo $this->url_to_site."affiliate/login"?></td>
+</tr>
+
+<tr>
+<td class="left">Affiliate Registration</td>
+<td class="left"><?php echo $this->url_to_site."affiliate/register"?></td>
+</tr>
+
+<tr>
+<td class="left">Affiliate edit information</td>
+<td class="left"><?php echo $this->url_to_site."affiliate/edit"?></td>
+</tr>
+
+<tr>
+<td class="left">Affiliate Change Password</td>
+<td class="left"><?php echo $this->url_to_site."affiliate/password"?></td>
+</tr>
+
+<tr>
+<td class="left">Affiliate Tracking </td>
+<td class="left"><?php echo $this->url_to_site."affiliate/tracking"?></td>
+</tr>
+
+<tr>
+<td class="left">Affiliate Forgot Password </td>
+<td class="left"><?php echo $this->url_to_site."affiliate/forgotten"?></td>
+</tr>
+
+</tbody>
+</table>
+
+</div>
+
+
+<div class="footer-theme-right">
+
+<table class="list">
+<thead>
+<tr>
+<td class="left">Title</td>
+<td class="left">link</td>
+</tr>
+</thead>
+<tbody>
+<?$cms_links=$act_ext->getPageLinks();
+foreach($cms_links as $k1=>$v1)
+{
+?>
+<tr>
+<td class="left"><?php echo $v1['page_name'];?></td>
+<td class="left"><?php echo $this->url_to_site."information/information/information_id/".$v1['page_id'];?></td>
+</tr>
+<?}?>
+
+</tbody>
+</table>
+
+</div>
+
+</div>
+
+<?
+$footer_file=file_exists(PATH_TO_FILES."/footer.phtml")?PATH_TO_FILES."/footer.phtml":PATH_TO_TEMPLATES."/".$_REQUEST['rid']."/includes/footer.phtml";
+$handle = fopen($footer_file, 'r');
+$data = fread($handle,filesize($footer_file));
+?>
+
+
+ <p> <b><a href="<?php echo "themes?type=Edit&rid=".$_REQUEST['rid']?>&do=defaultfooter">Default Footer</a></b> </p>
+
+<p>Apply Modifications<input type="checkbox" name="modify_footer" value="1"></p>
+<textarea name="footer" rows="50" cols="142"><?php echo $data;?></textarea>
+
+</div>
+                        
+                       </div>
+<div class="TabbedPanelsContent">
+<p>Enable Introduction Page<input type="checkbox" name="intro_on" value="1" <?php echo @constant('STORE_INTRODUCTION_STATUS')=='1'?'checked':'';?>></p>
+<textarea name="intro_page" id="intro_page" rows="50" cols="142"><?php echo stripslashes(@constant('STORE_INTRODUCTION_CONTENT'));?></textarea>
+
+</div>
+</form>
+                  </div>
+                     <div class="module-body">
+                  </div>
+
+                </div>
+        		<div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+           <div style="clear:both;"></div>
+</div></div>
+<script type="text/javascript" >
+window.onload = function()
+{
+	if(document.getElementById('intro_page')) 
+	{
+		var oFCKeditor = new FCKeditor('intro_page') ;
+	}
+	oFCKeditor.BasePath = "<?=PUBLIC_PATH?>js/fckeditor/" ;
+	oFCKeditor.Height = 300;
+	oFCKeditor.Width = 1050;
+	oFCKeditor.ReplaceTextarea();
+}
+</script>
+		<?php }?>
+<script type="text/javascript">
+function fnTheme(val)
+{
+		$.ajax({
+		url: 'set-theme?id='+val,
+		dataType: 'json',
+		complete: function() {
+			$('.bottom-spacing').before().remove();
+		},
+		success: function(json) {
+
+			if (json['success']) {
+
+				$('.bottom-spacing').before('<span class="notification n-success">' + json['success'] + '</span>');
+			}
+		}
+		});
+}
+</script>

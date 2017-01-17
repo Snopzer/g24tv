@@ -1,0 +1,47 @@
+<div class="main-column"><!--main-max-banner start-->
+<div id="container"><!--container start-->
+
+<? if(count($this->pos[left])>0){?>
+<div id="column-left"><!--column-left start-->
+<?php echo $this->action('left','modules',null,array('mod' =>$this->pos[left]));?>
+<!--column-left End--></div>
+<?}?>
+
+<?if(count($this->pos[right])>0){?>
+<div id="column-right"><!--column-right start-->
+<?php echo $this->action('right','modules',null,array('mod' =>$this->pos[right]));?>
+<!--column-right End--></div>
+<?}?>
+		
+            <div id="content"><!--content start-->
+<?if(count($this->pos[top])>0){?>
+<div id="main-max-banner"><!--start main-max-banner-->
+asdfasdf<?php
+echo "<pre>";
+print_r($this->data);
+echo $this->action('top','modules',null,array('mod' =>$this->pos[top]));?>
+<!--End main-max-banner--></div>
+<?}?>
+
+<div class="breadcrumb"><!--readcrumb start-->
+	<p><?php foreach ($this->data[breadcrumbs] as $breadcrumb) { ?>
+    <?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a>
+    <?php } ?></p> <!--readcrumb End --></div>
+				  
+				  
+<div class="page-title"><h1> <?php echo $this->data[heading_title]; ?> </h1></div>
+<div class="box"><!-- box start -->
+<div class="box-content"> <!-- box-content start-->
+     <div class="errow-msg"> <?php echo $this->data[text_error]; ?> </div>
+	 <!-- box-content End--></div>
+	<!-- box End--></div>
+   
+ 						
+						</div>
+                    <!--innerpage_rightContent --></div>
+				<?if(count($this->pos[bottom])>0){?>
+				<div class="container-top">
+				<?php echo $this->action('bottom','modules',null,array('mod' =>$this->pos[bottom]));?></div>
+				<?}?>	
+                <!--rightContainer --></div>
+            <!--innerContent --></div>

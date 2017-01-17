@@ -1,0 +1,154 @@
+<?php  $ftr=$this->footer();?>
+<div class="main-footer"><!-- Footer-main start-->
+
+<div id="container"><!-- container start-->
+
+<div class="footer"><!--footer start-->
+
+<div class="footer-box">
+<div class="box">
+<h3>Company</h3>
+<ul>
+                    	<li><a href="<?echo $ftr['aboutus_link']?>">About Us</a></li>
+                        <li><a href="<?echo $ftr['our_promise_link']?>">Our Promise</a></li>
+                        <li><a href="<?echo $ftr['team_link']?>">Team</a></li>
+                        <li><a href="<?echo $ftr['protection_link']?>">Protection</a></li>
+                        <li><a href="<?echo $ftr['location_link']?>">Locations</a></li>
+                    </ul>
+</div>
+<div class="clear"></div>
+</div>
+
+
+<div class="footer-box">
+<div class="box">
+<h3>Buy</h3>
+<ul>
+                    	<li><a href="<?echo $ftr['specials_link']?>">Specials</a></li>
+			<li><a href="<?echo $ftr['voucher_link']?>">Gift Vouchers</a></li>
+                        <li><a href="<?echo $ftr['best_selling_brand_link']?>">Best Sales Brands</a></li>
+                        <li><a href="<?echo $ftr['security_link']?>">Security</a></li>
+			<li><a href="<?echo $ftr['contactus_link']?>">Contactus</a></li>
+
+
+                    </ul>
+</div>
+<div class="clear"></div>
+</div>
+
+
+<div class="footer-box">
+<div class="box">
+<h3>Customer</h3>
+ <ul>
+                    	<li><a href="<?echo $ftr['signin_link']?>">Customer Sign In</a></li>
+                        <li><a href="<?echo $ftr['register_link']?>">Customer Register</a></li>
+                        <li><a href="<?echo $ftr['affiliate_signin_link']?>">Affiliate Sign In</a></li>
+                        <li><a href="<?echo $ftr['affiliate_register_link']?>">Affiliate Register</a></li>
+                        <li><a href="<?echo $ftr['sitemap_link']?>">Sitemap</a></li>
+                    </ul>
+</div>
+<div class="clear"></div>
+</div>
+
+
+<div class="footer-box">
+<div class="box">
+<h3>Follow Us</h3>
+<ul>
+<li id="fb"><a href="" target="_blank" >Facebook</a></li>
+<li id="tt"><a href="" target="_blank" >Twitter</a></li>
+
+</ul>
+</div>
+<div class="clear"></div>
+</div>
+
+<div class="footer-box-news">
+<div class="box">
+<h3>Newsletter Subscribe</h3>
+<p>Subscribe to receive our<br>
+news and updates.</p>
+
+<p><input name="newsletter_email" id="newsletter_email" type="text" value="Enter Email ID" onfocus="value=''" class="nav-sel" /></p>
+
+<p ><input name=""  value="SUBMIT >" type="button" class="sub-btn" /></p>
+</div>
+
+
+<div class="clear"></div>
+</div>
+
+
+<div class="clear"></div>
+<!--footer End--></div>
+
+<!--container End--></div>
+<!-- Footer-main End--></div>
+
+
+<div class="copyright-main"><!-- copyright-main start-->
+<div class="copyright"><!-- copyright start-->
+
+<p> <a href="http://www.rcart99.com/" class="logo" target="_blank"> Powered By </a> </p>
+<p class="left">Copyright © 2012 <a href="http://www.rcart99.com/" target="_blank">Rcart99.com</a>. All rights reserved.</p>
+<p class="center"><a href="<?echo $ftr['privacy_link']?>">Privacy Policy</a> | <a href="<?echo $ftr['terms_link']?>">Terms and Conditions</a></p>
+
+
+<div class="clear"></div>
+<!-- copyright end--></div>
+
+<div class="clear"></div>
+<!-- copyright-main End--></div>
+
+<!-- main-wraper End--></div>
+
+<script type="text/javascript">
+$(document).ready(function()
+{
+	// Search
+	$('.sub-btn').bind('click', function() {
+
+		var newsletter = $('input[name=\'newsletter_email\']').attr('value')
+
+		if (newsletter) {
+			url = '<?echo HTTP_SERVER?>account/newsletter-footer/email/'+newsletter;
+		}else
+		{
+			alert("please enter valid email address!!")
+		}
+
+		location = url;
+	});
+})
+</script>
+<script type='text/javascript' src='<?php echo $this->url_to_templates;?>javascript/jquery/jquery.autocomplete.js'></script>
+<link rel="stylesheet" type="text/css" href="<?php echo $this->url_to_templates;?>javascript/jquery/jquery.autocomplete.css" />
+<script type="text/javascript">
+$().ready(function() {
+	$("#q").autocomplete("<?php echo $this->url_to_site;?>ajax/ajaxseachauto?format=json", {
+		width: 260,
+		matchContains: true,
+		selectFirst: false
+	});
+});
+
+</script>
+<?php 
+/*echo (memory_get_usage()/(1024*1024));
+$cartObj=new Model_Cart();
+echo "value of weight : ".$cartObj->getWeight()."<br/>";
+//echo "shipping country ".$_SESSION['shipping_country_id']." shipping zone ".$_SESSION['shipping_zone_id']."<br/>";
+//echo "payment country ".$_SESSION['payment_country_id']."  payment zone ".$_SESSION['payment_zone_id'];*/
+/*ECHO "<pre>";
+print_r($_SESSION);
+echo "</pre>";
+$_SESSION['shipping_address_id'];
+//echo "value of ".MODULE_SHIPPING_TABLE_ZONE;
+isset($_SESSION['guest'])*/
+//echo "value of lang code ".$_SESSION['Curr']['currency'];
+//echo "<pre>";
+//print_r($_SESSION['voucher']);
+//echo "value of ".$_SESSION['Lang']['language_id'];
+
+?>

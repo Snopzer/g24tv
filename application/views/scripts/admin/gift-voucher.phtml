@@ -1,0 +1,217 @@
+<?php
+	$act=new Model_Adminaction();
+	$act_ext=new Model_Adminextaction();
+	$currency=new Model_currencies();
+ 	if($_REQUEST['type']==''){?>
+<div class="container_12">
+           <div style="clear:both;"></div>
+            <div class="grid_12">
+  				<?
+					if($_REQUEST['msg']!=""){?>
+				<span class="notification n-success"><?=base64_decode($_REQUEST['msg']);?></span>
+				<?}?>
+				
+                <div class="bottom-spacing">
+                    <!-- Button -->
+                    <div class="float-right"><?=$this->view_pagination;?>
+						
+                    </div>
+                    <!-- Table records filtering -->
+                    
+                    
+                </div>
+                
+                
+                <!-- Example table -->
+                <div class="module">
+                	<h2><span><?=$this->actionTitle." [".$this->total_count."]"?></span>  <div class="add-btn-div" > <?php $act->viewAddB(ADMIN_URL_CONTROLLER.$this->actionTitle);?> </div> </h2>
+                    
+                    <div class="module-table-body">
+                    	<form name="frmMain" id="frmMain" method="post" action="<?php echo ADMIN_URL_CONTROLLER.$this->actionTitle?>"> 
+                      <?if($this->total_count>0){?>
+			<table id="myTable" class="tablesorter">
+                   	  <thead>
+                                <tr>
+								  <th align="center" style="width:5%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#</th>
+                                  <th style="width:10%"><?echo $act_ext->getSortLable(array("disType"=>$this->disType, "sortby"=>"v.code", "page"=>$_REQUEST['page'] ,"file"=>"gift-voucher" ,"label"=>"Code"));?></th>
+								  <th style="width:15%"><?echo $act_ext->getSortLable(array("disType"=>$this->disType, "sortby"=>"v.from_name", "page"=>$_REQUEST['page'] ,"file"=>"gift-voucher" ,"label"=>"From"));?></th>
+								  <th style="width:15%"><?echo $act_ext->getSortLable(array("disType"=>$this->disType, "sortby"=>"v.to_name", "page"=>$_REQUEST['page'] ,"file"=>"gift-voucher" ,"label"=>"To"));?></th>
+								   <th style="width:10%"><?echo $act_ext->getSortLable(array("disType"=>$this->disType, "sortby"=>"v.amount", "page"=>$_REQUEST['page'] ,"file"=>"gift-voucher" ,"label"=>"Amount"));?></th>
+								   <th style="width:10%"><?echo $act_ext->getSortLable(array("disType"=>$this->disType, "sortby"=>"t.name", "page"=>$_REQUEST['page'] ,"file"=>"gift-voucher" ,"label"=>"Theme"));?></th>
+								   <th style="width:5%"><?echo $act_ext->getSortLable(array("disType"=>$this->disType, "sortby"=>"v.status", "page"=>$_REQUEST['page'] ,"file"=>"gift-voucher" ,"label"=>"Status"));?></th>
+								   <th style="width:13%"><?echo $act_ext->getSortLable(array("disType"=>$this->disType, "sortby"=>"v.date_added", "page"=>$_REQUEST['page'] ,"file"=>"gift-voucher" ,"label"=>"Date Added"));?></th>
+								   <th style="width:7%">Email</th>
+                                  <th style="width:15%"><input type="checkbox" name="checkall" id="checkall" onClick="Checkall()"/> <a href="#">Action</a></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+						
+							<? 
+					$i=1;
+					if($this->page!=1)
+					{
+						$i+=($this->page-1)*$this->per_page;
+					}
+
+							foreach ($this->results as $result) 
+							{
+								if($result['invoice_id']=='0') //ignore invalid order vouchers
+								{
+									continue;
+								}
+							 
+							$class=fmod($i,2)==0?'':'addcolorne';
+							?>
+                              <tr>
+                                <td align="center" class="<?=$class?>"><?=$i?></td>
+                                 <td class="<?=$class?>"><?php echo $result['code'];?></td>
+				 				 <td class="<?=$class?>"><?php echo $result['from_name'];?></td>
+								 <td class="<?=$class?>"><?php echo $result['to_name'];?></td>
+								 <td class="<?=$class?>"><?php echo $currency->format($result['amount']);?></td>
+								 <td class="<?=$class?>"><?php echo $result['name'];?></td>
+								 <td class="<?=$class?>"><?php echo $result['status']=='1'?'Enable':'Disable';?></td>
+								 <td class="<?=$class?>"><?php echo $result['date_added'];?></td>
+								 <td class="<?=$class?>"><a href="<?php echo @constant("ADMIN_URL_CONTROLLER");?>gift-voucher?em=sendmail&rid=<?php echo $result['voucher_id'];?>&oid=<?php echo $result['order_id'];?>">Send Mail<a></td>
+                                <td class="<?=$class?>">
+                                
+								<input type="checkbox" name="rid[]" id="rid" value="<?php echo $result[$this->r_id];?>"  />
+								<?php 
+									$act->viewEditB(ADMIN_URL_CONTROLLER.$this->actionTitle,$result[$this->r_id],$_REQUEST['page']);
+									$act->viewDelB($this->actionTitle,$result[$this->r_id],$this->r_table,$this->r_id,$_REQUEST['page']);
+								?>	
+								
+                                </td>
+                              </tr>
+                              <?$i=$i+1;}?>
+                                 
+                            </tbody>
+                        </table><?}else{
+								echo "<table id='myTable' class='tablesorter' border='2'><tr><td align='center'>No records to display</td></tr></table>";}?>
+
+						<input type="hidden" name="page" id="page" value="<?php echo $this->page;?>">
+                        <div class="table-apply">
+                              <?$act->fnmultipleactdropdown(array('Del'=>'Delete'));?>
+
+                            </form>
+                        </div>
+                        <div style="clear: both"></div>
+                     </div>  
+                </div>  
+
+                <?=$this->view_pagination;?>
+			</div>  
+             <div class="grid_6">
+		  </div>  
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+        </div>  
+		<?php }elseif($_REQUEST['type']=='Add' || 'Edit'){ 
+ 	/*foreach ($this->data as $result) 
+	{} print_r($result);*/?>
+		<div class="container_12">
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+            <div class="grid_12">
+                <div class="module">
+                     <h2><span><?php echo $_REQUEST['type']." ".$this->actionTitle;?></span></h2>
+                     <div id="TabbedPanels1" class="TabbedPanels">
+                       <ul class="TabbedPanelsTabGroup">
+                         <li class="TabbedPanelsTab" tabindex="0">Details</li>
+						 <?php if($_REQUEST['type']=='Edit'){?>
+						 <li class="TabbedPanelsTab" tabindex="0">Voucher History</li><?php } ?>
+                         <li class="iconsec">
+						 <?php echo $act->editCancelB($this->actionTitle,$_REQUEST['page']);?></li>
+                         <li class="iconsec">
+						 <?php 
+						 if($_REQUEST['type']=='Edit'){
+						 echo $act->editApplyB(ADMIN_URL_CONTROLLER.$this->actionTitle,(int)$_REQUEST['rid'],$_REQUEST['type']);
+		}					?></li>
+                         <li class="iconsec">
+						 <?php echo $act->editSaveB(ADMIN_URL_CONTROLLER.$this->actionTitle,(int)$_REQUEST['rid'],$_REQUEST['type'],$_REQUEST['page']);?></li>
+                       </ul> 
+                       <div class="TabbedPanelsContentGroup">
+                         <div class="TabbedPanelsContent"> <form name="frmEdit" method="post" enctype="multipart/form-data">
+                             <?if($this->msg!=""){ echo '<div><span class="notification n-success">'.base64_decode($this->msg).'</span></div> ';}?>
+							 <p><b>All fields indicated with * are mandatory</b></p>
+                           <?$code=$_REQUEST['type']=='Edit'?$this->data[0]['code']:strtotime("now");?>
+<div class="mode-box">
+<h3><span>Voucher Details</span></h3>
+<p>
+<label>*Code</label>
+<input id="r_voucher[code]" readonly class="input-medium" type="text" tooltiptext="The code the customer enters to activate the voucher" value="<?=$code?>" title="Code" name="r_voucher[code]">
+</p>
+<?
+echo $act->field(array('lable'=>'Message','input_title'=>'r_voucher[message]','desc'=>'message','input_type'=>'textarea','val'=>$this->data[0]['message'],"req"=>'1'));
+
+echo $act->field(array('lable'=>'Amount','input_title'=>'r_voucher[amount]','desc'=>'amount','input_type'=>'input_text','val'=>$this->data[0]['amount'],"req"=>'1'));
+?>
+<p>
+<label>Theme</label>
+<select id="r_voucher[amount]" name="r_voucher[voucher_theme_id]" tooltiptext="theme">
+<?$act_ext->getThemedropdown($this->data[0]['voucher_theme_id']);?>
+</select>
+</p>
+<?
+	echo $act->field(array('lable'=>'status','input_title'=>'r_voucher[status]','desc'=>'enable or disable review','input_type'=>'select','val'=>$act->reviewstatusdropdown($this->data[0]['status']),"req"=>'0'));?>
+</div>
+<div class="mode-box">
+<h3><span>From Details</span></h3>
+
+<?
+//echo $act->field(array('lable'=>'Code' ,'input_title'=>'r_voucher[code]','desc'=>'The code the customer enters to activate the voucher','input_type'=>'input_text','val'=>$this->data[0]['code'],"req"=>'1'));
+
+echo $act->field(array('lable'=>'From Name','input_title'=>'r_voucher[from_name]','desc'=>'from name','input_type'=>'input_text','val'=>$this->data[0]['from_name'],"req"=>'1'));
+
+echo $act->field(array('lable'=>'From Email','input_title'=>'r_voucher[from_email]','desc'=>'from email','input_type'=>'input_text','val'=>$this->data[0]['from_email'],"req"=>'1'));
+?>
+</div>
+<div class="mode-box">
+<h3><span>To Details</span></h3>
+<?
+
+echo $act->field(array('lable'=>'To Name','input_title'=>'r_voucher[to_name]','desc'=>'to name','input_type'=>'input_text','val'=>$this->data[0]['to_name'],"req"=>'1'));
+
+echo $act->field(array('lable'=>'To Email','input_title'=>'r_voucher[to_email]','desc'=>'to email','input_type'=>'input_text','val'=>$this->data[0]['to_email'],"req"=>'1'));
+?>
+</div>
+</div>
+							 <div class="TabbedPanelsContent"> 
+							 <div class="mode-box">
+<h3><span>Voucher History</span></h3>
+							 	<table class="list">
+  <thead>
+    <tr>
+      <td class="left">Order Id</td>
+      <td class="left">Customer</td>
+      <td class="right">Amount</td>
+	  <td class="right">Date added</td>
+    </tr>
+
+  </thead>
+  <tbody>
+  <?$aff=$act->db->fetchAll("select h.order_id,h.amount,h.date_added,o.customers_name from r_voucher_history h,r_orders o where h.order_id=o.orders_id and h.voucher_id='".(int)$_REQUEST['rid']."'");
+  foreach($aff as $k){?>
+     <tr>
+      <td class="left"><?=$k[order_id]?></td>
+      <td class="left"><?=$k[customers_name]?></td>
+      <td class="right"><?=$currency->format($k[amount])?></td>
+	    <td class="right"><?=$k[date_added]?></td>
+    </tr>
+    <?}?>
+      </tbody>
+</table></div>
+							 </div>
+                        </form>
+                       </div>
+                  </div>
+                     <div class="module-body">
+                  </div> 
+
+                </div>  
+        		<div style="clear:both;"></div>
+            </div> 
+            <div style="clear:both;"></div>
+           <div style="clear:both;"></div>
+</div>
+		<?php }?>

@@ -1,0 +1,218 @@
+<div id="chkOutContainer">
+<div id="caption1">
+<p>Payment and Order Informtion</p>
+<!--caption -->
+</div>
+<div style="clear:both;"></div>
+<div id="chkOutContent">
+<div id="chkOutConient_block">
+<!-- <form name="checkout_payment" action="checkout_confirmation.php" method="post" onsubmit="return check_form();"> -->
+
+<?php
+//echo '<pre>';
+//print_r($payment_modules);
+
+
+//$selection = $payment_modules->selection ();
+/*echo "selection <pre>";
+print_r($this->data['selection']);
+echo "</pre>";*/
+
+if (sizeof ( $this->data['selection'] ) > 1) {
+?>
+
+<div class="title-main">
+<div style="float: right;">
+<?php echo '<strong>' . $_SESSION['OBJ']['tr']->translate('TITLE_PLEASE_SELECT') . '</strong>'; ?>
+</div>
+
+<?php echo $_SESSION['OBJ']['tr']->translate('TEXT_SELECT_PAYMENT_METHOD'); ?>
+</div>
+
+<?php
+} elseif ($free_shipping == false) {
+//echo "in free shipping";
+?>
+<div class="title-main">
+<div style="float: right;">
+<?php echo '<strong>' . $_SESSION['OBJ']['tr']->translate('TITLE_PLEASE_SELECT') . '</strong>'; ?>
+</div>
+
+<?php echo $_SESSION['OBJ']['tr']->translate('TEXT_SELECT_PAYMENT_METHOD'); ?>
+</div>
+<!-- <div class="contentText">
+<?php echo TEXT_ENTER_PAYMENT_INFORMATION; ?>
+</div> -->
+
+<?php
+}
+?>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" id="inner_payment_method">
+<tr>
+<td valign="top">
+ 
+<?php
+$radio_buttons = 0;
+//	echo "<pre>";
+//	print_r($selection);
+for($i = 0, $n = sizeof ( $this->data['selection'] ); $i < $n; $i ++) {
+?>
+
+<table border="0" width="100%" cellspacing="0" cellpadding="2" >
+
+<?php
+
+//   if ( ($selection[$i]['id'] == $payment) || ($n == 1) ) {
+//echo $selection[$i]['id'];
+if (($this->data['selection'] [$i] ['id'] == $_SESSION ['payment']['id']) || ($n == 1)) {
+//$radio_buttons="1";
+// echo "in ".$radio_buttons;
+echo '      <tr id="defaultSelected" class="moduleRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="selectRowEffect(this, ' . $radio_buttons . ')">' . "\n";
+} else {
+//$radio_buttons="0";
+//echo "out ".$radio_buttons;
+echo '      <tr class="moduleRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="selectRowEffect(this, ' . $radio_buttons . ')">' . "\n";
+}
+?>
+
+<td height="30" width="48%"><strong><label for="<?php echo $this->data['selection'] [$i] ['id']?>"><?php echo $_SESSION['OBJ']['tr']->translate($this->data['selection'][$i]['module']); ?></label></strong></td>
+<td align="right" width="48%" class="radio" height="30">
+
+<?php
+if (sizeof ( $this->data['selection'] ) > 1) {
+//echo "here".$selection[$i]['id']." == ".$_SESSION['payment'];
+//echo tep_draw_radio_field ( 'payment', $this->data['selection'] [$i] ['id'], ($this->data['selection'] [$i] ['id'] == trim ( $_SESSION ['payment'] )) );
+echo tep_draw_radio_field ( 'payment', $this->data['selection'] [$i] ['id'], ($this->data['selection'] [$i] ['id'] == trim ( $_SESSION ['payment']['id'] )) );
+
+//$check=$selection[$i]['id'] == trim($_SESSION['payment'])?'checked':'';
+// echo "hell<input type='radio' class="radio" name='payment' id='payment' ".$check." value='".$selection[$i]['id']."' >";
+} else {
+//echo tep_draw_hidden_field ( 'payment', $this->data['selection'] [$i] ['id'] );
+echo tep_draw_radio_field('payment', $this->data['selection'][$i]['id'], 'checked');
+
+//echo "<input type='hidden' name='payment'  id='payment' value='".$selection[$i]['id']."'>";
+}
+?>
+
+</td>
+</tr>
+
+<?php
+if (isset ( $this->data['selection'] [$i] ['error'] )) {
+?>
+
+<tr>
+<td colspan="2"><?php echo $this->data['selection'][$i]['error']; ?></td>
+</tr>
+
+<?php
+} elseif (isset ( $this->data['selection'] [$i] ['fields'] ) && is_array ( $this->data['selection'] [$i] ['fields'] )) {
+?>
+
+<tr>
+<td colspan="2"><table border="0" cellspacing="0"
+cellpadding="2">
+
+<?php
+for($j = 0, $n2 = sizeof ( $this->data['selection'] [$i] ['fields'] ); $j < $n2; $j ++) {
+?>
+
+<tr>
+<td><?php echo $this->data['selection'][$i]['fields'][$j]['title']; ?></td>
+<td><?php echo $this->data['selection'][$i]['fields'][$j]['field']; ?></td>
+</tr>
+
+<?php
+}
+?>
+
+</table>
+</td>
+</tr>
+
+<?php
+}
+?>
+
+</table>
+
+<?php
+$radio_buttons ++;
+}
+?>
+
+</td>
+</tr>
+
+<!-- <button id="tdb6" type="submit">Continue</button>
+ --><!--<input type="submit" name="submit" value="Confirm Payment">-->
+</table>
+<!-- </form>
+ --><!--chkOutConient_block -->
+
+
+
+
+<?php if ($this->data[text_agree]) { ?>
+
+<div class="buttons" id="inner_payment_method_agree">
+  <div class="right"><label for="agree">
+  <?php echo $this->data[text_agree]; ?>
+    <?php if ($this->data[agree]) { ?>
+    <input type="checkbox" name="agree" id="agree" class="checkbox" value="1" checked="checked" />
+    <?php } else { ?>
+    <input type="checkbox" class="checkbox" name="agree" id="agree" value="1" />
+    <?php } ?></label>
+    <a id="button-payment" class="button_btn"><span><?php echo $this->data[button_continue]; ?></span></a></div>
+</div>
+
+<?php } else { ?>
+
+ <div class="buttons">
+  <div class="right"><a id="button-payment" class="button_btn"><span><?php echo $this->data[button_continue]; ?></span></a></div>
+</div>
+
+<?}?>
+
+
+</div>
+<!--chkOutContent -->
+</div>
+<!--chkOutContent -->
+</div>
+
+
+
+<script type="text/javascript"><!--
+var selected;
+
+function selectRowEffect(object, buttonSelect) {
+  if (!selected) {
+    if (document.getElementById) {
+      selected = document.getElementById('defaultSelected');
+    } else {
+      selected = document.all['defaultSelected'];
+    }
+  }
+
+  if (selected) selected.className = 'moduleRow';
+  object.className = 'moduleRowSelected';
+  selected = object;
+}
+
+function rowOverEffect(object) {
+  if (object.className == 'moduleRow') object.className = 'moduleRowOver';
+}
+
+function rowOutEffect(object) {
+  if (object.className == 'moduleRowOver') object.className = 'moduleRow';
+}
+//--></script>
+
+<script type="text/javascript"><!--
+$('.colorbox').colorbox({
+	width: 560,
+	height: 560
+});
+//--></script>

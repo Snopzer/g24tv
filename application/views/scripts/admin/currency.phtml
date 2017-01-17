@@ -1,0 +1,172 @@
+<?php
+$act=new Model_Adminaction();
+$act_ext=new Model_Adminextaction();
+	if($_REQUEST['type']==''){?>
+<div class="container_12">
+           <div style="clear:both;"></div>
+            <div class="grid_12">
+  				<?
+					if($_REQUEST['msg']!=""){?>
+				<span class="notification n-success"><?=base64_decode($_REQUEST['msg']);?></span>
+				<?}?>
+
+                <div class="bottom-spacing">
+                    <!-- Button -->
+                    <div class="float-right"><?=$this->view_pagination;?>
+						
+                    </div>
+                </div>
+
+
+                <!-- Example table -->
+				<?//$currency=new Model_currencies();
+				//print_r($currency->currencies); ?>
+                <div class="module">
+                	<h2><span><?=$this->actionTitle." [".$this->total_count."]"?></span> <div class="add-btn-div" ><?php $act->viewAddB(ADMIN_URL_CONTROLLER.$this->actionTitle);?></div> </h2>
+
+                    <div class="module-table-body">
+                    	<form name="frmMain" id="frmMain" method="post" action="<?php echo ADMIN_URL_CONTROLLER.$this->actionTitle?>">
+                        <table id="myTable" class="tablesorter">
+                   	  <thead>
+                                <tr>
+								  <th align="center" style="width:5%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#</th>
+                                  <th style="width:20%"><?php echo $act_ext->getSortLable(array("disType"=>$this->disType, "sortby"=>"title", "page"=>$_REQUEST['page'] ,"file"=>"currency" ,"label"=>"Title"));?></th>
+                                  <th style="width:21%"><?php echo $act_ext->getSortLable(array("disType"=>$this->disType, "sortby"=>"code", "page"=>$_REQUEST['page'] ,"file"=>"currency" ,"label"=>"Code"));?></th>
+                                  <th style="width:13%"><?php echo $act_ext->getSortLable(array("disType"=>$this->disType, "sortby"=>"value", "page"=>$_REQUEST['page'] ,"file"=>"currency" ,"label"=>"Value"));?></th>
+				  <th style="width:13%"><?php echo $act_ext->getSortLable(array("disType"=>$this->disType, "sortby"=>"last_updated", "page"=>$_REQUEST['page'] ,"file"=>"currency" ,"label"=>"Last Updated"));?></th>
+                                  <th style="width:15%"><input type="checkbox" name="checkall" id="checkall" onClick="Checkall()"/> <a href="#">Action</a></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+							<?
+					$i=1;
+					if($this->page!=1)
+					{
+						$i+=($this->page-1)*$this->per_page;
+					}
+
+							foreach ($this->results as $result)
+							{
+
+							$class=fmod($i,2)==0?'':'addcolorne';
+							?>
+                              <tr>
+                                <td align="center" class="<?=$class?>"><?=$i?></td>
+                                <td class="<?=$class?>"><a href=""><?php echo $result['title'];?> <?echo trim($result['code'])==DEFAULT_CURRENCY?'[default]':'';?></a></td>
+                                <td class="<?=$class?>"><?php echo $result['code'];?></td>
+                                <td class="<?=$class?>"><?php echo $result['value'];?></td>
+								<td class="<?=$class?>"><?php echo $result['last_updated'];?></td>
+                                <td class="<?=$class?>">
+
+								<input type="checkbox" name="rid[]" id="rid" value="<?php echo $result['currencies_id'];?>"  />
+								<?php
+									$act->viewStatusB($result['status'],'currency', $result['currencies_id'],'r_currencies','status','currencies_id',$_REQUEST['page']);
+									$act->viewEditB(ADMIN_URL_CONTROLLER.$this->actionTitle,$result['currencies_id'],$_REQUEST['page']);
+									$act->viewDelB($this->actionTitle,$result['currencies_id'],'r_currencies','currencies_id',$_REQUEST['page']);
+								?>
+
+                                </td>
+                              </tr>
+                              <?$i=$i+1;}?>
+
+                            </tbody>
+                        </table>
+
+						<input type="hidden" name="page" id="page" value="<?php echo $this->page;?>">
+                        <div class="table-apply">
+			      <?$act->fnmultipleactdropdown(array('Pub'=>'Enable','UnPub'=>'Disable','Del'=>'Delete'));?>
+                            </form>
+                        </div>
+                        <div style="clear: both"></div>
+                     </div>
+                </div>
+
+                <?=$this->view_pagination;?>
+			</div>
+             <div class="grid_6">
+		  </div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+        </div>
+		<?php }elseif($_REQUEST['type']=='Add' || 'Edit'){
+ 	/*foreach ($this->data as $result)
+	{} print_r($result);*/?>
+		<div class="container_12">
+          <div style="clear:both;"></div>
+          <div style="clear:both;"></div>
+            <div class="grid_12">
+                <div class="module">
+                     <h2><span><?php echo $_REQUEST['type']." ".$this->actionTitle;?></span></h2>
+                     <div id="TabbedPanels1" class="TabbedPanels">
+                       <ul class="TabbedPanelsTabGroup">
+                         <li class="TabbedPanelsTab" tabindex="0">Details</li>
+                         <li class="iconsec">
+						 <?php echo $act->editCancelB($this->actionTitle,$_REQUEST['page']);?></li>
+                         <li class="iconsec">
+						 <?php echo $act->editApplyB(ADMIN_URL_CONTROLLER.$this->actionTitle,(int)$_REQUEST['rid'],$_REQUEST['type']);?></li>
+                         <li class="iconsec">
+						 <?php echo $act->editSaveB(ADMIN_URL_CONTROLLER.$this->actionTitle,(int)$_REQUEST['rid'],$_REQUEST['type'],$_REQUEST['page']);?></li>
+                       </ul>
+                       <div class="TabbedPanelsContentGroup">
+                         <div class="TabbedPanelsContent"> <form name="frmEdit" method="post" enctype="multipart/form-data">
+                             <?if($this->msg!=""){ echo '<div><span class="notification n-success">'.base64_decode($this->msg).'</span></div> ';}?>
+							 <p><b>All fields indicated with * are mandatory</b></p>
+
+<div class="mode-box">
+<h3><span>Info</span></h3>                            
+			    <? echo $act->field(array('lable'=>'Name','input_title'=>'title','desc'=>'enter currency title ','input_type'=>'input_text','val'=>$this->data[0]['title'],"req"=>'0'));?>
+
+
+			
+			   <? echo $act->field(array('lable'=>'Code','input_title'=>'code','desc'=>'enter currency code','input_type'=>'input_text','val'=>$this->data[0]['code'],"req"=>'0'));?>
+			   			   <? echo $act->field(array('lable'=>'Value','input_title'=>'value','desc'=>'enter value','input_type'=>'input_text','val'=>$this->data[0]['value'],"req"=>'0'));?>
+			   </div>
+<div class="mode-box">
+<h3><span>Symbol Placement</span></h3>                            
+
+<? echo $act->field(array('lable'=>'Symbol Left','input_title'=>'symbol_left','desc'=>'enter symbol left','input_type'=>'input_text','val'=>$this->data[0]['symbol_left'],"req"=>'0'));?>
+			   <? echo $act->field(array('lable'=>'Symbol Right','input_title'=>'symbol_right','desc'=>'enter symbol left','input_type'=>'input_text','val'=>$this->data[0]['symbol_right'],"req"=>'0'));?>
+</div>
+
+<div class="mode-box">
+<h3><span>Decimal Placement</span></h3>                            
+			   <? echo $act->field(array('lable'=>'Decimal Point','input_title'=>'decimal_point','desc'=>'enter decimal point ','input_type'=>'input_text','val'=>$this->data[0]['decimal_point'],"req"=>'0'));?>
+
+
+
+			    <? echo $act->field(array('lable'=>'Thousands Point','input_title'=>'thousands_point','desc'=>'enter thousands point','input_type'=>'input_text','val'=>$this->data[0]['thousands_point'],"req"=>'0'));?>
+
+			   <? echo $act->field(array('lable'=>'Decimal Places','input_title'=>'decimal_places','desc'=>'enter decimal places','input_type'=>'input_text','val'=>$this->data[0]['decimal_places'],"req"=>'0'));?>
+
+</div>
+<div class="mode-box">
+<h3><span>Settings</span></h3>                            
+							<?if($_REQUEST[type]=='Edit'){?>
+							<p><label>Set as default</label><input type="checkbox" name="default" id="default" <?echo trim($this->data[0]['code'])==DEFAULT_CURRENCY?'checked':'';?> value="<?=trim($this->data[0]['code']);?>"></p>
+							<p>
+							<?}?>
+						   	<p>
+                                <label>Status</label>
+
+							<select name="status" id="status"   class="input-medium"  tooltipText="select status">
+							<option value="1" <?echo $status=$this->data[0]['status']=='1'?'selected':'';?>>Enable</option>
+							<option value="0" <?echo $status=$this->data[0]['status']=='0'?'selected':'';?> >Disable</option>
+							</select>
+                           </p></div>
+
+						 </div>
+                        </form>
+                       </div>
+                  </div>
+                     <div class="module-body">
+                  </div>
+
+                </div>
+        		<div style="clear:both;"></div>
+            </div>
+            <div style="clear:both;"></div>
+           <div style="clear:both;"></div>
+</div>
+		<?php }?>

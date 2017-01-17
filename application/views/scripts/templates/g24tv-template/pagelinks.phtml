@@ -1,0 +1,13 @@
+<?php 
+echo '<div class="links"><ul>';
+foreach($this->pagesInRange as $page)
+{
+
+	//echo '<a href="'.$this->url(array('page'=>$page."/q/blue".$this->data[q]."/dd/0".$this->data['dd'])).'">'.$page.'</a>';
+	$class=$page==$this->current?'active':'';
+	echo '<li><a href="'.$this->url(array('page'=>$page)).'" class="'.$class.'" >'.$page.'</a></li>';
+}                                	
+    //echo  '<li><a href="#" class="active">1</a></li>';
+echo '</ul></div>'; 
+
+echo "<div class='results'>Showing ".$this->firstItemNumber." to ".$this->lastItemNumber." of ".$this->totalItemCount." (".$this->pageCount." Pages)</div>";

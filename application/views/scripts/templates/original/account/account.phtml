@@ -1,0 +1,140 @@
+<div class="main-column"><!--main-max-banner start-->
+<div id="container"><!--container start-->
+
+
+<? if(count($this->pos[left])>0){?>
+<div id="column-left"><!--column-left start-->
+<?php echo $this->action('left','modules',null,array('mod' =>$this->pos[left]));?>
+<!--column-left End--></div>
+<?}?>
+
+<?if(count($this->pos[right])>0){?>
+<div id="column-right"><!--column-right start-->
+<?php echo $this->action('right','modules',null,array('mod' =>$this->pos[right]));?>
+<!--column-right End-->
+<?}?>
+
+                	<div id="content"><!--content start-->
+					
+					
+					
+					<?if(count($this->pos[top])>0){?>
+<div id="main-max-banner"><!--start main-max-banner-->
+<?php echo $this->action('top','modules',null,array('mod' =>$this->pos[top]));?>
+<!--End main-max-banner--></div>
+<?}?>
+					
+<div class="breadcrumb"><!--readcrumb start-->
+                    	<p><?php    foreach ($this->data[breadcrumbs] as $breadcrumb) { ?>
+<?php echo $breadcrumb['separator']; ?><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a> <?php } ?>                   </p> <!--readcrumb End --></div>
+<?echo $this->data['success']!=""?'<div class="success">'.$this->data['success'].'</div>':'';?>
+<div class="my-account-div">
+                  <div class="box">
+                        	<div class="box-heading"><p><span>Dear <?echo $this->data[info][customers_firstname]." ".$this->data[info][customers_lastname];?>, </span></p> </div>
+							<div class="box-content">
+                        	<p><?php echo $this->trans->_('text_account_dashboard_welcometext');?></p>
+                          <?if(sizeof($this->data['orders'])>0){?>
+						  
+						  </div>
+						  </div>
+						  
+			
+                  <div class="box">
+								<div class="box-heading"><p><span><?php echo $this->trans->_('text_account_recent_orders');?></span>
+								
+								</p><span class="right-div"><a href="<?echo HTTP_SERVER.'account/order';?>"><?php echo $this->trans->_('text_view_all');?></a></span></div>
+							<div class="box-content">
+                                
+                           
+ 			    <?/*echo "<pre>";
+			    print_r($this->data['orders']);
+			    echo "</pre>";*/?>
+                       
+                            <div class="recent">
+                            	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                  <tr>
+                                    <td width="7%" class="dashBar" height="35"><strong><?echo $_SESSION['OBJ']['tr']->_('column_order_id_account_account');?></strong></td>
+                                    <td width="10%" class="dashBar"><strong><?echo $_SESSION['OBJ']['tr']->_('column_date_added_account_transaction');?></strong></td>
+                                    <td width="30%" class="dashBar"><strong><?echo $_SESSION['OBJ']['tr']->_('text_shipping_address_account_order');?></strong></td>
+                                    <td width="14%" class="dashBar"><strong><?echo $_SESSION['OBJ']['tr']->_('column_total_account_order');?></strong></td>
+                                    <td width="11%" class="dashBar"><strong><?echo $_SESSION['OBJ']['tr']->_('column_status_account_return');?></strong></td>
+                                    <td width="15%" align="center" class="dashBar"><strong><?echo $_SESSION['OBJ']['tr']->_('column_action_account_return');?></strong></td>
+                                  </tr>
+				  <?
+				  foreach($this->data['orders'] as $details){?>
+                                  <tr>
+                                    <td class="dashgrid" height="40"><?echo $details['orders_id'];?></td>
+                                    <td class="dashgrid"><?echo $details['date_purchased'];?></td>
+                                    <td class="dashgrid"><?echo $details['delivery_street_address'].",".$details['delivery_suburb'].",".$details['delivery_city'].",".$details['delivery_zone'].",".$details['delivery_country'];?></td>
+                                    <td class="dashgrid"><?echo $this->data['currObj']->format($details['total'],true, $details['currency'], $details['currency_value']);?></td>
+                                    <td class="dashgrid"><?echo $details['status'];?></td>
+                                    <td align="center" valign="middle" class="dashgrid"><a href="<?echo HTTP_SERVER.'account/orderinfo/order_id/'.$details['orders_id'];?>"><?echo $_SESSION['OBJ']['tr']->_('column_view_account_account');?></a> | <a href="<?echo HTTP_SERVER.'account/order/order_id/'.$details['orders_id'];?>"><?echo $_SESSION['OBJ']['tr']->_('column_reorder_account_account');?></a></td>
+                                  </tr>
+                                   <?}?>
+				   
+                                  <tr>
+                                    <td colspan="6">&nbsp;</td>
+                                  </tr>
+                                </table>
+                            </div><?}?>
+                            <div id="clear"></div>
+							</div></div>
+							
+							<div class="full-width-box">
+							
+							  <div class="box full-width">
+                        	<div class="box-heading"><p><span><?php echo $this->trans->_('text_account_contact_information');?></span></p>
+							<span class="right-div"><!-- <a href="<?echo Model_Url::getLink(array("controller"=>"account","action"=>"password"),'',SERVER_SSL);?>" ><?php echo $this->trans->_('heading_title_account_password');?></a> | --> <a href="<?echo Model_Url::getLink(array("controller"=>"account","action"=>"edit"),'',SERVER_SSL);?>"><?php echo $this->trans->_('button_edit');?></a></span></div>
+							<div class="box-content" id="address-info">
+							<div class="name-title"><?echo $this->data[info][customers_firstname]." ".$this->data[info][customers_lastname];?></div>
+                            <div class="email-title"><?echo $this->data[info][customers_email_address];?></div>
+							<div class="customers-title"><?echo $this->data[info][customers_telephone];?></div>
+							<div class="fax-title"><?echo $this->data[info][customers_fax];?></div>
+							
+                                            </p>
+							</div>
+							</div>
+                            
+                         
+						 <div class="box full-width-right">
+                        	<div class="box-heading"><p><span><?php echo $this->trans->_('heading_title_account_address');?></span></p> 
+							<span class="right-div"><!-- <a  href="<?echo HTTP_SERVER.'account/addressupdate/address_id/'.$this->data[default_address][customers_default_address_id]?>"> <span><?php echo $this->trans->_('text_account_default_address');?></span></a> | --><a href="<?echo Model_Url::getLink(array("controller"=>"account","action"=>"address"),'',SERVER_SSL);?>"><?php echo $this->trans->_('text_account_manage_addresses');?></a></span></div>
+							<div class="box-content" id="address-info"><!-- 
+								<strong><?php echo $this->trans->_('text_account_default_address');?></strong> -->
+								<p>
+                                                   <?
+						   /*echo "<pre>";
+						   print_r($this->data[default_address]);
+						   echo "<pre>";*/
+						   echo $this->data[default_address][firstname]." ".$this->data[default_address][lastname]."<br/>".$this->data[default_address][company]."<br/>".$this->data[default_address][address_1]."<br/>".$this->data[default_address][address_2]."<br/>".$this->data[default_address][city]." , ".$this->data[default_address][zone][zone_name]." , ".$this->data[default_address][country][countries_name]." , ".$this->trans->_('entry_postcode_account_address').$this->data[default_address][postcode]."<br/>";	   ?>
+												</p>
+							</div>
+				</div>
+					 
+						
+							 </div>
+							 <div class="box">
+                        	<div class="box-heading"><p><span><?php echo $this->trans->_('text_my_newsletter_account_account');?></span></p> 
+							<span class="right-div"><a href="<?echo Model_Url::getLink(array("controller"=>"account","action"=>"newsletter"),'',SERVER_SSL);?>"><?php echo $this->trans->_('button_edit');?></a></span></div>
+							<div class="box-content" id="address-info">
+								<p>
+                                        	<?echo $this->data['newsletter_statement'];?>
+                                        </p>
+							</div>
+							</div>	
+							 
+				
+            </div><!--innerpage_rightContent -->
+		</div>
+	</div>
+<?if(count($this->pos[bottom])>0){?>
+<div class="content-bottom"><!--content-bottom srtart-->
+<?php echo $this->action('bottom','modules',null,array('mod' =>$this->pos[bottom]));?>
+</div>
+<?}?>
+
+
+                <!--rightContainer -->
+				</div>
+            <!--innerContent --></div>
+    	<!--contentArea -->
